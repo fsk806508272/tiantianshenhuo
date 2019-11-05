@@ -114,17 +114,59 @@ class UserModel extends HTTP{
    }
 
 
-	//我的优惠券列表
-   getCouponList(data,success){
-   	let params = {
-   		method:'POST',
-   		url:'/app/coupon/getList',
-   		data:data,
-   		success:success
-   	}
-   	this.request(params)
-   }
-
+	//领取优惠券列表
+    getCouponList(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/coupon/getList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询用户优惠券
+	getMyCouponList(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/couponreceive/getList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//领取优惠券
+	receiveCoupon(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/couponreceive/receive',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查看我的合同
+	queryContractDetails(success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryContractDetails',
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查看账单详情
+	queryBillDetails(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryPayment',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

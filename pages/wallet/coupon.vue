@@ -1,5 +1,11 @@
 <template>
 	<view>
+		<view class="topTabBar" :style="{position:headerPosition,top:headerTop}">
+			<view class="grid" v-for="(grid,tbIndex) in orderType" :key="tbIndex" @tap="showType(tbIndex)" >
+				<view class="text" :class="[tbIndex==tabbarIndex?'on':'']">{{grid}}</view>
+			</view>
+		</view>
+		
 		<view class="couponList">
 			<view v-for="(item,index) in coupons" :key="index" class="item">
 				<view class="left">
@@ -7,7 +13,7 @@
 					<view class="remark">{{item.remark}}</view>
 					<view class="time">有效期:{{item.useStartDate}}至{{item.useEndDate}}</view>
 				</view>
-				<view class="right">立即使用</view>
+				<view class="right">{{status[tabbarIndex]}}</view>
 			</view>
 		</view>
 	</view>
@@ -19,14 +25,28 @@
 	export default{
 		data(){
 			return{
-				coupons: []
+				coupons: [],
+				headerPosition:"fixed",
+				headerTop:"0px",
+				orderType: ['未使用','已使用','已过期'],
+				tabbarIndex:0,
+				type:1,
+				status:['立即使用','已使用','已过期']
 			}
 		},
 		onLoad() {
-			usermodel.getCouponList({},(data)=>{
-				this.coupons = data;
-				console.log(this.coupons);
+			usermodel.getMyCouponList({type:this.type},(data)=>{
+				this.coupons = data.list;
 			})
+		},
+		methods:{
+			showType(index){
+				this.tabbarIndex = index
+				this.type = this.tabbarIndex + 1
+				usermodel.getCouponList({type:this.type},(data)=>{
+					this.coupons = data
+				})
+			}
 		}
 	}
 </script>
@@ -34,6 +54,36 @@
 <style lang="scss">
 page{
 	background-color: #f2f2f2;
+	margin-top: 84rpx;
+}
+
+.topTabBar{
+	position:fixed;
+	z-index: 10;
+	top:0;
+	width:100%;
+	height:64rpx;
+	background-color: #fff;
+	display: flex;
+	justify-content: space-around;
+	.grid{
+		width:20%;
+		height:64rpx;
+		display:flex;
+		justify-content: center;
+		align-items: center;
+		color:#787878;
+		font-size:24rpx;
+		.text{
+			height:62rpx;
+			display: flex;
+			align-items: center;
+			&.on{
+				color: #FF6600;
+				border-bottom: solid 2rpx #FF6600;
+			}
+		}
+	}
 }
 .couponList{
 	width:100%;

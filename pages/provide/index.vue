@@ -27,7 +27,8 @@
 			<view class="secondType">
 				<view class="title">服务子类</view>
 				<view class="typeContent">
-					<view v-for="(item,index) in typeData" :key="index" class="grayButton">
+					<view v-for="(item,index) in typeData" :class="[secondIndex==index?'secondOn':'grayButton']" 
+					:key="index" @tap="chooseSecondType(item,index)">
 						{{item.title}}
 					</view>
 				</view>
@@ -37,7 +38,7 @@
 					<view class="grayButton">价格正序</view>
 					<view class="grayButton">距离最近</view>
 				</view>
-				<view class="button">确定</view>
+				<view class="button"  @tap="confirmSecond">确定</view>
 			</view>
 		</uni-popup>
 		<uni-load-more :status='status'></uni-load-more>
@@ -85,7 +86,9 @@ export default {
 			position:'',
 			swiperImg:[],
 			status:'more',
-			typeData:''
+			typeData:'',
+			secondIndex:null,
+			secondId:''
 		}
 	},
 	onLoad(options) {
@@ -100,7 +103,6 @@ export default {
 		this.dataReq.goodsFirsttype = this.type
 		providemodel.getItemList(this.dataReq,(data)=>{
 			this.data = data
-			console.log(this.data)
 		})
 	},
 	onShow(){
@@ -194,6 +196,37 @@ export default {
 		},
 		pop(){
 			this.$refs.poptop.open()
+		},
+		chooseSecondType(item,index){
+			if(this.secondIndex==null){
+				this.secondIndex = index
+				this.secondId = item.secondtypeinfoId
+				
+			}else{
+				if(this.secondIndex == index){
+					this.secondIndex = null
+					this.secondId = item.secondtypeinfoId
+				}else{
+					this.secondIndex = index
+					this.secondId = item.secondtypeinfoId
+				}
+			}
+		},
+		confirmSecond(item){
+			if(this.secondIndex==null){
+				this.dataReq.goodsSecondtype = ''
+				this.dataReq.pageNo = 1
+				providemodel.getItemList(this.dataReq,(data)=>{
+					this.data = data
+				})
+			}else{
+				this.dataReq.goodsSecondtype = this.secondId
+				this.dataReq.pageNo = 1
+				providemodel.getItemList(this.dataReq,(data)=>{
+					this.data = data
+				})
+			}
+			this.$refs.poptop.close()
 		}
 	}
 
@@ -229,5 +262,15 @@ page{
 			height:26rpx;
 		}
 	}
+}
+
+.secondOn{
+	background:rgba(255,241,232,1);
+	border:1rpx solid rgba(255,102,0,1);
+	border-radius:10rpx;
+	height:58rpx;
+	padding:0 30rpx 0 30rpx;
+	line-height: 58rpx;
+	margin-right: 19rpx;
 }
 </style>

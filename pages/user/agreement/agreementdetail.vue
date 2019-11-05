@@ -2,25 +2,26 @@
 	<view>
 		<view class="top">
 			<view class="topOne">
-				<view class="status">履行中</view>
+				<view class="status" v-if="item.contractState==1">履行中</view>
+				<view class="status" v-if="item.contractState!=1">已解约</view>
 				<view class="icon">乙方</view>
 			</view>
 			<view class="topTwo">
-				<view class="title">#龙城广场A出口 电梯公寓直租#</view>
-				<view class="number">合同编号：TTSH12345678901234567890</view>
+				<view class="title">#{{item.title}}#</view>
+				<view class="number">合同编号：{{item.contractCode}}</view>
 			</view>
 		</view>
 		
 		<view class="middle">
 			<view class="item">
 				<view class="left">合同时长</view>
-				<view class="right">2019-11-01至2020-10-01</view>
+				<view class="right">{{item.contractStarttime}}至{{item.contractEndtime}}</view>
 			</view>
 			<view class="item">
 				<view class="left">电子合同</view>
 				<view class="right">查看<image src="/static/cut/grayright.png"></image></view>
 			</view>
-			<view class="item">
+			<view class="item" @tap="toBillDetail">
 				<view class="left">账单详情</view>
 				<image src="/static/cut/grayright.png"></image>
 			</view>
@@ -31,25 +32,50 @@
 		<view class="bottom">
 			<view class="item">
 				<view class="left">身份证</view>
-				<view class="right">500235************23</view>
+				<view class="right">{{plusXing(item.partybId,3,4)}}</view>
 			</view>
 			<view class="item">
 				<view class="left">联系电话</view>
-				<view class="right">137******36</view>
+				<view class="right">{{plusXing(item.partybPhone,3,4)}}</view>
 			</view>
-			<view class="item">
+<!-- 			<view class="item">
 				<view class="left">公司名称</view>
 				<view class="right">天河科技有限公司</view>
 			</view>
 			<view class="address">
 				<view class="title">公司地址</view>
 				<view class="detail">广东省深圳市龙岗区龙翔大道9002号志联佳大厦 508号</view>
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
 
 <script>
+export default{
+	data(){
+		return{
+			item:''
+		}
+	},
+	onLoad(options){
+		this.item = JSON.parse(options.data)
+	},
+	methods:{
+		plusXing (str,frontLen,endLen) { 
+			var len = str.length-frontLen-endLen;
+			var xing = '';
+			for (var i=0;i<len;i++) {
+				xing+='*';
+			}
+			return str.substr(0,frontLen)+xing+str.substr(str.length-endLen);
+		},
+		toBillDetail(){
+			uni.navigateTo({
+				url:'/pages/user/bill/billdetail?billcode=' + this.item.billCode
+			})
+		}
+	}
+}
 </script>
 
 <style lang="scss">

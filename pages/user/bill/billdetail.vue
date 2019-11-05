@@ -2,7 +2,7 @@
 	<view>
 		<view class="top">
 			<view class="title">合计</view>
-			<view class="money">￥3960</view>
+			<view class="money">￥{{data.sum}}</view>
 			<view class="image">
 				<image src="/static/cut/pay_finish.png"></image>
 				已支付
@@ -12,15 +12,15 @@
 		<view class="bottom">
 			<view>
 				<view class="title">押金</view>
-				<view class="content">￥1030</view>
+				<view class="content">￥{{data.costList[0].costPrice}}</view>
 			</view>
 			<view>
 				<view class="title">租金</view>
-				<view class="content">￥1000</view>
+				<view class="content">￥{{data.costList[2].costPrice}}</view>
 			</view>
 			<view>
 				<view class="title">服务费</view>
-				<view class="content">￥0</view>
+				<view class="content">￥{{data.costList[1].costPrice}}</view>
 			</view>
 			<view>
 				<view class="title">账单周期</view>
@@ -28,11 +28,11 @@
 			</view>
 			<view>
 				<view class="title">关联合同</view>
-				<view class="content">TTSH12345678901234567890</view>
+				<view class="content">{{data.contractCode}}</view>
 			</view>
 			<view>
 				<view class="title">关联房屋</view>
-				<view class="content">龙城广场A出口 电梯公寓直租 </view>
+				<view class="content">{{data.title}}</view>
 			</view>
 			<view>
 				<view class="title">支付时间</view>
@@ -43,6 +43,20 @@
 </template>
 
 <script>
+import {UserModel} from '@/common/models/user.js'
+const usermodel = new UserModel()
+export default{
+	data(){
+		return{
+			data:''
+		}
+	},
+	onLoad(options){
+		usermodel.queryBillDetails({billCode:options.billcode},(data)=>{
+			this.data = data[0]
+		})
+	}
+}
 </script>
 
 <style lang="scss">

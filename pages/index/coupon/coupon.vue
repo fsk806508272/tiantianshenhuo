@@ -7,21 +7,50 @@
 					<view class="remark">{{item.remark}}</view>
 					<view class="time">有效期:{{item.useStartDate}}至{{item.useEndDate}}</view>
 				</view>
-				<view class="right">立即使用</view>
+				<view v-if="item.receiveStatus==1" class="right" @tap="collectCoupon(item)">立即领取</view>
+				<view v-if="item.receiveStatus==2" class="received">已领取</view>
+				<view v-if="item.receiveStatus==3" class="received">已领完</view>
 			</view>
 		</view>
+		
+		<view class="toMy" @tap="toMyCoupon()"><image src='/static/cut/coupon.png'></image>我的优惠券</view>
 	</view>
 </template>
 
 <script>
+	import {UserModel} from '@/common/models/user.js'
+	let usermodel = new UserModel()
 	export default {
 		data() {
 			return {
 				coupons: []
 			}
 		},
+		onLoad(){
+			usermodel.getCouponList({},(data)=>{
+				this.coupons = data
+			})
+		},
 		methods: {
-			
+			collectCoupon(item){
+				usermodel.receiveCoupon({couponId:item.couponId},(data)=>{
+					uni.showToast({
+						title:'领取优惠券成功',
+						icon:'none',
+						duration:1500
+					}),
+					setTimeout(()=>{
+						usermodel.getCouponList({},(data)=>{
+							this.coupons = data
+						})
+					},1500)
+				})
+			},
+			toMyCoupon(){
+				uni.navigateTo({
+					url:'/pages/wallet/coupon'
+				})
+			}
 		}
 	}
 </script>
@@ -78,7 +107,37 @@ page{
 			font-weight:400;
 			color:rgba(255,255,255,1);
 		}
+		.received{
+			width:200rpx;
+			height:200rpx;
+			background: url(data:image/png;base64,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);
+			background-size:200rpx 200rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size:34rpx;
+			font-family:Source Han Sans CN;
+			font-weight:400;
+			color:rgba(255,255,255,1);
+		}
 		
+	}
+}
+
+.toMy{
+	z-index:999;
+	position: fixed;
+	bottom:0;
+	background-color: #fff;
+	width:750rpx;
+	height:100rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	image{
+		width:32rpx;
+		height:28rpx;
+		margin-right: 10rpx;
 	}
 }
 </style>

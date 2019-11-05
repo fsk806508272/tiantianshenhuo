@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<block v-if="commentList.length!=0">
-			<block v-for="(item,index) in commentList" :key="index">
+			<block v-for="(item,index) in commentList.goodCommentList" :key="index">
 				<comment-box :row="item" :margin="true" :button="false" v-on:delete="deleteUserComment(item)">
 					<view class="commentInfo">
 						<image class="goodImage" :src="item.smallPic"></image>
@@ -32,12 +32,13 @@ export default{
 			starOff:'/static/cut/star_off.png',
 			starOn:'/static/cut/star_on.png',
 			starList:[0,1,2,3,4],
-			commentList:[]
+			commentList:{}
 		}
 	},
 	onLoad(){
 		usermodel.getUserComment((data)=>{
 			this.commentList = data
+			console.log(this.commentList)
 		})
 	},
 	methods:{

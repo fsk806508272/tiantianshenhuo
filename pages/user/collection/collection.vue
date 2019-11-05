@@ -29,52 +29,6 @@
 			</block>
 		</view>
 		
-		<!-- <view v-if="tabbarIndex == 1" class="needList">
-			<block v-for="(item,index) in needList" :key="index">
-				<view class="container">
-					<view class="top">
-						<view class="icon">
-							<image :src="item.icon"></image>
-						</view>
-						<view class="info">
-							<view class="firstContainer">
-								<view>{{item.name}}</view>
-								<image src="/static/cut/personal_cer.png"></image>
-							</view>
-							<view class="secondContainer">
-								<image src="/static/cut/star_on.png"></image>
-								<view>{{item.stars}}</view>
-								<view>享受服务：{{item.times}}次</view>
-							</view>
-						</view>
-						<view class="like">
-							<image src="/static/cut/collected.png"></image>
-						</view>
-					</view>
-					<view class="middle">
-						<view class="needfor">
-							<image src="/static/cut/zu.png"></image>
-							<view class="text">我现需要：{{item.needs}}</view>
-						</view>
-						<view class="serviceTime">
-							<image src="/static/cut/time.png"></image>
-							<view class="text">服务时间：{{item.serviceTime}}</view>
-						</view>
-						<view class="location">
-							<image src="/static/cut/location.png"></image>
-							<view class="text">服务地点：{{item.servicePlace}}</view>
-						</view>
-					</view>
-					<view class="bottom">
-						<view class="release">{{item.release}}</view>
-						<view class="whiteButton">联系TA</view>
-						<view class="yellowButton">立即抢单</view>
-					</view>
-				</view>
-			</block>
-		</view> -->
-		
-		
 		<view v-if="tabbarIndex == 1" class="storeList">
 			<block v-for="(item,index) in storeList" :key="index">
 				<view class="row">
@@ -150,36 +104,9 @@ export default{
 			headerPosition:"fixed",
 			headerTop:"0px",
 			collectionType:['提供','店铺','会员卡'],
-			provideList:[
-				// {
-				// 	"title":"环日液化石油气5kg 即买即送送货到家",
-				// 	"img":"/static/goods/p8.jpg",
-				// 	"price":129.9,
-				// 	"deliver":5,
-				// 	"sales":24
-				// }
-			],
-			needList:[
-				// {
-				// 	name:'陈达欧',
-				// 	stars:4.2,
-				// 	icon:'/static/cut/stan.png',
-				// 	times:10,
-				// 	needs:'一罐5KG煤气罐',
-				// 	serviceTime:'3月11日',
-				// 	servicePlace:'广东省深圳市龙岗区志联佳大厦508号',
-				// 	release:'2018年10月15日 15：30'
-				// }
-			],
-			storeList:[
-				// {
-				// 	"title":"美宜佳便利店",
-				// 	"img":"/static/goods/p8.jpg",
-				// 	"stars":4.3,
-				// 	"address":'深圳市龙岗区龙翔大道9002号志联佳大厦508',
-				// 	"sales":24
-				// }
-			],
+			provideList:[],
+			needList:[],
+			storeList:[],
 			vipcardList: [],
 			starIndex:[0,1,2,3,4],
 			starSrc:'/static/cut/star_on.png',

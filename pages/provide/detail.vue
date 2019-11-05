@@ -140,7 +140,7 @@ export default{
 			this.sellerdata = data
 		})
 		ordermodel.queryGoodsComment({goodsId:options.id},(data)=>{
-			this.comment = data
+			this.comment = data.goodCommentList
 		})
 	},
 	onShow() {

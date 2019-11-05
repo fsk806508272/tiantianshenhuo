@@ -608,8 +608,8 @@ page{
 			display: flex;
 			align-items: center;
 			&.on{
-				color: #f06c7a;
-				border-bottom: solid 2rpx #f06c7a;
+				color: #FF6600;
+				border-bottom: solid 2rpx #FF6600;
 			}
 		}
 	}

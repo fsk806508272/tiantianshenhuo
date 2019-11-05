@@ -2,22 +2,23 @@
 	<view>
 		<view v-for="(item,index) in agreementList" :key="index">
 			<view class="top">
-				<view class="status">{{status[item.status]}}</view>
+				<view class="status" v-if="item.contractState==1">履行中</view>
+				<view class="status" v-if="item.contractState!=1">已解约</view>
 				<view class="icon">乙方</view>
 			</view>
-			<view class="middle" @tap="toDetail()">
+			<view class="middle" @tap="toDetail(item)">
 				<view class="title">#{{item.title}}#</view>
-				<view class="default">合同编号：{{item.number}}</view>
-				<view class="default">合同时长：{{item.duration}}</view>
-				<view class="default">月租金：￥{{item.salary}}</view>
+				<view class="default">合同编号：{{item.contractCode}}</view>
+				<view class="default">合同时长：{{item.contractStarttime}}至{{item.contractEndtime}}</view>
+				<view class="default">月租金：￥{{item.rental}}</view>
 			</view>
 			<view class="bottom">
-				<view class="time">{{item.time}}</view>
-				<view class="buttons" v-if="item.status==0">
+				<view class="time">{{item.createDate}}</view>
+				<view class="buttons" v-if="item.contractState==1">
 					<view class="button">联系TA</view>
 					<view class="button" @tap="toChange()">合同变更</view>
 				</view>
-				<view v-if="item.status==1" class="buttons">
+				<view v-if="item.contractState!=1" class="buttons">
 					<view class="button">删除合同</view>
 					<view class="button">账单详情</view>
 				</view>
@@ -27,27 +28,23 @@
 </template>
 
 <script>
+import {UserModel} from '@/common/models/user.js'
+const usermodel = new UserModel()
 export default{
 	data(){
 		return{
-			status:['履行中','已解约'],
-			agreementList:[
-				{
-					status:'0',
-					type:'乙方',
-					title:'龙城广场A出口 电梯公寓直租',
-					number:'TTSH12345678901234567890',
-					duration:'2019-11-01至2020-10-01',
-					salary:'2000/月',
-					time:'2019-11-01  10:52'
-				}
-			]
+			agreementList:[]
 		}
 	},
+	onLoad() {
+		usermodel.queryContractDetails((data)=>{
+			this.agreementList = data
+		})
+	},
 	methods:{
-		toDetail(){
+		toDetail(item){
 			uni.navigateTo({
-				url:'agreementdetail'
+				url:'agreementdetail?data=' + JSON.stringify(item)
 			})
 		},
 		toChange(){
