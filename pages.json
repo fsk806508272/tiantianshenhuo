@@ -4,15 +4,13 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "天天生活",
-				"navigationBarBackgroundColor":"#FFFFFF"
-				// //#ifdef H5
-				// "navigationBarTitleText": "首页",			
-				// "app-plus": {
-				// 	"titleNView": false ,//禁用原生导航栏
-				// 	"bounce":"none"
-				// 	
-				// }
-				// //#endif
+				"navigationBarBackgroundColor":"#FFFFFF",
+				//#ifdef H5
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
+				//#endif
 			}
 		},
 		{
@@ -627,8 +625,33 @@
 				"navigationBarTitleText": "商品评价",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
-		}
-        ,{
+		},
+		{
+			"path": "pages/nearby/nearby",
+			"style": {
+				"navigationBarTitleText": "附近",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
+			}
+		},
+		{
+			"path": "pages/realease/realease",
+			"style": {
+				"navigationBarTitleText": "发布",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/index/fixed/select_fixed",
+			"style": {
+				"navigationBarTitleText": "选择定位地址",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
             "path" : "pages/test/test",
             "style" : {
 				"navigationBarTitleText": "续租",
@@ -663,18 +686,23 @@
 	        "iconPath": "static/tab/tab_home_unselected.png",
 	        "selectedIconPath": "static/tab/tab_home_onselected.png",
 	        "text": "首页"
-	    }, {
+	    }, 
+		 {
+		    "pagePath": "pages/nearby/nearby",
+		    "iconPath": "static/tab/tab_near_unselected.png",
+		    "selectedIconPath": "static/tab/tab_near_selected.png",
+		    "text": "附近"
+		},  
+		 {
+			"pagePath": "pages/realease/realease",
+			"iconPath": "static/tab/tab_add_onselected.png",
+			"selectedIconPath": "static/tab/tab_add_onselected.png"
+		},{
 	        "pagePath": "pages/order/order",
 	        "iconPath": "static/tab/tab_order_unselected.png",
 	        "selectedIconPath": "static/tab/tab_order_onselected.png",
 	        "text": "订单"
 	    },
-		 {
-		    "pagePath": "pages/msg/msg",
-		    "iconPath": "static/tab/tab_news_unselected.png",
-		    "selectedIconPath": "static/tab/tab_news_selected.png",
-		    "text": "消息"
-		}, 
 		{
 	        "pagePath": "pages/user/user",
 	        "iconPath": "static/tab/tab_my_unselected.png",
