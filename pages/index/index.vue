@@ -1,10 +1,20 @@
 <template>
 	<view>
+		<view class="status_bar">  
+		    <view class="top_view"></view>  
+		</view>
+		<view class="top_fixed">
+			<view @tap="toSelectFixed()">
+				<image src="/static/cut/fixed_icon.png" mode=""></image>
+				<text>{{pickerText}}</text>
+			</view>
+			<image src="/static/cut/mess_icon.png" @tap="toMessage()" mode=""></image>
+		</view>
 		<!-- 顶部导航 -->
 		<view class="top">
-			<view class="top-Location" @click="showMulLinkageThreePicker">
-				<text>{{pickerText}}</text><image class="drop-down" src="../../static/cut/drop-down.png" mode=""></image>
-			</view>
+			<!-- <view class="top-Location" @click="showMulLinkageThreePicker">
+				<text>{{pickerText}}</text><image class="drop-down" src="/static/cut/drop-down.png" mode=""></image>
+			</view> -->
 			<view class="top-search" @click="clicksearch">
 				<view>
 					<image class="lf" src="../../static/cut/ss.png" mode=""></image>
@@ -13,9 +23,7 @@
 				<image class="rt" src="../../static/cut/yy.png" mode=""></image>
 			</view>
 		</view>
-		<!-- #ifndef APP-PLUS || H5 -->
 		<view class="place"></view>
-		<!-- #endif -->
 		
 		<!-- 授权登录按钮 -->
 		<view class="getuser_box" v-if="!hasLogin">
@@ -83,7 +91,7 @@
 		</view>
 		<view class="bg"></view>
 		<!-- #ifdef APP-PLUS || H5 -->
-		<view class="tabs" v-if="isActive"></view>
+		<!-- <view class="tabs" v-if="isActive"></view>
 		<view :class="!isActive ? '':'activeClass'" class="tabs">
 			<view class="item" @tap="provide">
 				<text :class="chenck ? 'checkclass' : ''">TA的提供</text>
@@ -93,7 +101,7 @@
 				<text :class="!chenck ? 'checkclass' : ''">TA的需求</text>
 				<view :class="!chenck ? 'checkclassbg' : ''"></view>
 			</view>
-		</view>
+		</view> -->
 		<!-- #endif -->
 		
 		<view class="content">
@@ -392,6 +400,16 @@
 			this.loadData()					
 		},
 		methods: {
+			toSelectFixed(){
+				uni.navigateTo({
+					url: '/pages/index/fixed/select_fixed'
+				})
+			},
+			toMessage(){
+				uni.navigateTo({
+					url: '/pages/msg/msg'
+				})
+			},
 			toUserInfo(){
 				// #ifdef H5
 				uni.navigateTo({
@@ -645,9 +663,48 @@
 				color:rgba(60,60,60,1);
 			}
 		}
+		.top_fixed{
+			position: fixed;
+			left: 0;
+			top: 28px;
+			width: 100%;
+			background: #fff;
+			height: 88rpx;
+			z-index: 1000;
+			padding:12rpx 20rpx;
+			box-sizing: border-box;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			image{
+				display: block;
+				width: 30rpx;
+				height: 36rpx;
+			}
+			view{
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				width: 54%;
+				text{
+					display: block;
+					width: 80%;
+					color: #1E1E1E;
+					font-size: 28rpx;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+				image{
+					width: 26rpx;
+					height: 31rpx;
+					margin-right: 10rpx;
+				}
+			}
+		}
 		.top{
 			position: fixed;
-			top:0;
+			top: 140rpx;
 			left: 0;
 			right: 0;
 			z-index: 1000;
@@ -655,6 +712,7 @@
 			align-items: center;
 			height: 88rpx;
 			padding:12rpx 20rpx;
+			box-sizing: border-box;
 			background-color: #FFFFFF;
 			.top-Location{
 				min-width: 82rpx;
@@ -693,7 +751,7 @@
 			}
 			
 		}
-		.place{height: 88rpx;}
+		.place{height: 232rpx;}// height: 176rpx;
 		.carousel-section{
 			width: 100%;
 			height: 33.3vw;

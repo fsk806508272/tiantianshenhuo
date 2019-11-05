@@ -391,5 +391,18 @@
 			align-items:center;
 		}
 	}
-
+	
+	.status_bar {
+		height: 28px;  
+		width: 100%;  
+		background-color: #fff; 
+		position: fixed;
+		z-index: 1000;
+		top: 0; 
+		left: 0;
+	}  
+	.top_view {  
+		// height: var(--status-bar-height);  
+		width: 100%;  
+	} 
 </style>
