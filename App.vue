@@ -405,4 +405,5 @@
 		// height: var(--status-bar-height);  
 		width: 100%;  
 	} 
+	.page_bg{background: #F2F2F2 !important;min-height: 100%;position: fixed;width: 100%;z-index: -1;left: 0;top: 0;}
 </style>
