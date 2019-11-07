@@ -179,6 +179,7 @@ export default{
 		confirmSign(){
 			let req = {goodsItemId:this.data.itemList[this.labelIndex].goodsItemId,num:this.number}
 			providemodel.addOneTotal(req,(data)=>{
+				console.log(data)
 				uni.navigateTo({
 					url:'/pages/order/confirmation?data=' + JSON.stringify(data) + '&type=' + 0
 				})

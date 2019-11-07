@@ -9,7 +9,7 @@
 			<block v-if="type=='completed'"><view class="default" @tap.stop="applyService">申请售后</view><view class="pay" @tap.stop="goRating">去评价</view></block>
 			<block v-if="type=='refunds'"><view class="pay">取消退款</view></block>
 			<block v-if="type=='cancelled'"><view class="default">删除订单</view></block>
-			<block v-if="type=='serviced'"><view class="default">联系TA</view><view class="pay">取消申请</view></block>
+			<block v-if="type=='serviced'"><view class="default">联系TA</view><view class="pay" @tap.stop="cancelApply">取消申请</view></block>
 			<block v-if="type=='waiting'"><view class="default">联系TA</view></block>
 			<block v-if="type=='finished'"><view class="default" @tap.stop="applyService">申请售后</view></block>
 		</view>
@@ -49,6 +49,9 @@ export default {
 		},
 		toPayment(){
 			this.$emit('toPay')
+		},
+		cancelApply(){
+			this.$emit('cancelBack')
 		}
 	}
 }

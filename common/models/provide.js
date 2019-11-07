@@ -51,6 +51,7 @@ class ProvideModel extends HTTP{
 		this.request(params)
 	}
 	
+	//单个商品结算
 	addOneTotal(data,success){
 		let params = {
 			method:'POST',

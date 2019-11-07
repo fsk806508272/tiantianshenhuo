@@ -9,7 +9,7 @@
 			<block v-if="orderList.type=='comment'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
 			<block v-if="orderList.type=='serviced'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
 			<block v-if="orderList.type=='waiting'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
-
+			<block v-if="orderList.type=='finished'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
 		</view>
 		
 		<view class="location" v-if="orderList.firsttypeId!=1">
@@ -81,7 +81,7 @@
 			<block v-if="orderList.type=='comment'"><view class="default">删除订单</view><view class="pay">申请售后</view></block>
 			<block v-if="orderList.type=='serviced'"><view class="default">删除订单</view><view class="pay">取消申请</view></block>
 			<block v-if="orderList.type=='waiting'"><view class="default">联系TA</view></block>
-
+			<block v-if="orderList.type=='finished'"><view class="default">删除订单</view><view class="default">申请售后</view></block>
 		</view>
 	</view>
 </template>
@@ -108,7 +108,8 @@
 					uncomment:'交易完成',
 					comment:'交易完成',
 					serviced:'退款售后',
-					waiting:'等待商家签约'
+					waiting:'等待商家签约',
+					finished:'交易完成'
 				},
 				iconPath:{
 					unpaid:'/static/cut/order_waiting.png',
@@ -118,7 +119,8 @@
 					servicing:'/static/cut/order_service.png',
 					uncomment:'/static/cut/order_finish.png',
 					comment:'/static/cut/order_finish.png',
-					serviced:'/static/cut/order_finish.png'
+					serviced:'/static/cut/order_finish.png',
+					finished:'/static/cut/order_ok.png'
 				},
 				orderList:{ type:"unpaid",img: '/static/goods/p1.jpg', adress:"广东省深圳市龙岗区龙翔大道9002号志联佳大厦508",username:'唐笑笑',phone:'13751157436',name: '清风原木纯品纸巾三层360抽 买三送一 限时抢购', price: '168.00',payment:168.00,freight:12,spec:'规格:S码',number:2 ,store:'清风纸巾售卖店',deil:"5",message:'要红色的这个'},
 				payInfo:[
@@ -144,6 +146,8 @@
 						this.orderList.type = "unpaid"
 					}else if(this.orderList.status==5&&this.orderList.viceStatus==502){
 						this.orderList.type = "servicing"
+					}else if(this.orderList.status==7){
+						this.orderList.type = "finished"
 					}
 				})
 			}else if(options.typeid==1){

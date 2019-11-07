@@ -106,6 +106,16 @@ class OrderModel extends HTTP {
 		this.request(params)
 	}
 	
+	getBackOrderDetail(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsBackorder/userGetOne',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
 	//确认完成按钮
 	confirmOrder(data,success){
 		let params = {
@@ -156,6 +166,28 @@ class OrderModel extends HTTP {
 		let params = {
 			method:'POST',
 			url:'/app/goodsOrder/needDelete',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//取消售后申请
+	cancelBackapplyOrder(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsBackorder/cancel',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//待支付结算
+	settleUnpaidOrder(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/shCarts/orderTotal',
 			data:data,
 			success:success
 		}

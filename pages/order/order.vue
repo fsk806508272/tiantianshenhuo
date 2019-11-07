@@ -112,15 +112,15 @@
 						<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
 						:specsize="JSON.parse(row.spec).spec" :spec="'×' + row.num"></store-main>
 					</block>
-					<view v-if="tabbarIndex!=4" class="deliverMoney">
+					<view v-if="tabbarIndex!=5" class="deliverMoney">
 						<view class="deliverTitle">配送费</view>
 						<view class="money">￥{{item.postFee}}</view>
 					</view>
-					<view v-if="tabbarIndex!=4" class="total">合计:￥{{item.payment}}</view>
+					<view v-if="tabbarIndex!=5" class="total">合计:￥{{item.payment}}</view>
 					<store-time :time="item.createTime" :type="item.type" 
 					v-on:rating="goRating(item)" v-on:confirmOrder="confirmOrderOk(item)" 
 					v-on:backOrder="applyService(item) " v-on:cancelOrder="cancelUnpaidOrder(item)"
-					v-on:toPay="toPayment(item)"></store-time>
+					v-on:toPay="toPayment(item)" v-on:cancelBack="cancelApply(item.id)"></store-time>
 				</view>
 				
 				<view v-if="item.firsttypeId==1" class="type" @tap="toDetail(item)">
@@ -191,7 +191,7 @@
 			return{
 				headerPosition:"fixed",
 				headerTop:"0px",
-				orderType: ['购物车','待付款','进行中','待评价','退款售后','已完成'],
+				orderType: ['购物车','待付款','进行中','待评价','已完成','退款售后'],
 				orderNone:"暂无订单哦，去首页逛逛吧",
 				shoppingNone:"暂无商品哦，去首页逛逛吧",
 				tabbarIndex:0,
@@ -257,134 +257,7 @@
 					url:"../login/login"
 				})
 			},
-			showType(tbIndex){
-				this.tabbarIndex = tbIndex;
-				if(tbIndex==1){
-					ordermodel.queryUnpaidOrder({pageSize:30},(data)=>{
-						this.list = data
-						for(let item of this.list){
-							item.type = "unpaid"
-						}
-					})
-				}else if(tbIndex==2){
-					ordermodel.queryIngOrder((data)=>{
-						this.list = data
-						for(let item of this.list){
-							if(item.firsttypeId==1){
-								item.picture = item.picture.split(',')[0]
-								item.sum = item.sum.toFixed(2)
-								item.type = "waiting"
-							}else if(item.firsttypeId==8){
-								if(item.status==5&&item.viceStatus==210){
-									item.type = "unreceived"
-								}else if(item.status==5&&item.viceStatus==33){
-									item.type = "received"
-								}else if(item.status==5&&item.viceStatus==502){
-									item.type = "deliver"
-								}
-							}
-						}
-					})
-				}else if(tbIndex==3){
-					ordermodel.queryUnCommentedOrder((data)=>{
-						this.list = data
-						for(let item of this.list){
-							if(item.firsttypeId==8){
-								if(item.status==6){
-									item.type = "completed"
-								}
-							}
-						}
-					})
-				}else if(tbIndex == 4){
-					ordermodel.queryBackOrder((data)=>{
-						this.list = data
-						for(let item of data){
-							item.type = "serviced"
-							item.goodsOrderItemList = item.orderItemList
-						}
-					})
-				}else if(tbIndex == 5){
-					ordermodel.queryFinishedOrder((data)=>{
-						this.list = data
-						for(let item of data){
-							item.type = "finished"
-						}
-					})
-				}
-				
-			},
-			//控制左滑删除效果-begin
-			touchStart(index,number,event){
-				//多点触控不触发
-				if(event.touches.length>1){
-					this.isStop = true;
-					return ;
-				}
-				this.oldIndex = this.theIndex;
-				this.oldNumber = this.oldNumber;
-				this.theIndex = null;
-				this.theNumber = null;
-				//初始坐标
-				this.initXY = [event.touches[0].pageX,event.touches[0].pageY];
-			},
-			touchMove(index,number,event){
-				//多点触控不触发
-				if(event.touches.length>1){
-					this.isStop = true;
-					return ;
-				}
-				let moveX = event.touches[0].pageX - this.initXY[0];
-				let moveY = event.touches[0].pageY - this.initXY[1];
-				
-				if(this.isStop||Math.abs(moveX)<5){
-					return ;
-				}
-				if (Math.abs(moveY) > Math.abs(moveX)){
-					// 竖向滑动-不触发左滑效果
-					this.isStop = true;
-					return;
-				}
-				
-				if(moveX<0){
-					this.theIndex = index;
-					this.theNumber = number;
-					this.isStop = true;
-				}else if(moveX>0){
-					if(this.theIndex!=null&&this.oldIndex==this.theIndex&&this.theNumber!=null&&this.oldNumber==this.theNumber){
-						this.oldIndex = index;
-						this.oldNumber = number;
-						this.theIndex = null;
-						this.theNumber = null;
-						this.isStop = true;
-						setTimeout(()=>{
-							this.oldIndex = null;
-							this.oldNumber = null;
-						},150)
-					}
-				}
-			},
-			touchEnd(index,number,$event){
-				//结束禁止触发效果
-				this.isStop = false;
-			},
-			//控制左滑删除效果-end
-			
-			goRating(item){
-				if(item.firsttypeId == 8){
-					let data = {}
-					data.spec = JSON.parse(item.goodsOrderItemList[0].spec).spec
-					data.image = item.goodsOrderItemList[0].picPath
-					data.title = item.goodsOrderItemList[0].title
-					data.goodsId = item.goodsOrderItemList[0].goodsId
-					data.goodsOrderId = item.orderId
-					uni.navigateTo({
-						url:'comment?data=' + JSON.stringify(data)
-					})
-				}
-				
-			},
-			orderDetail(){
+						orderDetail(){
 				uni.navigateTo({
 					url:'orderdetail'
 				})
@@ -480,14 +353,146 @@
 					})
 				}
 			},
-			toDetail(item){
-				if(item.firsttypeId == 8||item.firsttypeId == 9){
+			//控制左滑删除效果-begin
+			touchStart(index,number,event){
+				//多点触控不触发
+				if(event.touches.length>1){
+					this.isStop = true;
+					return ;
+				}
+				this.oldIndex = this.theIndex;
+				this.oldNumber = this.oldNumber;
+				this.theIndex = null;
+				this.theNumber = null;
+				//初始坐标
+				this.initXY = [event.touches[0].pageX,event.touches[0].pageY];
+			},
+			touchMove(index,number,event){
+				//多点触控不触发
+				if(event.touches.length>1){
+					this.isStop = true;
+					return ;
+				}
+				let moveX = event.touches[0].pageX - this.initXY[0];
+				let moveY = event.touches[0].pageY - this.initXY[1];
+				
+				if(this.isStop||Math.abs(moveX)<5){
+					return ;
+				}
+				if (Math.abs(moveY) > Math.abs(moveX)){
+					// 竖向滑动-不触发左滑效果
+					this.isStop = true;
+					return;
+				}
+				
+				if(moveX<0){
+					this.theIndex = index;
+					this.theNumber = number;
+					this.isStop = true;
+				}else if(moveX>0){
+					if(this.theIndex!=null&&this.oldIndex==this.theIndex&&this.theNumber!=null&&this.oldNumber==this.theNumber){
+						this.oldIndex = index;
+						this.oldNumber = number;
+						this.theIndex = null;
+						this.theNumber = null;
+						this.isStop = true;
+						setTimeout(()=>{
+							this.oldIndex = null;
+							this.oldNumber = null;
+						},150)
+					}
+				}
+			},
+			touchEnd(index,number,$event){
+				//结束禁止触发效果
+				this.isStop = false;
+			},
+			//控制左滑删除效果-end
+			
+			goRating(item){
+				if(item.firsttypeId == 8){
+					let data = {}
+					data.spec = JSON.parse(item.goodsOrderItemList[0].spec).spec
+					data.image = item.goodsOrderItemList[0].picPath
+					data.title = item.goodsOrderItemList[0].title
+					data.goodsId = item.goodsOrderItemList[0].goodsId
+					data.goodsOrderId = item.orderId
 					uni.navigateTo({
-						url:'orderdetail?id=' + item.orderId + '&typeid=' + item.firsttypeId
+						url:'comment?data=' + JSON.stringify(data)
 					})
-				}else if(item.firsttypeId == 1){
+				}
+			},
+			showType(tbIndex){
+				this.tabbarIndex = tbIndex;
+				if(tbIndex==1){
+					ordermodel.queryUnpaidOrder({pageSize:30},(data)=>{
+						this.list = data
+						for(let item of this.list){
+							item.type = "unpaid"
+						}
+					})
+				}else if(tbIndex==2){
+					ordermodel.queryIngOrder((data)=>{
+						this.list = data
+						for(let item of this.list){
+							if(item.firsttypeId==1){
+								item.picture = item.picture.split(',')[0]
+								item.sum = item.sum.toFixed(2)
+								item.type = "waiting"
+							}else if(item.firsttypeId==8){
+								if(item.status==5&&item.viceStatus==210){
+									item.type = "unreceived"
+								}else if(item.status==5&&item.viceStatus==33){
+									item.type = "received"
+								}else if(item.status==5&&item.viceStatus==502){
+									item.type = "deliver"
+								}
+							}
+						}
+					})
+				}else if(tbIndex==3){
+					ordermodel.queryUnCommentedOrder((data)=>{
+						this.list = data
+						for(let item of this.list){
+							if(item.firsttypeId==8){
+								if(item.status==6){
+									item.type = "completed"
+								}
+							}
+						}
+					})
+				}else if(tbIndex == 5){
+					ordermodel.queryBackOrder((data)=>{
+						this.list = data
+						for(let item of data){
+							item.type = "serviced"
+							item.goodsOrderItemList = item.orderItemList
+						}
+					})
+				}else if(tbIndex == 4){
+					ordermodel.queryFinishedOrder((data)=>{
+						this.list = data
+						for(let item of data){
+							item.type = "finished"
+						}
+					})
+				}
+				
+			},
+			toDetail(item){
+				if(this.tabbarIndex!=5){
+					if(item.firsttypeId == 8||item.firsttypeId == 9){
+						uni.navigateTo({
+							url:'orderdetail?id=' + item.orderId + '&typeid=' + item.firsttypeId
+						})
+					}else if(item.firsttypeId == 1){
+						uni.navigateTo({
+							url:'orderdetail?data=' + JSON.stringify(item) + '&typeid=' + item.firsttypeId
+						})
+					}
+				}else{
 					uni.navigateTo({
-						url:'orderdetail?data=' + JSON.stringify(item) + '&typeid=' + item.firsttypeId
+						url:'backorderdetail?id=' + item.id + '&orderId=' + item.goodsOrderId
 					})
 				}
 				
@@ -497,7 +502,33 @@
 					uni.navigateTo({
 						url:'/pages/order/houseConfirmation?data=' + JSON.stringify(item)
 					})
+				}else if(item.firsttypeId == 8){
+					let goodsOrderIdList =  item.orderId
+					ordermodel.settleUnpaidOrder({goodsOrderIdList},(data)=>{
+						uni.navigateTo({
+							url:'/pages/order/confirmation?data=' + JSON.stringify(data) + '&type=' + 0 
+						})
+					})
+					// let req = {goodsItemId:this.data.itemList[this.labelIndex].goodsItemId,num:this.number}
+					// providemodel.addOneTotal(req,(data)=>{
+					// 	console.log(data)
+					// 	uni.navigateTo({
+					// 		url:'/pages/order/confirmation?data=' + JSON.stringify(data) + '&type=' + 0
+					// 	})
+					// })
 				}
+			},
+			cancelApply(item){
+				ordermodel.cancelBackapplyOrder({goodsBackorderId:item},(data)=>{
+					uni.showToast({
+						title:'取消申请成功',
+						icon:'none',
+						duration:1500
+					})
+					setTimeout(()=>{
+						this.showType(5)
+					},1500)
+				})
 			},
 			settlement(){
 				let array = []
