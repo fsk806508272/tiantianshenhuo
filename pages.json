@@ -4,13 +4,15 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "天天生活",
-				"navigationBarBackgroundColor":"#FFFFFF",
-				//#ifdef H5
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-				}
-				//#endif
+				"navigationBarBackgroundColor":"#FFFFFF"
+				// //#ifdef H5
+				// "navigationBarTitleText": "首页",			
+				// "app-plus": {
+				// 	"titleNView": false ,//禁用原生导航栏
+				// 	"bounce":"none"
+				// 	
+				// }
+				// //#endif
 			}
 		},
 		{
@@ -625,6 +627,34 @@
 				"navigationBarTitleText": "商品评价",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		}
+        ,{
+            "path" : "pages/test/test",
+            "style" : {
+				"navigationBarTitleText": "续租",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/index/coupon/coupon",
+            "style" : {
+				"navigationBarTitleText": "领取优惠券",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        },
+		{
+		    "path" : "pages/order/houseConfirmation",
+		    "style" : {
+				"navigationBarTitleText": "确认支付",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/order/backorderdetail",
+		    "style" : {
+				"navigationBarTitleText": "订单详情",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		},
 		{
 			"path": "pages/nearby/nearby",
@@ -645,27 +675,9 @@
 			}
 		},
 		{
-			"path": "pages/index/fixed/select_fixed",
+			"path": "pages/realease/provide",
 			"style": {
-				"navigationBarTitleText": "选择定位地址",
-				"navigationBarBackgroundColor":"#FFFFFF"
-			}
-		},
-		{
-            "path" : "pages/test/test",
-            "style" : {
-				"navigationBarTitleText": "续租",
-				"navigationBarBackgroundColor":"#FFFFFF"
-			}
-        }
-        ,{
-            "path" : "pages/index/coupon/coupon",
-            "style" : {}
-        },
-		{
-		    "path" : "pages/order/houseConfirmation",
-		    "style" : {
-				"navigationBarTitleText": "确认支付",
+				"navigationBarTitleText": "发布",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
@@ -676,7 +688,7 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"tabBar": {
+		"tabBar": {
 	    "color": "#7A7E83",
 	    "selectedColor": "#FF6600",
 	    "borderStyle": "white",
@@ -694,7 +706,7 @@
 		    "text": "附近"
 		},  
 		 {
-			"pagePath": "pages/realease/realease",
+			"pagePath": "pages/realease/provide",
 			"iconPath": "static/tab/tab_add_onselected.png",
 			"selectedIconPath": "static/tab/tab_add_onselected.png"
 		},{
