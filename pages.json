@@ -675,6 +675,34 @@
 			}
 		},
 		{
+			"path": "pages/user/distribution/dis_center",
+			"style": {
+				"navigationBarTitleText": "分销中心",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/user/distribution/invite",
+			"style": {
+				"navigationBarTitleText": "已邀请用户",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/user/distribution/commission",
+			"style": {
+				"navigationBarTitleText": "佣金明细",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/user/distribution/invite_detail",
+			"style": {
+				"navigationBarTitleText": "用户详细",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/realease/provide",
 			"style": {
 				"navigationBarTitleText": "发布",

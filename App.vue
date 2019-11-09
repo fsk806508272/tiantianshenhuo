@@ -406,4 +406,44 @@
 		width: 100%;  
 	} 
 	.page_bg{background: #F2F2F2 !important;min-height: 100%;position: fixed;width: 100%;z-index: -1;left: 0;top: 0;}
+	
+	// 用户详细列表公共样式
+	.commission_item{
+		padding: 30rpx 20rpx;
+		box-sizing: border-box;
+		border-bottom: 1px solid #F2F2F2;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.ci_left{
+			width: 70%;
+			view{
+				font-size:28rpx;
+				font-family:Source Han Sans CN;
+				font-weight:500;
+				color:rgba(60,60,60,1);
+				margin-bottom: 10rpx;
+			}
+			text{
+				font-size:26rpx;
+				color:rgba(140,140,140,1);
+			}
+		}
+		.ci_right{
+			width: 30%;
+			text-align: right;
+			view{
+				font-size:30rpx;
+				color:rgba(31,170,34,1);
+				margin-bottom: 10rpx;
+				&.red{
+					color: #f00;
+				}
+			}
+			text{
+				font-size:26rpx;
+				color:rgba(180,180,180,1);
+			}
+		}
+	}
 </style>

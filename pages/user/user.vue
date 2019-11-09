@@ -373,7 +373,7 @@ export default{
 		},
 		toMySetting(){
 			uni.navigateTo({
-				url:'../settings/setting'
+				url:'/pages/user/distribution/dis_center'
 			})
 		},
 		toMyCollection(){
