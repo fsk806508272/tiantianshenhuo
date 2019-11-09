@@ -167,6 +167,17 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//提交个人认证
+	personalCer(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/appuser/personalCer',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

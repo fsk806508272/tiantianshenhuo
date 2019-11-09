@@ -19,6 +19,12 @@
 			<view class="whiteButton" @tap="toIndex">返回首页</view>
 			<view class="yellowButton" @tap="toMyPackage">我的订单</view>
 		</view>
+		<view v-if="type==4">
+			<image src="/static/cut/pay_ok.png"></image>
+			<view class="payTitle">资料提交成功</view>
+			<view class="content">等待审核中，耐心等候哦</view>
+			<view class="indexButton" @tap="toIndex">去首页看看</view>
+		</view>
 	</view>
 </template>
 
@@ -113,5 +119,18 @@ image{
 	left:305rpx;
 	font-size:36rpx;
 	color:rgba(60,60,60,1);
+}
+.indexButton{
+	position: absolute;
+	top:578rpx;
+	left:255rpx;
+	width:240rpx;
+	height:60rpx;
+	background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+	border-radius:10rpx;
+	color:#fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 </style>
