@@ -445,7 +445,7 @@
 		line-height: 100rpx;
 		border-radius: 0;
 		left: 0;
-		bottom: 50px;
+		bottom: 0;
 		color: #fff;
 		font-size: 34rpx;
 		background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));

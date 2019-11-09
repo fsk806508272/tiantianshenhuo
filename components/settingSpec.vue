@@ -62,6 +62,7 @@
 			padding-left:20rpx;
 			input{
 				width:300rpx;
+				font-size: 26rpx;
 			}
 		}
 		.detail{
@@ -76,6 +77,7 @@
 				padding-left:20rpx;
 				input{
 					width:100rpx;
+					font-size: 26rpx;
 				}
 			}
 			.sec{

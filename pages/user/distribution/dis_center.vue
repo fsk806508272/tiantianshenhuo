@@ -3,46 +3,46 @@
 		<view class="page_bg"></view>
 		<view class="discenter_top_box">
 			<view class="discenter_info">
-				<image src="/static/cut/logo.png" class="avatar_img" mode="widthFix"></image>
+				<image :src="avatar" class="avatar_img" mode="widthFix"></image>
 				<view class="info_right">
-					<view class="info_title">汤圆圆<image src="/static/cut/level_png.png" mode="widthFix"></image></view>
-					<view class="info_txt">2019-09-01加入代理</view>
+					<view class="info_title">{{name}}<image src="/static/cut/level_png.png" mode="widthFix"></image></view>
+					<view class="info_txt">{{time}}加入代理</view>
 				</view>
 			</view>
 			<view class="dis_money_box">
 				<text>当前累计获取佣金(元)</text>
-				<view class="dis_money_txt">568.88</view>
+				<view class="dis_money_txt">{{total_money}}</view>
 			</view>
 		</view>
 		<view class="discenter_bottom_box">
 			<view class="disbottom_list">
 				<view class="dl_box">
 					<text>今日获取佣金</text>
-					<view class="dl_money">568.88</view>
+					<view class="dl_money">{{today_money}}</view>
 				</view>
 				<view class="dl_box">
 					<text>待收益佣金</text>
-					<view class="dl_money">12.82</view>
+					<view class="dl_money">{{wait_money}}</view>
 				</view>
 			</view>
 			<view class="disbottom_with">
-				<text>可提现佣金：99.86元</text>
-				<view>立即提现<image src="/static/cut/right_orange.png" mode=""></image></view>
+				<text>可提现佣金：{{withdraw_money}}元</text>
+				<view>立即提现<image src="/static/cut/right_orange.png" mode="widthFix"></image></view>
 			</view>
 			<view class="my_invite_code">
-				<view>我的邀请码：<text>ABC456</text></view>
+				<view>我的邀请码：<text>{{invite_code}}</text></view>
 				<text>复制</text>
 			</view>
 			<view class="invite_nav_box">
 				<view class="invite_item" @tap="toInvitePage()">
 					<image src="/static/cut/discenter_icon1.png" mode="widthFix"></image>
 					<view>已邀请用户</view>
-					<text>100人</text>
+					<text>{{person_num}}人</text>
 				</view>
-				<view class="invite_item">
+				<view class="invite_item" @tap="toCommissionPage()">
 					<image src="/static/cut/discenter_icon2.png" mode="widthFix"></image>
 					<view>佣金明细</view>
-					<text>180笔</text>
+					<text>{{money_num}}笔</text>
 				</view>
 				<view class="invite_item">
 					<image src="/static/cut/discenter_icon3.png" mode="widthFix"></image>
@@ -58,7 +58,16 @@
 	export default{
 		data(){
 			return{
-				
+				avatar: '/static/cut/logo.png',
+				name: '汤圆圆',
+				time: '2019-09-01',
+				total_money: '568.88',
+				today_money: '568.88',
+				wait_money: '12.82',
+				withdraw_money: '99.86',
+				invite_code: 'ABC456',
+				person_num: 100,
+				money_num: 180
 			}
 		},
 		components: {
@@ -68,6 +77,11 @@
 			toInvitePage(){
 				uni.navigateTo({
 					url: '/pages/user/distribution/invite'
+				})
+			},
+			toCommissionPage(){
+				uni.navigateTo({
+					url: '/pages/user/distribution/commission'
 				})
 			}
 		}

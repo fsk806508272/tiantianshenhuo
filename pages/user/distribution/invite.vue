@@ -2,7 +2,7 @@
 	<view>
 		<view class="invite_top">
 			<text>邀请用户总人数</text>
-			<view class="invite_num">101</view>
+			<view class="invite_num">{{total}}</view>
 		</view>
 		<view class="list_nav">
 			<view v-for="(item,index) in navbar" :key="index" :class="[currentTab==index ? 'active' : '']" @tap="navbarTap(index)">{{item.name}}({{item.num}})</view>
@@ -26,6 +26,7 @@
 	export default{
 		data(){
 			return{
+				total: 101,
 				navbar:[{name:"一级用户",num:0},{name:"二级用户",num:0}],
 				currentTab:0,
 				level_list: [
@@ -79,7 +80,7 @@
 			},
 			toInviteDetail(id){
 				uni.navigateTo({
-					url: ''
+					url: '/pages/user/distribution/invite_detail?id=' + id
 				})
 			}
 		}

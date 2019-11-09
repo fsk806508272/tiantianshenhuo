@@ -151,8 +151,9 @@
 	}
 	
 	//星星
-	.star::before { content: "*"; color: #FF0000;} 
-	
+	.star{position: relative;}
+	.star::before { content: "*"; color: #FF0000;position: absolute;left: -6rpx;} 
+	.star.no::before{ display: none; }
 	//长按钮
 	.long-button{
 		margin-left:20rpx;

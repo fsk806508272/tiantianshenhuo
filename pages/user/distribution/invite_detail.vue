@@ -2,10 +2,10 @@
 	<view class="invite_detail">
 		<view class="page_bg"></view>
 		<view class="invite_detail_top">
-			<image src="/static/cut/logo.png" mode="widthFix"></image>
+			<image :src="invite_avatar" mode="widthFix"></image>
 			<view class="idt_right">
-				<view>汤圆圆</view>
-				<text>2019-09-01注册软件</text>
+				<view>{{invite_name}}</view>
+				<text>{{invite_time}}注册软件</text>
 			</view>
 		</view>
 		<view class="invite_till">收益详细</view>
@@ -28,6 +28,9 @@
 	export default{
 		data(){
 			return{
+				invite_avatar: '/static/cut/logo.png',
+				invite_name: '汤圆圆',
+				invite_time: '2019-09-01',
 				inviteDetails: [
 					{
 						title: '邀请用户136****7521',
