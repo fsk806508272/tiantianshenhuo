@@ -187,6 +187,7 @@ export default{
 }
 
 .uploadGoodsImg{
+	background-color: #fff;
 	display: flex;
 	padding:0 20rpx 30rpx 20rpx;
 	flex-wrap: wrap;

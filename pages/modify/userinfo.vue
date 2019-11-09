@@ -53,7 +53,7 @@
 			<view class="iconfont icon-dibudaohanglan-"></view>
 		</view>
 		<view class="cert general" @tap="certification()">
-			<view class="descri">实名认证</view>
+			<view class="descri">个人认证</view>
 			<view class="detail" >
 				<view class="certification">去认证</view>
 				<view class="iconfont icon-dibudaohanglan-"></view>

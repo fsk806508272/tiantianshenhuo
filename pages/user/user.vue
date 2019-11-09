@@ -124,7 +124,7 @@
 							</view>
 							<text>收付款码</text>
 						</view>
-						<view class="item">
+						<view class="item" @tap="toMyStore">
 							<view class='icon'>
 								<image src="/static/cut/user/mystore.png" mode="widthFix"></image>
 							</view>
@@ -419,6 +419,11 @@ export default{
 		toShare(){
 			uni.navigateTo({
 				url:'share/share'
+			})
+		},
+		toMyStore(){
+			userModel.getInfo((data)=>{
+				console.log(data)
 			})
 		}
 	}
