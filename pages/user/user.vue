@@ -423,7 +423,23 @@ export default{
 		},
 		toMyStore(){
 			userModel.getInfo((data)=>{
-				console.log(data)
+				if(data.personalCerStatus==3||data.companyCerStatus==3){
+					uni.navigateTo({
+						url:'/pages/user/mystore?storeId=' + data.storeId
+					})
+				}else{
+					uni.showModal({
+						title:'您还没有认证，请先做认证',
+						confirmText:'去认证',
+						success(res){
+							if(res.confirm){
+								uni.navigateTo({
+									url:'/pages/modify/certification'
+								})
+							}
+						}
+					})
+				}
 			})
 		}
 	}

@@ -48,7 +48,7 @@ export default{
 					console.log(this.type)
 					let req = {img:res.tempFilePaths}
 					uni.uploadFile({
-						url: 'http://192.168.3.194:9091/app/imgUpload/upload', 
+						url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
 						filePath: res.tempFilePaths[0],
 						name: 'img',
 						success: (uploadFileRes) => {

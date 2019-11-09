@@ -28,7 +28,7 @@
 					所在地区
 				</view>
 				<view class="input" @tap="chooseCity">
-					{{receiverProvince}}
+				{{receiverProvince}}
 				{{receiverCity}}
 				{{receiverDistrict}}
 				</view>

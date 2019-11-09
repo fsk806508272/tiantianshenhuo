@@ -708,6 +708,20 @@
 				"navigationBarTitleText": "发布",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		},
+		{
+			"path": "pages/user/store/mystore",
+			"style": {
+				"navigationBarTitleText": "我的店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path": "pages/user/store/applystore",
+			"style": {
+				"navigationBarTitleText": "店铺入驻",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		}
     ],
 	"globalStyle": {
