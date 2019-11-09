@@ -41,11 +41,6 @@ class IndexModel extends HTTP{
 	  let params = {
 		method:"POST",
 		url:"/app/firsttypeinfo/getList", 
-		// data:{
-		// 	token:'348UJGW',
-		// 	pageNo:1,
-		// 	pageSize:10
-		// },
 		success:success
 	  }
     this.request(params)

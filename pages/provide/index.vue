@@ -12,7 +12,7 @@
 			<block v-for="(item,index) in data" :key="index">
 				<item-list :src="item.smallPic" :money="item.price" 
 				:title="item.goodsName|titleFormat" :deliver="item.postFee" :sales="item.monthSale"
-				@tap="toDetail(item)" v-on:addcart="addToCart(item)"></item-list>
+				v-on:toDetailPage="toDetail(item)" v-on:addcart="addToCart(item)"></item-list>
 			</block>
 		</block>
 		
@@ -182,7 +182,7 @@ export default {
 		},
 		toDetail(item){
 			uni.navigateTo({
-				url:'detail?sellerId=' + item.sellerId + '&id=' + item.id + '&type=' + this.type
+				url:'/pages/provide/detail?sellerId=' + item.sellerId + '&id=' + item.id + '&type=' + this.type
 			})
 		},
 		addToCart(item){

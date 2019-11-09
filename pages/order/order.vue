@@ -55,7 +55,7 @@
 							<view class="storeImage"><image :src="good.picPath"></image></view>
 							<view class="detail">
 								<view class="title">{{good.title.substring(0,42)}}</view>
-								<view class="spec">{{good.spec|jsonparse}}</view>
+								<view class="spec">{{good.spec}}</view>
 								<view class="choose">
 									<view class="price">￥{{good.price}}</view>
 									<view class="number">
@@ -110,7 +110,7 @@
 					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
 					<block v-for="(row,number) in item.goodsOrderItemList" :key="number">
 						<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
-						:specsize="JSON.parse(row.spec).spec" :spec="'×' + row.num"></store-main>
+						:specsize="row.spec" :spec="'×' + row.num"></store-main>
 					</block>
 					<view v-if="tabbarIndex!=5" class="deliverMoney">
 						<view class="deliverTitle">配送费</view>
@@ -175,9 +175,6 @@
 			uniPopup
 		},
 		filters: {
-			jsonparse: function(value) {
-				return JSON.parse(value).spec;
-			},
 			picOne:function(value){
 				if(value.hasOwnProperty('picture')){
 					return value.picture.split(',')[0]
@@ -423,7 +420,9 @@
 				}
 			},
 			showType(tbIndex){
+				console.log(tbIndex)
 				this.tabbarIndex = tbIndex;
+				console.log(this.tabbarIndex)
 				if(tbIndex==1){
 					ordermodel.queryUnpaidOrder({pageSize:30},(data)=>{
 						this.list = data
@@ -569,7 +568,7 @@
 			applyService(item){
 				let data = {}
 				data.goodsOrderItemId = item.goodsOrderItemList[0].orderItemId
-				data.spec = JSON.parse(item.goodsOrderItemList[0].spec).spec
+				data.spec = item.goodsOrderItemList[0].spec
 				data.image = item.goodsOrderItemList[0].picPath
 				data.title = item.goodsOrderItemList[0].title
 				uni.navigateTo({

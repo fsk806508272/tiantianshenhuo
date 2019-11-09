@@ -132,6 +132,7 @@
 		},
 		methods: {
 			sub(){
+				console.log(this.difference)
 				uni.showLoading({
 				    title: '正在提交中...',
 					mask:true
@@ -142,7 +143,7 @@
 				}
 				let buylist=this.buylist
 				console.log(buylist)
-				if(this.difference){
+				if(this.difference == 1){
 					let subData={receiverAddressId:this.recinfo.receiverAddressId}
 					let buyerMessage=[]
 					let goodsItemIdList=""
@@ -163,7 +164,7 @@
 						payModel.tenpayPayOrder({outTradeNo:outTradeNo})  //调用支付
 					})
 					
-				}else{
+				}else if(this.difference == 0){
 					// let obj={}
 					let onesubData={receiverAddressId:this.recinfo.receiverAddressId,sourceType:4}
 					for(let i=0;i<buylist.length;i++){
@@ -176,6 +177,15 @@
 					}
 					confirmationModel.addOneGoodsToOrder(onesubData,(outTradeNo)=>{
 						payModel.tenpayPayOrder({outTradeNo:outTradeNo})  //调用支付 1表示商品类型支付
+					})
+				}else if(this.difference == 2){
+					let orderIdList = []
+					for(let i of buylist){
+						orderIdList.push(i.orderItemList[0].orderId)
+					}
+					orderIdList = orderIdList.join(',')
+					confirmationModel.addPayOrder({orderIdList,payType:2},(data)=>{
+						payModel.tenpayPayOrder({outTradeNo:data})
 					})
 				}
 				uni.hideLoading();

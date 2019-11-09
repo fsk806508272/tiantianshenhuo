@@ -178,6 +178,28 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//店铺入驻
+	openStore(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/seller/userOpeningStore',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查看自己店铺信息
+	checkStoreInfo(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/seller/findOne',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}
