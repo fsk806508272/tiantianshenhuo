@@ -1,5 +1,5 @@
 <template name="itemList">
-	<view class="item">
+	<view class="item" @tap="toInfo">
 		<view class="lf">
 			<image class="goodImg" :src="src"></image>
 		</view>
@@ -35,15 +35,15 @@ export default {
 			value:''
 		},
 		money:{
-			type:String,
+			type:Number,
 			value:''
 		},
 		sales:{
-			type:String,
+			type:Number,
 			value:''
 		},
 		deliver:{
-			type:String,
+			type:Number,
 			value:''
 		},
 		src:{
@@ -60,6 +60,9 @@ export default {
 	methods:{
 		childrenTap(){
 			this.$emit('addcart')
+		},
+		toInfo(){
+			this.$emit('toDetailPage')
 		}
 	}
 }

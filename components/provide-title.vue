@@ -23,7 +23,7 @@ export default {
 	name:'provideTitle',
 	props:{
 		price:{
-			type:String,
+			type:Number,
 			value:''
 		},
 		title:{

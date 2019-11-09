@@ -425,7 +425,7 @@ export default{
 			userModel.getInfo((data)=>{
 				if(data.personalCerStatus==3||data.companyCerStatus==3){
 					uni.navigateTo({
-						url:'/pages/user/mystore?storeId=' + data.storeId
+						url:'/pages/user/store/mystore?storeId=' + data.storeId
 					})
 				}else{
 					uni.showModal({

@@ -25,7 +25,6 @@ class ConfirmationModel extends HTTP{
   	  this.request(params)
   }	
  tenpayPayOrder(obj,success){
- 	  console.log(obj)
  	  let params={
  		  method:"POST",
  		  url:"/app/wechat/wechatSPPay",
@@ -35,6 +34,15 @@ class ConfirmationModel extends HTTP{
  	  this.request(params)
  }	
  
+	addPayOrder(data,success){
+		let params={
+			method:"POST",
+			url:"/app/goodsOrder/addPayOrder",
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 
 
 	

@@ -10,19 +10,29 @@
 </template>
 
 <script>
+import {UserModel} from '@/common/models/user.js'
+const usermodel = new UserModel()
 export default{
 	data(){
 		return{
-			storeId:''
+			storeId:'',
+			storeStatus:''
 		}
 	},
 	onLoad(option){
 		this.storeId = option.storeId
+		if(this.storeId=="null"){
+			
+		}else{
+			usermodel.checkStoreInfo({sellerId:option.storeId},(data)=>{
+				this.storeStatus = data.authenticationState
+			})
+		}
 	},
 	methods:{
 		applyStore(){
 			uni.navigateTo({
-				url:''
+				url:'/pages/user/store/applystore'
 			})
 		}
 	}

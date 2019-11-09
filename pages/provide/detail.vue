@@ -71,7 +71,7 @@
 				<view class="tips">请选择规格</view>
 				<view class="labelBox">
 					<view v-for="(item,index) in data.itemList" :key="index" class="label" @tap="chooseLabel(index)" :class="labelIndex==index?'on':'' ">
-						{{item.spec|specFormat}}
+						{{item.spec}}
 					</view>
 				</view>
 				<view v-if="type!=3" class="number">
@@ -103,11 +103,6 @@ const likemodel = new LikeModel()
 import {OrderModel} from '@/common/models/order.js'
 const ordermodel = new OrderModel()
 export default{
-	filters: {
-		specFormat: function(value) {
-			return JSON.parse(value).spec;
-		}
-	},
 	components: {
 		provideTitle,
 		uniPopup,
@@ -147,10 +142,9 @@ export default{
 		if(this.type!=3){
 			providemodel.getItemDetail({goodsId:this.id},(data)=>{
 				this.data = data
-				let image = JSON.parse(data.goodsDesc.itemImages)
-				for(let i of image){
-					this.pic.push(i.url)
-				}
+				let image = data.goodsDesc.itemImages
+				image = image.split(',')
+				this.pic = image
 			})
 		}else{
 			console.log(this.type)

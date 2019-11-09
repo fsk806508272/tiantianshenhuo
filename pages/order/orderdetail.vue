@@ -24,7 +24,7 @@
 				<store-title :title="orderList.sellerNickName"></store-title>
 				<block v-for="(row,number) in orderList.goodsOrderItemList" :key="number">
 					<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
-					:specsize="JSON.parse(row.spec).spec" :spec="'×' + row.num"></store-main>
+					:specsize="row.spec" :spec="'×' + row.num"></store-main>
 				</block>
 				<view class="deliverMoney">
 					<view class="deliverTitle">配送费</view>
