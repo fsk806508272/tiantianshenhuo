@@ -13,38 +13,38 @@
 		<view class="graytitle">基本信息</view>
 		
 		<!-- 房屋发布 start -->
-		<view class="listItem">
+		<view v-if="firstTypeId==1" class="listItem">
 			<view class="star">房屋名称</view>
 			<input placeholder="请输入标题(26字内)"/>
 		</view>
-		<view class="listItem">
+		<view v-if="firstTypeId==1" class="listItem">
 			<view class="star">房屋租金</view>
 			<input placeholder="请输入"/>
 		</view>
 		<!-- 房屋发布 end -->
 		
 		<!-- 维修发布 start -->
-		<view class="listItem">
+		<view v-if="firstTypeId==9" class="listItem">
 			<view class="star">服务名称</view>
 			<input placeholder="请输入标题(26字内)"/>
 		</view>
-		<view class="listItem">
+		<view v-if="firstTypeId==9" class="listItem">
 			<view class="star">上门费</view>
 			<input placeholder="请输入"/>
 		</view>
 		<!-- 维修发布 end -->
 		
-		<view class="listItem">
+		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
 			<view class="star">商品名称</view>
 			<input placeholder="请输入标题(26字内)"/>
 		</view>
-		<view class="listItem">
+		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
 			<view class="star">商品价格</view>
 			<input placeholder="请输入"/>
 		</view>
 		
 		<!-- 代购发布显示 start -->
-		<view class="listItem">
+		<view v-if="firstTypeId==10" class="listItem">
 			<view class="star no">进口税费</view>
 			<input placeholder="0元则为免税费"/>
 		</view>
@@ -69,14 +69,14 @@
 		</view>
 		
 		<!-- 设置规格 -->
-		<view class="size">
+		<view v-if="firstTypeId!=1" class="size">
 			<view class="top"><view class="title">设置规格</view></view>
 			<setting-spec></setting-spec>
 		</view>
 		
 		<!-- 房屋发布 start -->
 		<!-- 付款方式 -->
-		<view class="pay_type_box">
+		<view v-if="firstTypeId==1" class="pay_type_box">
 			<view class="pro_title title gray star">付款方式</view>
 			<view class="pay_item">
 				<view class="pay_txt">押金</view>
@@ -197,6 +197,10 @@
 import settingSpec from '@/components/settingSpec.vue'
 import uploadImgs from '@/components/uploadImgs.vue'
 import {ProvideModel} from '@/common/models/provide.js'
+import {UserModel} from '@/common/models/user.js'
+import {StoreModel} from '@/common/models/store.js'
+const storemodel = new StoreModel()
+const usermodel = new UserModel()
 const providemodel = new ProvideModel()
 export default{
 	components:{
@@ -209,11 +213,12 @@ export default{
 			demand_parent_idx: null,
 			cateList: ["生活用品","生活用品","生活用品","生活用品","生活用品"],
 			cate_idx: null,
-			
+			firstTypeId:'',
+			firstType:'',
 			isCanUpload: 0,
 			goods_photos: [],
 			goods_detail_photos: [],
-			
+			sellerId:'',
 			deposit: "请选择",
 			depositArr: ["押金选择1","押金选择2"],
 			delivery: "请选择",
@@ -229,6 +234,21 @@ export default{
 		}
 	},
 	onLoad(){
+		usermodel.getInfo((data)=>{
+			this.sellerId = data.storeId
+			storemodel.getSellerStore({sellerId:this.sellerId},(data)=>{
+				this.firstType = data.firstType
+				this.firstTypeId = data.firstTypeId
+				providemodel.getSecondType({firstType:this.firstType,type:2},(data)=>{
+					this.provideItem = []
+					for(let i of data){
+						this.provideItem.push(i.title)
+					}
+				})
+			})
+		})
+		
+		
 		providemodel.getSecondType({firstType:'生活',type:2},(data)=>{
 			for(let i of data){
 				this.provideItem.push(i.title)

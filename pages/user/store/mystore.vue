@@ -6,6 +6,7 @@
 			<view class="gray">快快申请属于自己的店铺吧</view>
 			<view @tap="applyStore" class="applyButton">申请店铺入驻</view>
 		</view>
+		<view v-if="storeStatus==3">我的店铺</view>
 	</view>
 </template>
 
@@ -26,6 +27,7 @@ export default{
 		}else{
 			usermodel.checkStoreInfo({sellerId:option.storeId},(data)=>{
 				this.storeStatus = data.authenticationState
+				console.log(this.storeStatus)
 			})
 		}
 	},
