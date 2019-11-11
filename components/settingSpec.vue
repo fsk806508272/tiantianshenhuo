@@ -55,10 +55,18 @@
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: function (res) {
-						console.log(res.tempFilePaths);
 						for(let i in res.tempFilePaths){
-							console.log(res.tempFilePaths[i]);
-							that.specLists[idx].img_pic = res.tempFilePaths[i];
+							uni.uploadFile({
+								url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
+								filePath: res.tempFilePaths[i],
+								name:'img',
+								success:(uploadFileRes)=>{
+									var data = JSON.parse(uploadFileRes.data);
+									var url = data.data;
+									that.specLists[idx].img_pic = url;
+									console.log(that.specLists[idx].img_pic);
+								}
+							})
 						}
 					},
 					fail: (res) => {
