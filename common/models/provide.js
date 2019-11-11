@@ -82,6 +82,17 @@ class ProvideModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//商品发布
+	addSellerGoods(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodss/add',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {ProvideModel}

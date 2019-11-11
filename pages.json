@@ -541,8 +541,7 @@
 				"navigationBarTitleText": "查看合同",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
-		}
-        ,{
+		},{
             "path" : "pages/finance/finance",
             "style" : {
 				"navigationBarTitleText": "金融服务",

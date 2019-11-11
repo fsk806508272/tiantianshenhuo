@@ -9,10 +9,10 @@
 			</view>
 		</view>
 		
-		<blcok v-for="(row,number) in data" :key="number">
+		<block v-for="(row,number) in data" :key="number">
 			<item-service :src="row.picture" :title="row.title.substring(0,25)+'...'"
 			:money="row.price" :desc="row.loan_rates" @tap="toDetail(number)"></item-service>
-		</blcok>
+		</block>
 		<uni-load-more :status='status'></uni-load-more>
 	</view>
 </template>

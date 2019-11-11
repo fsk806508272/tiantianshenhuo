@@ -1,21 +1,21 @@
 <template name="settingSpec">
 	<view>
 		<view class="box" v-for="(item,index) in specLists" :key="index">
-			<view class="uploadImg gray" v-if="item.img_pic == ''" @tap="chooseImg(index)">上传图片</view>
-			<image class="img_pic" v-else :src="item.img_pic" @tap="chooseImg(index)" mode="widthFix"></image>
+			<view class="uploadImg gray" v-if="item.image == ''" @tap="chooseImg(index)">上传图片</view>
+			<image class="img_pic" v-else :src="item.image" @tap="chooseImg(index)" mode="widthFix"></image>
 			<view class="setting">
 				<view class="specName">
 					<view>规格名：</view>
-					<input placeholder="请输入" v-model="item.format_name"/>
+					<input placeholder="请输入" v-model="item.spec"/>
 				</view>
 				<view class="detail">
 					<view class="item">
 						<view>单价：</view>
-						<input placeholder="请输入" v-model="item.unit_price"/>
+						<input placeholder="请输入" v-model="item.price"/>
 					</view>
 					<view class="item sec">
 						<view>库存：</view>
-						<input placeholder="请输入" v-model="item.stock"/>
+						<input placeholder="请输入" v-model="item.stockCount"/>
 					</view>
 				</view>
 			</view>
@@ -38,10 +38,10 @@
 			return {
 				specLists: [
 					{
-						img_pic: '',
-						format_name: '',
-						unit_price: '',
-						stock: '',
+						image: '',
+						spec: '',
+						price: '',
+						stockCount: '',
 						isAdd: false
 					}
 				]
@@ -63,8 +63,8 @@
 								success:(uploadFileRes)=>{
 									var data = JSON.parse(uploadFileRes.data);
 									var url = data.data;
-									that.specLists[idx].img_pic = url;
-									console.log(that.specLists[idx].img_pic);
+									that.specLists[idx].image = url;
+									console.log(that.specLists[idx].image);
 								}
 							})
 						}
@@ -79,10 +79,10 @@
 			},
 			addSpec(idx){
 				this.specLists.push({
-					img_pic: '',
-					format_name: '',
-					unit_price: '',
-					stock: '',
+					image: '',
+					spec: '',
+					price: '',
+					stockCount: '',
 					isAdd: true
 				})
 			},

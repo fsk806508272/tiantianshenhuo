@@ -40,11 +40,15 @@
 		
 		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
 			<view class="star">商品名称</view>
-			<input placeholder="请输入标题(26字内)"/>
+			<input v-model="goodsName" placeholder="请输入标题(26字内)"/>
 		</view>
 		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
 			<view class="star">商品价格</view>
-			<input placeholder="请输入"/>
+			<input v-model="goodsPrice" placeholder="请输入"/>
+		</view>
+		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
+			<view class="star">配送费</view>
+			<input v-model="goodsPost" placeholder="请输入"/>
 		</view>
 		
 		<!-- 代购发布显示 start -->
@@ -75,7 +79,7 @@
 		<!-- 设置规格 -->
 		<view v-if="firstTypeId!=1" class="size">
 			<view class="top"><view class="title">设置规格</view></view>
-			<setting-spec></setting-spec>
+			<setting-spec ref="specData"></setting-spec>
 		</view>
 		
 		<!-- 房屋发布 start -->
@@ -242,12 +246,18 @@ export default{
 			item:'',
 			demand_parent_idx: null,
 			cateList: [],
+			cateIdList:[],
 			newCateName:'',
 			cate_idx: null,
 			firstTypeId:'',
 			firstType:'',
+			secondtypeinfoId:'',
+			secondtypeinfoIdList:[],
 			isCanUpload: 0,
 			goods_photos: [],
+			goodsName:'',
+			goodsPrice:'',
+			goodsPost:'',
 			goods_detail_photos: [],
 			sellerId:'',
 			deposit: "请选择",
@@ -280,8 +290,10 @@ export default{
 				this.firstTypeId = data.firstTypeId
 				providemodel.getSecondType({firstType:this.firstType,type:2},(data)=>{
 					this.provideItem = []
+					this.secondtypeinfoIdList = []
 					for(let i of data){
 						this.provideItem.push(i.title)
+						this.secondtypeinfoIdList.push(i.secondtypeinfoId)
 					}
 				})
 			})
@@ -303,6 +315,9 @@ export default{
 		selectDemandParent(idx){
 			this.demand_parent_idx = idx;
 			this.item = this.provideItem[idx]
+			this.secondtypeinfoId = this.secondtypeinfoIdList[idx]
+			console.log(this.item)
+			console.log(this.secondtypeinfoId)
 		},
 		selectCate(idx){
 			this.cate_idx = idx;
@@ -363,11 +378,95 @@ export default{
 			}
 			
 		},
+		getCateList(){
+			providemodel.checkSellerGroup((data)=>{
+				this.cateList = []
+				this.cateIdList = []
+				for(let i of data){
+					this.cateList.push(i.name)
+					this.cateIdList.push(i.id)
+				}
+			})
+		},
 		submitUpload(){
+			if(this.demand_parent_idx==null){
+				uni.showToast({
+					title:'请选择服务商子类',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			if(this.goodsName==''){
+				uni.showToast({
+					title:'请输入商品名称',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			if(this.goodsPrice==''){
+				uni.showToast({
+					title:'请输入商品价格',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			if(this.goodsPost==''){
+				uni.showToast({
+					title:'请设置商品配送费',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			if(this.cate_idx==null){
+				uni.showToast({
+					title:'请选择店铺商品分类',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			if(this.$refs.specData.specLists[0].img_pic==''){
+				uni.showToast({
+					title:'请设置商品规格',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			if(this.goods_photos.length==0){
+				uni.showToast({
+					title:'请上传商品图片',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
 			let req = {}
-			req.image = this.goods_photos.join(',')
-			console.log(req)
-			
+			req.goods = {}
+			req.goods.city = '深圳市'
+			req.goods.goodsFirsttype = this.firstType
+			req.goods.goodsName = this.goodsName
+			req.goods.goodsSecondtype = this.secondtypeinfoId
+			req.goods.latitudeLongitude = '114.258072,22.727932'
+			req.goods.price = this.goodsPrice
+			req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+			req.goods.sellerId = this.sellerId
+			req.goods.postFee = this.goodsPost
+			// req.goods.serviceScope = 60
+			req.goodsDesc = {}
+			req.goodsDesc.itemImages = this.goods_photos.join(',')
+			req.itemList = this.$refs.specData.specLists
+			for(let i of req.itemList){
+				delete i.isAdd
+			}
+			let goodsJSON = JSON.stringify(req)
+			providemodel.addSellerGoods({goodsJSON},(data)=>{
+				console.log(data)
+			})
 		}
 	}
 }
