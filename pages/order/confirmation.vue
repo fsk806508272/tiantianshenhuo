@@ -55,6 +55,22 @@
 				</view>
 			</view>
 		</view>
+		
+		<view class="graytitle">支付方式</view>
+		<view class="payBox">
+			<view class="lf">
+				<image src="/static/cut/wechat.png"></image>
+				<view>微信支付</view>
+			</view>
+			<image @tap="chooseWechat" :src="isWechat?chooseSrc[1]:chooseSrc[0]"></image>
+		</view>
+		<view class="payBox">
+			<view class="lf">
+				<image src="/static/cut/alipay.png"></image>
+				<view>支付宝支付</view>
+			</view>
+			<image @tap="chooseAli" :src="isAli?chooseSrc[1]:chooseSrc[0]"></image>
+		</view>
 
 		<view @click="sub" class="submit-button">确认支付￥{{sumPrice}}</view>
 		
@@ -81,8 +97,10 @@
 				note:'',		//备注
 				int:1200,		//抵扣积分
 				deduction:0,	//抵扣价格
-				recinfo:{}
-
+				recinfo:{},
+				isAli:false,
+				isWechat:true,
+				chooseSrc:['/static/cut/no_selected.png','/static/cut/choosed.png']
 			};
 		},
 		onLoad(options){
@@ -142,7 +160,6 @@
 					return
 				}
 				let buylist=this.buylist
-				console.log(buylist)
 				if(this.difference == 1){
 					let subData={receiverAddressId:this.recinfo.receiverAddressId}
 					let buyerMessage=[]
@@ -176,7 +193,16 @@
 						onesubData.buyerMessage=buylist[i].val
 					}
 					confirmationModel.addOneGoodsToOrder(onesubData,(outTradeNo)=>{
-						payModel.tenpayPayOrder({outTradeNo:outTradeNo})  //调用支付 1表示商品类型支付
+						let type = ''
+						if(this.isAli==true){
+							type = 1
+						}else{
+							type = 2
+						}
+						if(type==1){
+							payModel.aliPayOrder({outTradeNo:outTradeNo,type})  //调用支付 1表示商品类型支付
+						}
+						
 					})
 				}else if(this.difference == 2){
 					let orderIdList = []
@@ -190,42 +216,19 @@
 				}
 				uni.hideLoading();
 			},
-			toPay(){
-				//商品列表
-				let paymentOrder = [];
-				let goodsid=[];
-				let len = this.buylist.length;
-				for(let i=0;i<len;i++){
-					paymentOrder.push(this.buylist[i]);
-					goodsid.push(this.buylist[i].id);
-				}
-				if(paymentOrder.length==0){
-					uni.showToast({title:'订单信息有误，请重新购买',icon:'none'});
-					return ;
-				}
-				//本地模拟订单提交UI效果
-				uni.showLoading({
-					title:'正在提交订单...'
-				})
-				setTimeout(()=>{
-					uni.setStorage({
-						key:'paymentOrder',
-						data:paymentOrder,
-						success: () => {
-							uni.hideLoading();
-							uni.redirectTo({
-								url:"../pay/payment/payment?amount="+this.sumPrice
-							})
-						}
-					})
-				},1000)
-				
-			},
 			//选择收货地址
 			selectAddress(){
 				uni.navigateTo({
 					url:'../user/address/address?type=select'
 				})
+			},
+			chooseWechat(){
+				this.isWechat = true
+				this.isAli = false
+			},
+			chooseAli(){
+				this.isWechat = false
+				this.isAli = true
 			}
 		}
 	}
@@ -430,6 +433,28 @@ page{
 		}
 	}
 }
-
+.payBox{
+	background-color: #fff;
+	border-bottom: 1rpx solid #F2F2F2;
+	height:100rpx;
+	padding:0 20rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	image{
+		width:28rpx;
+		height:28rpx;
+	}
+	.lf{
+		display: flex;
+		align-items: center;
+		image{
+			width:60rpx;
+			height:60rpx;
+			margin-right: 20rpx;
+		}
+	}
+	
+}
 
 </style>
