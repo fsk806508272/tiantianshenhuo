@@ -5,7 +5,6 @@ class ConfirmationModel extends HTTP{
 
 
   addOneGoodsToOrder(obj,success){ //单个商品下单
-	  console.log(obj)
 	  let params={
 		  method:"POST",
 		  url:"/app/goodsOrder/addOneGoodsToOrder",

@@ -25,10 +25,6 @@ class PayModel extends HTTP{
 			  			})
 			  		},
 			  		fail:(err)=> {
-						// uni.navigateTo({
-						// 	url: '../../pages/success/success?data='+err+'&type='+ 3
-						// });
-			  	// 		console.log('fail:' + JSON.stringify(err));
 						uni.showToast({
 							title:'您已取消支付，请尽快完成支付',
 							duration:2000,
@@ -57,6 +53,39 @@ class PayModel extends HTTP{
 		this.request(params)
 	}
 	
+	aliPayOrder(data){
+		let params = {
+			method:'POST',
+			url:'/app/pay/wxPayOrAliPayOrder',
+			data:data,
+			success:(orderInfo)=>{
+				uni.requestPayment({
+					provider: 'alipay',
+					orderInfo:orderInfo,
+					success: function(res) {
+						console.log(res)
+						uni.navigateTo({
+							url:'/pages/success/success?type=' + 3
+						})
+					},
+					fail:(err)=> {
+						uni.showToast({
+							title:'您已取消支付，请尽快完成支付',
+							duration:2000,
+							icon:'none'
+						})
+						setTimeout(function(){
+							uni.reLaunch({
+								url:'/pages/order/order?index=' + 1
+							})
+						},2000)
+									
+					}
+				});
+			}
+		}
+		this.request(params)
+	}
  
 
 
