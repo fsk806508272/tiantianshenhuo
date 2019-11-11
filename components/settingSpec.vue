@@ -1,25 +1,32 @@
 <template name="settingSpec">
-	<view class="box">
-		<view class="uploadImg gray">上传图片</view>
-		<view class="setting">
-			<view class="specName">
-				<view>规格名：</view>
-				<input placeholder="请输入"/>
-			</view>
-			<view class="detail">
-				<view class="item">
-					<view>单价：</view>
-					<input placeholder="请输入"/>
+	<view>
+		<view class="box" v-for="(item,index) in specLists" :key="index">
+			<view class="uploadImg gray" v-if="item.img_pic == ''" @tap="chooseImg(index)">上传图片</view>
+			<image class="img_pic" v-else :src="item.img_pic" @tap="chooseImg(index)" mode="widthFix"></image>
+			<view class="setting">
+				<view class="specName">
+					<view>规格名：</view>
+					<input placeholder="请输入" v-model="item.format_name"/>
 				</view>
-				<view class="item sec">
-					<view>库存：</view>
-					<input placeholder="请输入"/>
+				<view class="detail">
+					<view class="item">
+						<view>单价：</view>
+						<input placeholder="请输入" v-model="item.unit_price"/>
+					</view>
+					<view class="item sec">
+						<view>库存：</view>
+						<input placeholder="请输入" v-model="item.stock"/>
+					</view>
 				</view>
 			</view>
-		</view>
-		<view class="add">
-			<image src="/static/cut/user/add.png"></image>
-			<view>添加</view>
+			<view class="add" v-if="item.isAdd != true" @tap="addSpec(index)">
+				<image src="/static/cut/user/add.png"></image>
+				<view>添加</view>
+			</view>
+			<view class="add white" v-else @tap="delSpec(index)">
+				<image src="/static/cut/user/del.png"></image>
+				<view>删除</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -29,8 +36,52 @@
 		name:'settingSpec',
 		data() {
 			return {
-				
-			};
+				img_pic: '',
+				specLists: [
+					{
+						img_pic: '',
+						format_name: '',
+						unit_price: '',
+						stock: '',
+						isAdd: false
+					}
+				]
+			}
+		},
+		methods:{
+			chooseImg(idx){
+				var that = this;
+				uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: function (res) {
+						console.log(res.tempFilePaths);
+						for(let i in res.tempFilePaths){
+							console.log(res.tempFilePaths[i]);
+							that.img_pic = res.tempFilePaths[i];
+						}
+					},
+					fail: (res) => {
+						uni.showToast({
+							title: '上传失败',
+							icon:'none',
+						});
+					}
+				});
+			},
+			addSpec(idx){
+				this.specLists.push({
+					img_pic: '',
+					format_name: '',
+					unit_price: '',
+					stock: '',
+					isAdd: true
+				})
+			},
+			delSpec(index){
+				this.specLists.splice(index, 1);
+			}	
 		}
 	}
 </script>
@@ -47,6 +98,12 @@
 		background-size: cover;
 		padding-left:37rpx;
 		padding-top: 92rpx;
+	}
+	.img_pic{
+		width:160rpx;
+		height:160rpx;
+		border: 1rpx solid #A0A0A0;
+		box-sizing: border-box;
 	}
 	.setting{
 		margin-left: 20rpx;
@@ -101,6 +158,13 @@
 			margin-left: 20rpx;
 			font-size:30rpx;
 			color:rgba(254,254,254,1);
+		}
+		&.white{
+			border:1px solid rgba(255,102,0,1);
+			background: #fff;
+			view{
+				color: #FF6600;
+			}
 		}
 	}
 }

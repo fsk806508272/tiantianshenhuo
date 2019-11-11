@@ -169,7 +169,9 @@
 							count: 10
 						})
 						
-						if(this.year < this.today.getFullYear() || this.year == this.today.getFullYear() && this.month < this.today.getMonth()+1 || arr[i-1].num < this.day){
+						if(this.year <= this.today.getFullYear() && this.month <= this.today.getMonth()+1 && arr[i-1].num < this.day){
+							arr[i-1].sign = 2
+						}else if(this.year <= this.today.getFullYear() && this.month < this.today.getMonth()+1){
 							arr[i-1].sign = 2
 						}else{
 							arr[i-1].sign = 0

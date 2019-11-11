@@ -164,6 +164,11 @@
 				</view>
 			</view>
 		</view>
+		
+		<!-- 房屋信息 -->
+		<view class="housing_info">
+			<view class="pro_title title gray">房屋信息</view>
+		</view>
 		<!-- 房屋发布 end -->
 		
 		<!-- 维修发布 start -->
@@ -221,7 +226,6 @@ export default{
 			sellerId:'',
 			deposit: "请选择",
 			depositArr: ["押金选择1","押金选择2"],
-			delivery: "请选择",
 			deliveryArr: ["床"],
 			deliverySelect: [
 				{
@@ -229,8 +233,7 @@ export default{
 					num: 0,
 					isAdd: false
 				}
-			],
-			selectIndex: 0
+			]
 		}
 	},
 	onLoad(){
@@ -296,18 +299,18 @@ export default{
 </script>
 
 <style lang="scss">
-.bottom_place{
-	height: 100rpx;
-	margin-top: 20rpx;
-}
+// .bottom_place{
+// 	height: 100rpx;
+// 	margin-top: 20rpx;
+// }
 .upload_btn{
-	position: fixed;
+	// position: fixed;
 	width: 100%;
 	height: 100rpx;
 	line-height: 100rpx;
 	border-radius: 0;
-	left: 0;
-	bottom: 100rpx;
+	// left: 0;
+	// bottom: 100rpx;
 	color: #fff;
 	font-size: 34rpx;
 	background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
@@ -643,5 +646,10 @@ export default{
 			}
 		}
 	}
+}
+.housing_info{
+	padding: 20rpx 20rpx 30rpx;
+	background: #fff;
+	margin-top: 15rpx;
 }
 </style>

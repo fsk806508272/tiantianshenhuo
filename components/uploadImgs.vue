@@ -62,7 +62,7 @@
 					},
 					fail: (res) => {
 						uni.showToast({
-							title:res.data.msg,
+							title:'上传失败',
 							icon:'none',
 						});
 					}
