@@ -16,7 +16,7 @@
 			<view class="use-top">
 				<view class="sweep-code">
 					<image class="scan" src="../../static/cut/sweep-code.png" @tap="scanCode" mode=""></image>
-					<image class="setting" src="/static/cut/settings.png"></image>
+					<image @tap="toMySetting()" class="setting" src="/static/cut/settings.png"></image>
 				</view>
 				<view class="my-message">
 					<view class="lf" @tap="goUserInfo()">
@@ -192,7 +192,7 @@
 						<text>其他功能</text>
 					</view>
 					<view class="main">
-						<view class="item" @tap="toMySetting()">
+						<view class="item" @tap="toRetailCenter()">
 							<view class='icon'>
 								<image src="/static/cut/user/retailcnnter.png" mode="widthFix"></image>
 							</view>
@@ -371,7 +371,7 @@ export default{
 				url:'../wallet/points'
 			})
 		},
-		toMySetting(){
+		toRetailCenter(){
 			uni.navigateTo({
 				url:'/pages/user/distribution/dis_center'
 			})
@@ -379,6 +379,11 @@ export default{
 		toMyCollection(){
 			uni.navigateTo({
 				url:'collection/collection'
+			})
+		},
+		toMySetting(){
+			uni.navigateTo({
+				url:'/pages/settings/setting'
 			})
 		},
 		toCashout(){

@@ -61,6 +61,27 @@ class ProvideModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//商家查看分组
+	checkSellerGroup(success){
+		let params = {
+			method:'POST',
+			url:'/app/sellerGroup/getListBySellerId',
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//商家添加分组
+	addSellerGroup(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/sellerGroup/add',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {ProvideModel}

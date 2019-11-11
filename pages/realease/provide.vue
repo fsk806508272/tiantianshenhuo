@@ -24,9 +24,13 @@
 		<!-- 房屋发布 end -->
 		
 		<!-- 维修发布 start -->
-		<view v-if="firstTypeId==9" class="listItem">
+		<view v-if="firstTypeId==9||firstTypeId==5" class="listItem">
 			<view class="star">服务名称</view>
 			<input placeholder="请输入标题(26字内)"/>
+		</view>
+		<view v-if="firstTypeId==5" class="listItem">
+			<view class="star">服务价格</view>
+			<input placeholder="请输入"/>
 		</view>
 		<view v-if="firstTypeId==9" class="listItem">
 			<view class="star">上门费</view>
@@ -62,8 +66,8 @@
 			<view class="category">
 				<view class="gray">新增分类</view>
 				<view class="input">
-					<input placeholder="请输入分类名称(限4字内)"/>
-					<view class="add">添加</view>
+					<input v-model='newCateName' placeholder="请输入分类名称(限4字内)"/>
+					<view class="add" @tap="addCate">添加</view>
 				</view>
 			</view>
 		</view>
@@ -118,7 +122,7 @@
 		</view>
 		
 		<!-- 物业交割信息 -->
-		<view class="delivery_box">
+		<view v-if="firstTypeId==1" class="delivery_box">
 			<view class="pro_title title gray star">物业交割信息</view>
 			<view class="delivery_item">
 				<view class="de_item">
@@ -164,94 +168,39 @@
 				</view>
 			</view>
 		</view>
-		
-		<!-- 房屋信息 -->
-		<view class="housing_info">
-			<view class="pro_title title gray">房屋信息</view>
-			<view class="housing_box">
-				<view class="housing_item">
-					<view class="housing_left">
-						<text>面积：</text>
-						<input type="text" placeholder="请输入" />㎡
-					</view>
-					<view class="housing_right">
-						<text>户型：</text>
-						<picker @change="houseTypeChange" :range="houseTypeArr">
-							<view class="house_select">
-								<view>{{houseType}}</view>
-								<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
-							</view>
-						</picker>
-					</view>
-				</view>
-				<view class="housing_item">
-					<view class="housing_left">
-						<text>年代：</text>
-						<input type="text" placeholder="请输入" />
-					</view>
-					<view class="housing_right">
-						<text>房号：</text>
-						<input type="text" placeholder="请输入" />
-					</view>
-				</view>
-				<view class="housing_item">
-					<view class="housing_left">
-						<text>总楼层数：</text>
-						<input type="text" placeholder="请输入" />
-					</view>
-					<view class="housing_right">
-						<text>所在楼层：</text>
-						<input type="text" placeholder="请输入" />
-					</view>
-				</view>
-				<view class="housing_item single nopicker">
-					<text>所在地区：</text>
-					<view class="house_select" @tap="showMulLinkageThreePicker">
-						<view>{{address}}</view>
-						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
-					</view>
-				</view>
-				<view class="housing_item single nopicker" @tap="chooseAddress">
-					<text>详细地址：</text>
-					<view class="house_select">
-						<view>{{houseAddress}}</view>
-						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
-					</view>
-				</view>
-				<view class="housing_item single">
-					<text>可入住日期：</text>
-					<picker @change="houseDateChange" mode="date" >
-						<view class="house_select">
-							<view>{{houseDate}}</view>
-							<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
-						</view>
-					</picker>
-				</view>
-				<view class="housing_item single">
-					<text>签约时长：</text>
-					<input type="text" placeholder="请输入" />
-				</view>
-			</view>
-		</view>
-		
-		<!-- 房屋标签 -->
-		<view class="house_label_box">
-			<view class="pro_title title gray">房屋标签（多选）</view>
-			<view class="house_label_ul">
-				<view class="label_item" :class="[item.is_select != 0?'active':'']" v-for="(item,index) in labelList" @tap="labelMultiple(index)" :key="index">{{item.name}}</view>
-			</view>
-			<view class="input_box">
-				<input type="text" v-model="label_txt" disabled>
-			</view>
-		</view>
 		<!-- 房屋发布 end -->
 		
 		<!-- 维修发布 start -->
-		<view class="remark_box">
-			<view class="rel_title"><text>服务详情</text></view>
+		<view v-if="firstTypeId!=8" class="remark_box">
+			<view class="rel_title"><text v-if="firstTypeId!=5">服务详情</text><text v-if="firstTypeId==5">业务详情</text></view>
 			<textarea placeholder="可以简单介绍一下.." />
 		</view>
 		<!-- 维修发布 end -->
+		
+		<!-- 金融发布 start -->
+		
+		<!-- 委托方业务范围 -->
+		<view v-if="firstTypeId==5" class="financeBox">
+			<view class="star">委托业务范围</view>
+			<view class="rangeSelect" v-for="(item,index) in rangeList" :key="index">
+				<picker @change="rangeChange($event,index)" :range="rangeArry">
+					<view class="box">
+						<view>{{item.title}}</view>
+						<image src="/static/cut/rightIcon.png"></image>
+					</view>
+				</picker>
+				<view class="input">收费:<input v-model="item.fee" placeholder="请输入"/></view>
+				<view class="button" v-if="item.add==1" @tap="addRange()">
+					<image src="/static/cut/user/add.png"></image>
+					<view>添加</view>
+				</view>
+				<view class="button" v-else @tap="deleteRange(index)">
+					<image src="/static/cut/user/del.png"></image>
+					<view>删除</view>
+				</view>
+			</view>
+		</view>
+		<!-- 金融发布 end -->
 		
 		<!-- 商品图片 -->
 		<view class="grayButton">商品图片(注：第一张为主图，限6张)</view>
@@ -261,17 +210,12 @@
 		<upload-imgs :photos="goods_photos"></upload-imgs>
 		
 		<!-- 商品详情图 -->
-		<view class="grayButton">商品详情图(注：限6张)</view>
-		<!-- <view class="uploadGoodsImg">
-			<image src="/static/cut/user/uploadgoodsimg.png"></image>
-		</view> -->
-		<upload-imgs :photos="goods_detail_photos"></upload-imgs>
+<!-- 		<view class="grayButton">商品详情图(注：限6张)</view>
+		<upload-imgs :photos="goods_detail_photos"></upload-imgs> -->
 		
 		<view class="bottom_place"></view>
 		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary">确认上传</button>
 		<button class="upload_btn" v-else type="primary">确认上传</button>
-		
-		<mpvue-city-picker :second="second" :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault" @onCancel="onCancel" @onConfirm="onConfirm"></mpvue-city-picker>
 	</view>
 </template>
 
@@ -279,7 +223,6 @@
 import settingSpec from '@/components/settingSpec.vue'
 import uploadImgs from '@/components/uploadImgs.vue'
 import {ProvideModel} from '@/common/models/provide.js'
-import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
 import {UserModel} from '@/common/models/user.js'
 import {StoreModel} from '@/common/models/store.js'
 const storemodel = new StoreModel()
@@ -288,18 +231,15 @@ const providemodel = new ProvideModel()
 export default{
 	components:{
 		settingSpec,
-		uploadImgs,
-		mpvueCityPicker
+		uploadImgs
 	},
 	data(){
 		return{
-			second:false,
-			cityPickerValueDefault: [0, 0, 1],
-			themeColor:"#FF6600",
-			
 			provideItem:[],
+			item:'',
 			demand_parent_idx: null,
-			cateList: ["生活用品","生活用品","生活用品","生活用品","生活用品"],
+			cateList: [],
+			newCateName:'',
 			cate_idx: null,
 			firstTypeId:'',
 			firstType:'',
@@ -309,6 +249,7 @@ export default{
 			sellerId:'',
 			deposit: "请选择",
 			depositArr: ["押金选择1","押金选择2"],
+			delivery: "请选择",
 			deliveryArr: ["床"],
 			deliverySelect: [
 				{
@@ -317,43 +258,15 @@ export default{
 					isAdd: false
 				}
 			],
-			
-			houseType: "请选择",
-			houseTypeArr: ["户型1","户型2"],
-			address: '请选择',
-			houseAddress: '请选择',
-			houseDate: '请选择',
-			
-			labelList: [
+			rangeList:[
 				{
-					name: "短租房",
-					is_select: 0
-				},{
-					name: "长租房",
-					is_select: 0
-				},{
-					name: "近地铁",
-					is_select: 0
-				},{
-					name: "免物业费",
-					is_select: 0
-				},{
-					name: "家具齐全",
-					is_select: 0
-				},{
-					name: "首次出租",
-					is_select: 0
-				},{
-					name: "拎包入住",
-					is_select: 0
-				},{
-					name: "智能锁",
-					is_select: 0
+					title: "请选择",
+					fee: '',
+					add: true
 				}
 			],
-			label_select_arr: [],
-			label_txt_arr: [],
-			label_txt: ''
+			rangeArry:['工商注册','记账报税','变更/年审','开户/注销','开放公帐户','税务疑难解决','地址挂靠'],
+			selectIndex: 0
 		}
 	},
 	onLoad(){
@@ -369,18 +282,24 @@ export default{
 					}
 				})
 			})
-		})
-		
-		
-		providemodel.getSecondType({firstType:'生活',type:2},(data)=>{
-			for(let i of data){
-				this.provideItem.push(i.title)
-			}
+			this.getCateList()
 		})
 	},
+	onShow(){
+		
+	},
 	methods:{
+		getCateList(){
+			providemodel.checkSellerGroup((data)=>{
+				this.cateList = []
+				for(let i of data){
+					this.cateList.push(i.name)
+				}
+			})
+		},
 		selectDemandParent(idx){
 			this.demand_parent_idx = idx;
+			this.item = this.provideItem[idx]
 		},
 		selectCate(idx){
 			this.cate_idx = idx;
@@ -389,7 +308,6 @@ export default{
 			this.deposit = this.depositArr[e.target.value];
 		},
 		deliveryChange(e,index){
-			console.log(index,e);
 			this.deliverySelect[index].delivery = this.deliveryArr[e.detail.value];
 		},
 		add(idx){
@@ -414,67 +332,51 @@ export default{
 		deliveryDel(index){
 			this.deliverySelect.splice(index, 1);
 		},
-		houseTypeChange(e){
-			this.houseType = this.houseTypeArr[e.target.value];
+		rangeChange(e,index){
+			this.rangeList[index].title = this.rangeArry[e.detail.value];
 		},
-		showMulLinkageThreePicker() {
-			this.$refs.mpvueCityPicker.show()
+		addRange(){
+			this.rangeList.push({
+				title: "请选择",
+				fee: '',
+				add: false
+			})
 		},
-		onConfirm(data){
-			console.log(data);
-			this.address = data.label;
+		deleteRange(index){
+			this.rangeList.splice(index,1)
 		},
-		chooseAddress(){
-			var that = this;
-			uni.chooseLocation({
-			    success: function (res) {
-			        console.log('位置名称：' + res.name);
-			        console.log('详细地址：' + res.address);
-			        console.log('纬度：' + res.latitude);
-			        console.log('经度：' + res.longitude);
-					that.houseAddress = res.name;
-			    }
-			});
-		},
-		houseDateChange(e){
-			this.houseDate = e.detail.value;
-		},
-		labelMultiple(idx){
-			if(this.labelList[idx].is_select == 0){
-				this.labelList[idx].is_select = 1;
-				this.label_select_arr.push(idx);
-				this.label_txt_arr.push(this.labelList[idx].name);
+		addCate(){
+			if(this.newCateName===''){
+				uni.showToast({
+					title:'请输入新增分类名',
+					icon:'none',
+					duration:1500
+				})
 			}else{
-				this.labelList[idx].is_select = 0;
-				if (this.label_select_arr.indexOf(idx) > -1) { 
-					this.label_select_arr.splice(this.label_select_arr.indexOf(idx),1);
-					this.label_txt_arr.splice(this.label_txt_arr.indexOf(this.labelList[idx].name),1);
-				}
+				providemodel.addSellerGroup({name:this.newCateName},(data)=>{
+					this.getCateList()
+					this.newCateName = ''
+				})
 			}
-			let txt = '';
-			for(let i in this.label_txt_arr){
-				txt += this.label_txt_arr[i]+',';
-			}
-			this.label_txt = txt;
-			console.log(this.label_txt_arr,this.label_select_arr);
+			
 		}
 	}
 }
 </script>
 
 <style lang="scss">
-// .bottom_place{
-// 	height: 100rpx;
-// 	margin-top: 20rpx;
-// }
+.bottom_place{
+	height: 100rpx;
+	margin-top: 20rpx;
+}
 .upload_btn{
-	// position: fixed;
+	position: fixed;
 	width: 100%;
 	height: 100rpx;
 	line-height: 100rpx;
 	border-radius: 0;
-	// left: 0;
-	// bottom: 100rpx;
+	left: 0;
+	bottom: 100rpx;
 	color: #fff;
 	font-size: 34rpx;
 	background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
@@ -506,7 +408,7 @@ export default{
 	}
 }
 .pro_title{
-	// padding-left: 10rpx;
+	padding-left: 10rpx;
 	position: relative;
 	&.title{
 		color: #3C3C3C;
@@ -546,7 +448,7 @@ export default{
 
 .listItem{
 	background-color: #fff;
-	padding-left:10rpx;
+	padding-left:20rpx;
 	display: flex;
 	align-items: center;
 	height:84rpx;
@@ -811,121 +713,65 @@ export default{
 		}
 	}
 }
-.housing_info{
-	padding: 20rpx 20rpx 30rpx;
-	background: #fff;
-	margin-top: 15rpx;
-	.housing_box{
-		.housing_item{
+
+.financeBox{
+	margin-top: 20rpx;
+	background-color: #fff;
+	padding:0 20rpx 30rpx 20rpx;
+	.star{
+		display: flex;
+		height:83rpx;
+		align-items: center;
+		border-bottom: 1rpx solid #F2F2F2;
+	}
+	.rangeSelect{
+		display: flex;
+		margin-bottom: 20rpx;
+		.box{
+			padding:0 20rpx;
+			width:255rpx;
+			height:64rpx;
+			border:1rpx solid rgba(160,160,160,1);
+			border-radius:8rpx;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			height: 64rpx;
-			margin-bottom: 20rpx;
-			&.single{
-				justify-content: flex-start;
-				border:1px solid rgba(160,160,160,1);
-				border-radius:8rpx;
-				padding-left: 20rpx;
-				box-sizing: border-box;
-				text{
-					width: 26%;
-				}
-				picker{
-					width: 71%;
-				}
-			}
-			&.nopicker{
-				.house_select{
-					width: 71%;
-				}
-			}
-			input{
-				width: 46%;
-				font-size: 26rpx;
-				margin-right: 10rpx;
-			}
-			.housing_left{
-				display: flex;
-				justify-content: flex-start;
-				align-items: center;
-				padding: 0 20rpx;
-				box-sizing: border-box;
-				height: 64rpx;
-				width: 46%;
-				border:1px solid rgba(160,160,160,1);
-				border-radius:8rpx;
-			}
-			.housing_right{
-				width: 46%;
-				height: 64rpx;
-				display: flex;
-				align-items: center;
-				padding: 0 0 0 20rpx;
-				box-sizing: border-box;
-				border:1px solid rgba(160,160,160,1);
-				border-radius:8rpx;
-			}
-			picker{
-				width: 66%;
-			}
-			.house_select{
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				view{
-					width: 80%;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					overflow: hidden;
-					font-size: 26rpx;
-					color: #B4B4B4;
-				}
-				image{
-					display: block;
-					width: 15rpx;
-					height: 25rpx;
-				}
+			image{
+				width:10rpx;
+				height:20rpx;
 			}
 		}
-	}
-}
-.house_label_box{
-	padding: 20rpx 20rpx 30rpx;
-	background: #fff;
-	margin-top: 15rpx;
-	.house_label_ul{
-		display: flex;
-		justify-content: flex-start;
-		align-items: flex-start;
-		flex-wrap: wrap;
-		.label_item{
-			display: block;
-			width: 140rpx;
-			text-align: center;
-			padding: 12rpx 0;
-			border:1px solid rgba(200,200,200,1);
+		.input{
+			width:255rpx;
+			height:64rpx;
+			border:1rpx solid rgba(160,160,160,1);
 			border-radius:8rpx;
-			color: #646464;
-			margin: 0 20rpx 20rpx 0;
-			&.active{
-				color: #FF6600;
-				border-color: #FE6600;
+			margin-left: 20rpx;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding-left: 20rpx;
+			input{
+				width:160rpx;
 			}
 		}
-	}
-	.input_box{
-		padding: 15rpx 20rpx;
-		box-sizing: border-box;
-		border:1px solid rgba(160,160,160,1);
-		border-radius:8rpx;
-		display: flex;
-		align-items: center;
-		margin-top: 20rpx;
-		input{
-			width: 100%;
-			color: #3C3C3C;
-			font-size: 26rpx;
+		.button{
+			width:160rpx;
+			height:64rpx;
+			background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+			border-radius:8rpx;
+			margin-left: 20rpx;
+			image{
+				width:34rpx;
+				height:34rpx;
+				margin-right:10rpx ;
+			}
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			align-items: center;
+			font-size:30rpx;
+			color:#fff;
 		}
 	}
 }
