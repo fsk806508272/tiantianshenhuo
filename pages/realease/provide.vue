@@ -210,11 +210,11 @@
 		<upload-imgs :photos="goods_photos" @changes="goodsPhoto"></upload-imgs>
 		
 		<!-- 商品详情图 -->
-		<view class="grayButton">商品详情图(注：限6张)</view>
+		<view v-if="firstTypeId==100" class="grayButton">商品详情图(注：限6张)</view>
 		<!-- <view class="uploadGoodsImg">
 			<image src="/static/cut/user/uploadgoodsimg.png"></image>
 		</view> -->
-		<upload-imgs :photos="goods_detail_photos" @changes="goodsPhoto1"></upload-imgs>
+		<upload-imgs v-if="firstTypeId==100" :photos="goods_detail_photos" @changes="goodsPhoto1"></upload-imgs>
 		
 		<view class="bottom_place"></view>
 		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary" @tap="submitUpload">确认上传</button>
@@ -364,9 +364,10 @@ export default{
 			
 		},
 		submitUpload(){
-			console.log(this.goods_photos.join(','));
-			console.log('------------------------');
-			console.log(this.goods_detail_photos.join(','));
+			let req = {}
+			req.image = this.goods_photos.join(',')
+			console.log(req)
+			
 		}
 	}
 }
