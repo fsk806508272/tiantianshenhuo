@@ -21,7 +21,8 @@
 		<!-- 地图 -->
 		<view class="map_box" v-if="isMap == true">
 			<cover-view>
-			<map id="mapId" style="width: 750rpx; height: 72vh" :controls="controls" :latitude="latitude" :longitude="longitude" :markers="covers" @callouttap="markerClick" @controltap="controlTap" show-location></map>
+				 <!-- :controls="controls" -->
+			<map id="mapId" style="width: 750rpx; height: 72vh" :latitude="latitude" :longitude="longitude" :markers="covers" @callouttap="markerClick" @controltap="controlTap" show-location></map>
 			</cover-view>
 		</view>
 		<!-- 列表 -->
@@ -70,17 +71,17 @@ export default{
 			
 			latitude: 39.909,
 			longitude: 116.39742,
-			controls:[{
-				id: 1,
-				position: {
-					left: 15,
-					top: 15,
-					width: 32,
-					height: 32
-				},
-				iconPath: '/static/cut/aim_icon.png',
-				clickable: true
-			}],
+			// controls:[{
+			// 	id: 1,
+			// 	position: {
+			// 		left: 15,
+			// 		top: 15,
+			// 		width: 32,
+			// 		height: 32
+			// 	},
+			// 	iconPath: '/static/cut/aim_icon.png',
+			// 	clickable: true
+			// }],
 			covers: [{
 				id: 1,
 				latitude: 39.909,

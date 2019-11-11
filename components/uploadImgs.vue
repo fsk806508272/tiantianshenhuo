@@ -19,7 +19,7 @@
 		props:{
 			photos: {
 				type: Array,
-				default: []
+				value: []
 			}
 		},
 		methods:{
@@ -30,35 +30,37 @@
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: function (res) {
-						console.log(res.tempFilePaths);
+						// console.log(res.tempFilePaths);
 						for(let i in res.tempFilePaths){
-							console.log(res.tempFilePaths[i]);
-							that.photos.push(res.tempFilePaths[i]);
-							// uni.uploadFile({
-							// 	url: that.$api+'default/upload-image', //图片接口
-							// 	filePath: res.tempFilePaths[i],
-							// 	name: 'image',
-							// 	success: (uploadFileRes) => {
-							// 		var data = JSON.parse(uploadFileRes.data);
-							// 		if(data.code == 0){
-							// 			if(that.photos.length >= 6){
-							// 				uni.showToast({
-							// 					title: "最多发布6张图片",
-							// 					icon: 'none'
-							// 				})
-							// 				return false;
-							// 			}
-							// 			var url = data.data.url;
-							// 			that.photos.push(url);
-							// 		}else{
-							// 			uni.showToast({
-							// 				title:data.msg,
-							// 				icon:'none',
-							// 			});
-							// 		}
-							// 	}
-							// });
+							// console.log(res.tempFilePaths[i]);
+							uni.uploadFile({
+								url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
+								filePath: res.tempFilePaths[i],
+								name: 'img',
+								success: (uploadFileRes) => {
+									var data = JSON.parse(uploadFileRes.data);
+									if(data.resultCode == 1){
+										if(that.photos.length >= 6){
+											uni.showToast({
+												title: "最多发布6张图片",
+												icon: 'none'
+											})
+											return false;
+										}
+										var url = data.data;
+										that.photos.push(url);
+										
+										console.log(that.photos);
+									}else{
+										uni.showToast({
+											title:data.message,
+											icon:'none',
+										});
+									}
+								}
+							});
 						}
+						that.$emit("changes",that.photos)
 					},
 					fail: (res) => {
 						uni.showToast({

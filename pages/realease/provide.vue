@@ -207,15 +207,18 @@
 		<!-- <view class="uploadGoodsImg">
 			<image src="/static/cut/user/uploadgoodsimg.png"></image>
 		</view> -->
-		<upload-imgs></upload-imgs>
+		<upload-imgs :photos="goods_photos" @changes="goodsPhoto"></upload-imgs>
 		
 		<!-- 商品详情图 -->
-<!-- 		<view class="grayButton">商品详情图(注：限6张)</view>
-		<upload-imgs :photos="goods_detail_photos"></upload-imgs> -->
+		<view class="grayButton">商品详情图(注：限6张)</view>
+		<!-- <view class="uploadGoodsImg">
+			<image src="/static/cut/user/uploadgoodsimg.png"></image>
+		</view> -->
+		<upload-imgs :photos="goods_detail_photos" @changes="goodsPhoto1"></upload-imgs>
 		
 		<view class="bottom_place"></view>
-		<button class="upload_btn noNumber" v-if="isCanUpload == 0" @tap="confirmUpload" type="primary">确认上传</button>
-		<!-- <button class="upload_btn" v-else type="primary" @tap="confirmUpload">确认上传</button> -->
+		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary" @tap="submitUpload">确认上传</button>
+		<button class="upload_btn" v-else type="primary">确认上传</button>
 	</view>
 </template>
 
@@ -289,13 +292,13 @@ export default{
 		
 	},
 	methods:{
-		getCateList(){
-			providemodel.checkSellerGroup((data)=>{
-				this.cateList = []
-				for(let i of data){
-					this.cateList.push(i.name)
-				}
-			})
+		goodsPhoto(e){
+			this.goods_photos = e;
+			console.log(this.goods_photos);
+		},
+		goodsPhoto1(e){
+			this.goods_detail_photos = e;
+			console.log(this.goods_detail_photos);
 		},
 		selectDemandParent(idx){
 			this.demand_parent_idx = idx;
@@ -360,8 +363,10 @@ export default{
 			}
 			
 		},
-		confirmUpload(){
-			console.log(this.goods_photos)
+		submitUpload(){
+			console.log(this.goods_photos.join(','));
+			console.log('------------------------');
+			console.log(this.goods_detail_photos.join(','));
 		}
 	}
 }
