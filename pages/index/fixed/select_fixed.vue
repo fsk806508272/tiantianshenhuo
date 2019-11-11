@@ -75,6 +75,10 @@ export default{
 				url: '/pages/HM-search/HM-search'
 			});
 		},	
+		onConfirm(data){
+			console.log(data);
+			this.pickerText = data.label.split('-')[0];
+		}
 	}
 }
 </script>
@@ -87,11 +91,17 @@ export default{
 		box-sizing: border-box;
 		background-color: #FFFFFF;
 		.top-Location{
-			min-width: 82rpx;
+			max-width: 142rpx;
 			color: #646464;
 			display: flex;
 			align-items: center;
 			font-size:26rpx;
+			text{
+				max-width: 100rpx;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
 			.drop-down{
 				width: 14rpx;
 				height: 8rpx;

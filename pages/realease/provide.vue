@@ -168,6 +168,81 @@
 		<!-- 房屋信息 -->
 		<view class="housing_info">
 			<view class="pro_title title gray">房屋信息</view>
+			<view class="housing_box">
+				<view class="housing_item">
+					<view class="housing_left">
+						<text>面积：</text>
+						<input type="text" placeholder="请输入" />㎡
+					</view>
+					<view class="housing_right">
+						<text>户型：</text>
+						<picker @change="houseTypeChange" :range="houseTypeArr">
+							<view class="house_select">
+								<view>{{houseType}}</view>
+								<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+							</view>
+						</picker>
+					</view>
+				</view>
+				<view class="housing_item">
+					<view class="housing_left">
+						<text>年代：</text>
+						<input type="text" placeholder="请输入" />
+					</view>
+					<view class="housing_right">
+						<text>房号：</text>
+						<input type="text" placeholder="请输入" />
+					</view>
+				</view>
+				<view class="housing_item">
+					<view class="housing_left">
+						<text>总楼层数：</text>
+						<input type="text" placeholder="请输入" />
+					</view>
+					<view class="housing_right">
+						<text>所在楼层：</text>
+						<input type="text" placeholder="请输入" />
+					</view>
+				</view>
+				<view class="housing_item single nopicker">
+					<text>所在地区：</text>
+					<view class="house_select" @tap="showMulLinkageThreePicker">
+						<view>{{address}}</view>
+						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+					</view>
+				</view>
+				<view class="housing_item single nopicker" @tap="chooseAddress">
+					<text>详细地址：</text>
+					<view class="house_select">
+						<view>{{houseAddress}}</view>
+						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+					</view>
+				</view>
+				<view class="housing_item single">
+					<text>可入住日期：</text>
+					<picker @change="houseDateChange" mode="date" >
+						<view class="house_select">
+							<view>{{houseDate}}</view>
+							<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+						</view>
+					</picker>
+				</view>
+				<view class="housing_item single">
+					<text>签约时长：</text>
+					<input type="text" placeholder="请输入" />
+				</view>
+			</view>
+		</view>
+		
+		<!-- 房屋标签 -->
+		<view class="house_label_box">
+			<view class="pro_title title gray">房屋标签（多选）</view>
+			<view class="house_label_ul">
+				<view class="label_item" :class="[item.is_select != 0?'active':'']" v-for="(item,index) in labelList" @tap="labelMultiple(index)" :key="index">{{item.name}}</view>
+			</view>
+			<view class="input_box">
+				<input type="text" v-model="label_txt" disabled>
+			</view>
 		</view>
 		<!-- 房屋发布 end -->
 		
@@ -195,6 +270,8 @@
 		<view class="bottom_place"></view>
 		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary">确认上传</button>
 		<button class="upload_btn" v-else type="primary">确认上传</button>
+		
+		<mpvue-city-picker :second="second" :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault" @onCancel="onCancel" @onConfirm="onConfirm"></mpvue-city-picker>
 	</view>
 </template>
 
@@ -202,14 +279,20 @@
 import settingSpec from '@/components/settingSpec.vue'
 import uploadImgs from '@/components/uploadImgs.vue'
 import {ProvideModel} from '@/common/models/provide.js'
+import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
 const providemodel = new ProvideModel()
 export default{
 	components:{
 		settingSpec,
-		uploadImgs
+		uploadImgs,
+		mpvueCityPicker
 	},
 	data(){
 		return{
+			second:false,
+			cityPickerValueDefault: [0, 0, 1],
+			themeColor:"#FF6600",
+			
 			provideItem:[],
 			demand_parent_idx: null,
 			cateList: ["生活用品","生活用品","生活用品","生活用品","生活用品"],
@@ -228,7 +311,44 @@ export default{
 					num: 0,
 					isAdd: false
 				}
-			]
+			],
+			
+			houseType: "请选择",
+			houseTypeArr: ["户型1","户型2"],
+			address: '请选择',
+			houseAddress: '请选择',
+			houseDate: '请选择',
+			
+			labelList: [
+				{
+					name: "短租房",
+					is_select: 0
+				},{
+					name: "长租房",
+					is_select: 0
+				},{
+					name: "近地铁",
+					is_select: 0
+				},{
+					name: "免物业费",
+					is_select: 0
+				},{
+					name: "家具齐全",
+					is_select: 0
+				},{
+					name: "首次出租",
+					is_select: 0
+				},{
+					name: "拎包入住",
+					is_select: 0
+				},{
+					name: "智能锁",
+					is_select: 0
+				}
+			],
+			label_select_arr: [],
+			label_txt_arr: [],
+			label_txt: ''
 		}
 	},
 	onLoad(){
@@ -273,6 +393,50 @@ export default{
 		},
 		deliveryDel(index){
 			this.deliverySelect.splice(index, 1);
+		},
+		houseTypeChange(e){
+			this.houseType = this.houseTypeArr[e.target.value];
+		},
+		showMulLinkageThreePicker() {
+			this.$refs.mpvueCityPicker.show()
+		},
+		onConfirm(data){
+			console.log(data);
+			this.address = data.label;
+		},
+		chooseAddress(){
+			var that = this;
+			uni.chooseLocation({
+			    success: function (res) {
+			        console.log('位置名称：' + res.name);
+			        console.log('详细地址：' + res.address);
+			        console.log('纬度：' + res.latitude);
+			        console.log('经度：' + res.longitude);
+					that.houseAddress = res.name;
+			    }
+			});
+		},
+		houseDateChange(e){
+			this.houseDate = e.detail.value;
+		},
+		labelMultiple(idx){
+			if(this.labelList[idx].is_select == 0){
+				this.labelList[idx].is_select = 1;
+				this.label_select_arr.push(idx);
+				this.label_txt_arr.push(this.labelList[idx].name);
+			}else{
+				this.labelList[idx].is_select = 0;
+				if (this.label_select_arr.indexOf(idx) > -1) { 
+					this.label_select_arr.splice(this.label_select_arr.indexOf(idx),1);
+					this.label_txt_arr.splice(this.label_txt_arr.indexOf(this.labelList[idx].name),1);
+				}
+			}
+			let txt = '';
+			for(let i in this.label_txt_arr){
+				txt += this.label_txt_arr[i]+',';
+			}
+			this.label_txt = txt;
+			console.log(this.label_txt_arr,this.label_select_arr);
 		}
 	}
 }
@@ -322,7 +486,7 @@ export default{
 	}
 }
 .pro_title{
-	padding-left: 10rpx;
+	// padding-left: 10rpx;
 	position: relative;
 	&.title{
 		color: #3C3C3C;
@@ -362,7 +526,7 @@ export default{
 
 .listItem{
 	background-color: #fff;
-	padding-left:20rpx;
+	padding-left:10rpx;
 	display: flex;
 	align-items: center;
 	height:84rpx;
@@ -631,5 +795,118 @@ export default{
 	padding: 20rpx 20rpx 30rpx;
 	background: #fff;
 	margin-top: 15rpx;
+	.housing_box{
+		.housing_item{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 64rpx;
+			margin-bottom: 20rpx;
+			&.single{
+				justify-content: flex-start;
+				border:1px solid rgba(160,160,160,1);
+				border-radius:8rpx;
+				padding-left: 20rpx;
+				box-sizing: border-box;
+				text{
+					width: 26%;
+				}
+				picker{
+					width: 71%;
+				}
+			}
+			&.nopicker{
+				.house_select{
+					width: 71%;
+				}
+			}
+			input{
+				width: 46%;
+				font-size: 26rpx;
+				margin-right: 10rpx;
+			}
+			.housing_left{
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				padding: 0 20rpx;
+				box-sizing: border-box;
+				height: 64rpx;
+				width: 46%;
+				border:1px solid rgba(160,160,160,1);
+				border-radius:8rpx;
+			}
+			.housing_right{
+				width: 46%;
+				height: 64rpx;
+				display: flex;
+				align-items: center;
+				padding: 0 0 0 20rpx;
+				box-sizing: border-box;
+				border:1px solid rgba(160,160,160,1);
+				border-radius:8rpx;
+			}
+			picker{
+				width: 66%;
+			}
+			.house_select{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				view{
+					width: 80%;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					font-size: 26rpx;
+					color: #B4B4B4;
+				}
+				image{
+					display: block;
+					width: 15rpx;
+					height: 25rpx;
+				}
+			}
+		}
+	}
+}
+.house_label_box{
+	padding: 20rpx 20rpx 30rpx;
+	background: #fff;
+	margin-top: 15rpx;
+	.house_label_ul{
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		.label_item{
+			display: block;
+			width: 140rpx;
+			text-align: center;
+			padding: 12rpx 0;
+			border:1px solid rgba(200,200,200,1);
+			border-radius:8rpx;
+			color: #646464;
+			margin: 0 20rpx 20rpx 0;
+			&.active{
+				color: #FF6600;
+				border-color: #FE6600;
+			}
+		}
+	}
+	.input_box{
+		padding: 15rpx 20rpx;
+		box-sizing: border-box;
+		border:1px solid rgba(160,160,160,1);
+		border-radius:8rpx;
+		display: flex;
+		align-items: center;
+		margin-top: 20rpx;
+		input{
+			width: 100%;
+			color: #3C3C3C;
+			font-size: 26rpx;
+		}
+	}
 }
 </style>

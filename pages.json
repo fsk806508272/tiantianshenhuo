@@ -668,6 +668,13 @@
 			}
 		},
 		{
+			"path": "pages/index/fixed/select_fixed",
+			"style": {
+				"navigationBarTitleText": "选择定位地址",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/realease/realease",
 			"style": {
 				"navigationBarTitleText": "发布",
