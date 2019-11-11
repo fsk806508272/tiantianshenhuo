@@ -207,15 +207,15 @@
 		<!-- <view class="uploadGoodsImg">
 			<image src="/static/cut/user/uploadgoodsimg.png"></image>
 		</view> -->
-		<upload-imgs :photos="goods_photos"></upload-imgs>
+		<upload-imgs></upload-imgs>
 		
 		<!-- 商品详情图 -->
 <!-- 		<view class="grayButton">商品详情图(注：限6张)</view>
 		<upload-imgs :photos="goods_detail_photos"></upload-imgs> -->
 		
 		<view class="bottom_place"></view>
-		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary">确认上传</button>
-		<button class="upload_btn" v-else type="primary">确认上传</button>
+		<button class="upload_btn noNumber" v-if="isCanUpload == 0" @tap="confirmUpload" type="primary">确认上传</button>
+		<!-- <button class="upload_btn" v-else type="primary" @tap="confirmUpload">确认上传</button> -->
 	</view>
 </template>
 
@@ -359,6 +359,9 @@ export default{
 				})
 			}
 			
+		},
+		confirmUpload(){
+			console.log(this.goods_photos)
 		}
 	}
 }
