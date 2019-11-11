@@ -45,6 +45,27 @@ class IndexModel extends HTTP{
 	  }
     this.request(params)
   }
+
+  getNearby(success){ 
+	  let params = {
+		method:"POST",
+		data: {type: 1},
+		url:"/app/firsttypeinfo/getList", 
+		success:success
+	  }
+    this.request(params)
+  }
+
+  getByNeedFirst(data,success){ 
+	  let params = {
+		method:"POST",
+		data: data,
+		url:"/app/secondtypeinfo/getListByNeedFirst", 
+		success:success
+	  }
+    this.request(params)
+  }
+  
   getOther(success){
 	  let params={
 		  method:"POST",

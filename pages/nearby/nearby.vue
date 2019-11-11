@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<view class="status_bar">  
+		<!-- <view class="status_bar">  
 		    <view class="top_view"></view>  
-		</view>
-		<view class="place"></view>
+		</view> -->
+		<!-- <view class="place"></view> -->
 		<view class="near_header">
 			<image src="../../static/cut/ss.png" mode=""></image>
 			附近
@@ -14,14 +14,14 @@
 		</view> -->
 		<scroll-view class="scroll_nav_box" scroll-x="true">
 			<view class="scroll_nav_item" @tap="clickNav(idx)" :class="[navActive==idx?'active':'']" v-for="(nav,idx) in nav_list" :key="idx">
-				<image :src="nav.icon" mode=""></image>
+				<image :src="nav.coverImg" mode="widthFix"></image>
 				<text>{{nav.title}}</text>
 			</view>
 		</scroll-view>
 		<!-- 地图 -->
 		<view class="map_box" v-if="isMap == true">
 			<cover-view>
-			<map style="width: 750rpx; height: 66vh" :latitude="latitude" :longitude="longitude" :markers="covers"></map>
+			<map id="mapId" style="width: 750rpx; height: 72vh" :controls="controls" :latitude="latitude" :longitude="longitude" :markers="covers" @callouttap="markerClick" @controltap="controlTap" show-location></map>
 			</cover-view>
 		</view>
 		<!-- 列表 -->
@@ -46,6 +46,8 @@
 
 <script>
 import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
+import {IndexModel} from '@/common/models/index.js'
+let indexModel = new IndexModel()
 export default{
 	data(){
 		return{
@@ -53,36 +55,58 @@ export default{
 			navbar:[{name:"他的提供"},{name:"他的需求"}],
 			currentTab:0,
 			nav_list: [
-				{icon: '/static/tab/icosh.png',title: '生活'},
-				{icon: '/static/tab/icodg.png',title: '代购'},
-				{icon: '/static/tab/icojz.png',title: '家政'},
-				{icon: '/static/tab/icojr.png',title: '金融'},
-				{icon: '/static/tab/icofw.png',title: '房屋'},
-				{icon: '/static/tab/icowx.png',title: '维修'},
-				{icon: '/static/tab/icohy.png',title: '会员'}
+				// {icon: '/static/tab/icosh.png',title: '生活'},
+				// {icon: '/static/tab/icodg.png',title: '代购'},
+				// {icon: '/static/tab/icojz.png',title: '家政'},
+				// {icon: '/static/tab/icojr.png',title: '金融'},
+				// {icon: '/static/tab/icofw.png',title: '房屋'},
+				// {icon: '/static/tab/icowx.png',title: '维修'},
+				// {icon: '/static/tab/icohy.png',title: '会员'}
 			],
 			navActive: 0,
 			
-			isMap: false,
+			isMap: true,
 			show_icon: '/static/cut/near_list.png',
 			
 			latitude: 39.909,
 			longitude: 116.39742,
+			controls:[{
+				id: 1,
+				position: {
+					left: 15,
+					top: 15,
+					width: 32,
+					height: 32
+				},
+				iconPath: '/static/cut/aim_icon.png',
+				clickable: true
+			}],
 			covers: [{
+				id: 1,
 				latitude: 39.909,
 				longitude: 116.39742,
 				iconPath: '/static/tab/icosh.png',
 				width: 30,
 				height: 30,
-				// callout: {
-				// 	content: "离我最近",
-				// 	color: "#3C3C3C",
-				// 	fontSize: 12,
-				// 	bgColor: "#fff",
-				// 	borderRadius: 5,
-				// 	padding: 10,
-				// 	display: 'ALWAYS'
-				// }
+				callout: {
+					content: "送水",
+					// color: "#3C3C3C",
+					// fontSize: 12,
+					// bgColor: "#fff",
+					// padding: 10,
+					display: 'BYCLICK'
+				}
+			},{
+				id: 2,
+				latitude: 39.909,
+				longitude: 116.39842,
+				iconPath: '/static/cut/address_on.png',
+				width: 30,
+				height: 30,
+				callout: {
+					content: "买烟",
+					display: 'BYCLICK'
+				}
 			}],
 			map_list: [
 				{img: '',title: '环日液化石油气5kg 即买即送货到家',price: '129.9',sales: '24',fee: 5,away: '1.3'},
@@ -95,6 +119,15 @@ export default{
 	components:{
 		uniLoadMore
 	},
+	onReady() {
+		let mapCtx = uni.createMapContext("mapId");
+	},
+	onLoad() {
+		indexModel.getNearby((data)=>{
+			console.log(data);
+			this.nav_list = data
+		})
+	},
 	methods:{
 		navbarTap(e){
 			console.log(e)
@@ -102,6 +135,10 @@ export default{
 		},
 		clickNav(e){
 			this.navActive = e;
+			let firstId = this.nav_list[e].firsttypeinfoId;
+			indexModel.getByNeedFirst({type:2,firstType:firstId},(data)=>{
+				console.log(data);
+			})
 		},
 		changeShow(){
 			this.isMap = !this.isMap;
@@ -113,6 +150,31 @@ export default{
 		},
 		loadMoreList(){
 			this.loadingType="noMore"
+		},
+		markerClick(e){
+			console.log(e.detail.markerId);
+			// uni.navigateTo({
+			// 	url: '/pages/nearby/nearbyDetail?id=' + e.detail.markerId
+			// })
+		},
+		controlTap(e){
+			uni.getLocation({
+			    type: 'gcj02', //返回可以用于uni.openLocation的经纬度
+			    success: function (res) {
+			        const latitude = res.latitude;
+			        const longitude = res.longitude;
+			        uni.openLocation({
+			            latitude: latitude,
+			            longitude: longitude,
+			            success: function () {
+			                console.log('success');
+			            }
+			        });
+			    }
+			});
+			this.latitude = 39.909;
+			this.longitude = 116.39742;
+			console.log(this.latitude,this.longitude);
 		}
 	}
 }
@@ -123,7 +185,7 @@ export default{
 		height: 28px;
 	}
 	.near_header{
-		padding: 25rpx 20rpx;
+		padding: 20rpx;
 		box-sizing: border-box;
 		background: #fff;
 		display: flex;
@@ -178,6 +240,7 @@ export default{
 		justify-content: flex-start;
 		align-items: center;
 		white-space: nowrap;
+		background: #fff;
 		.scroll_nav_item{
 			display: inline-block;
 			width: 100rpx;

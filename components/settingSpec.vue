@@ -36,7 +36,6 @@
 		name:'settingSpec',
 		data() {
 			return {
-				img_pic: '',
 				specLists: [
 					{
 						img_pic: '',
@@ -59,7 +58,7 @@
 						console.log(res.tempFilePaths);
 						for(let i in res.tempFilePaths){
 							console.log(res.tempFilePaths[i]);
-							that.img_pic = res.tempFilePaths[i];
+							that.specLists[idx].img_pic = res.tempFilePaths[i];
 						}
 					},
 					fail: (res) => {

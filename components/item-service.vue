@@ -38,8 +38,8 @@ export default {
 			value:''
 		},
 		money:{
-			type:String,
-			value:''
+			type:Number,
+			value:0
 		},
 		desc:{           //销量 楼层等
 			type:String,
