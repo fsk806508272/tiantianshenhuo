@@ -429,9 +429,15 @@ export default{
 		toMyStore(){
 			userModel.getInfo((data)=>{
 				if(data.personalCerStatus==3||data.companyCerStatus==3){
-					uni.navigateTo({
-						url:'/pages/user/store/mystore?storeId=' + data.storeId
-					})
+					if(data.storeId==null){
+						uni.navigateTo({
+							url:'/pages/user/store/mystore?storeId=' + data.storeId
+						})
+					}else{
+						uni.navigateTo({
+							url:'/pages/shop/myShop?storeId=' + data.storeId
+						})
+					}
 				}else{
 					uni.showModal({
 						title:'您还没有认证，请先做认证',
