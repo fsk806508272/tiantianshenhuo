@@ -1,8 +1,8 @@
 <template>
 	<view>
-		<view class="status_bar">  
+		<!-- <view class="status_bar">  
 		    <view class="top_view"></view>  
-		</view>
+		</view> -->
 		<view class="top_fixed">
 			<view @tap="toSelectFixed()">
 				<image src="/static/cut/fixed_icon.png" mode=""></image>
@@ -615,7 +615,7 @@
 <style lang="scss">
 	//ctrl+alt+/ 即可生成正确注释 条件编译是利用注释实现的，在不同语法里注释写法不一样，js使用 // 注释、css 使用 /* 注释 */、vue/nvue 模板里使用 <!-- 注释 -->；
 		page{
-			//background:rgba(246,246,246,1);	
+			background:#fff;	
 		}		
 		.bg{height: 20rpx;background:rgba(246,246,246,1);}
 		
@@ -666,12 +666,13 @@
 		.top_fixed{
 			position: fixed;
 			left: 0;
-			top: 28px;
+			top: 0;
 			width: 100%;
 			background: #fff;
 			height: 88rpx;
 			z-index: 1000;
 			padding:12rpx 20rpx;
+			padding-bottom: 0;
 			box-sizing: border-box;
 			display: flex;
 			justify-content: space-between;
@@ -704,7 +705,7 @@
 		}
 		.top{
 			position: fixed;
-			top: 140rpx;
+			top: 88rpx;
 			left: 0;
 			right: 0;
 			z-index: 1000;
@@ -712,6 +713,7 @@
 			align-items: center;
 			height: 88rpx;
 			padding:12rpx 20rpx;
+			padding-top: 0;
 			box-sizing: border-box;
 			background-color: #FFFFFF;
 			.top-Location{
@@ -751,7 +753,7 @@
 			}
 			
 		}
-		.place{height: 232rpx;}// height: 176rpx;
+		.place{height: 176rpx;}// height: 232rpx;
 		.carousel-section{
 			width: 100%;
 			height: 33.3vw;
@@ -796,6 +798,7 @@
 		.icons{
 			width: 100%;
 			height: 336rpx;
+			background: #fff;
 			// height: 168rpx;
 			margin-top: 43rpx;
 			display: flex;

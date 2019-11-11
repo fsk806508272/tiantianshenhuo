@@ -4,14 +4,13 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "天天生活",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationBarBackgroundColor":"#FFFFFF",
 				// //#ifdef H5
 				// "navigationBarTitleText": "首页",			
-				// "app-plus": {
-				// 	"titleNView": false ,//禁用原生导航栏
-				// 	"bounce":"none"
-				// 	
-				// }
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
 				// //#endif
 			}
 		},
@@ -104,6 +103,16 @@
 		    "path" : "pages/shop/shop",
 		    "style" : {
 				"navigationBarTitleText": "店铺主页"
+			}
+		},
+		{
+		    "path" : "pages/shop/myShop",
+		    "style" : {
+				"navigationBarTitleText": "我的店铺",
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
 			}
 		},
 		{

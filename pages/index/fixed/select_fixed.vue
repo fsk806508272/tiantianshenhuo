@@ -146,6 +146,7 @@ export default{
 		padding: 30rpx 20rpx;
 		box-sizing: border-box;
 		display: flex;
+		background: #fff;
 		justify-content: space-between;
 		align-items: center;
 		border-top: 1rpx solid #DCDCDC;
@@ -174,6 +175,7 @@ export default{
 	.scroll_list{
 		.scroll_item_box{
 			padding: 0 20rpx;
+			background: #fff;
 			box-sizing: border-box;			
 		}
 		.scroll_title{
