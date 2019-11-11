@@ -258,7 +258,7 @@
 		<!-- <view class="uploadGoodsImg">
 			<image src="/static/cut/user/uploadgoodsimg.png"></image>
 		</view> -->
-		<upload-imgs :photos="goods_photos"></upload-imgs>
+		<upload-imgs :photos="goods_photos" @changes="goodsPhoto"></upload-imgs>
 		
 		<!-- 商品详情图 -->
 		<view class="grayButton">商品详情图(注：限6张)</view>
@@ -268,7 +268,7 @@
 		<upload-imgs :photos="goods_detail_photos"></upload-imgs>
 		
 		<view class="bottom_place"></view>
-		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary">确认上传</button>
+		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary" @tap="submitUpload">确认上传</button>
 		<button class="upload_btn" v-else type="primary">确认上传</button>
 		
 		<mpvue-city-picker :second="second" :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault" @onCancel="onCancel" @onConfirm="onConfirm"></mpvue-city-picker>
@@ -379,6 +379,10 @@ export default{
 		})
 	},
 	methods:{
+		goodsPhoto(e){
+			this.goods_photos = e;
+			console.log(this.goods_photos);
+		},
 		selectDemandParent(idx){
 			this.demand_parent_idx = idx;
 		},
@@ -457,6 +461,9 @@ export default{
 			}
 			this.label_txt = txt;
 			console.log(this.label_txt_arr,this.label_select_arr);
+		},
+		submitUpload(){
+			console.log(this.goods_photos.join(','));
 		}
 	}
 }
