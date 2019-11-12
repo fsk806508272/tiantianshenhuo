@@ -93,6 +93,28 @@ class ProvideModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	// 查询房屋押金方式
+	queryRentType(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/housePayType/getlistAll',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询房屋家具
+	queryHouseGoods(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/house/queryHouseGoods',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {ProvideModel}

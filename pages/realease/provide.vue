@@ -15,11 +15,11 @@
 		<!-- 房屋发布 start -->
 		<view v-if="firstTypeId==1" class="listItem">
 			<view class="star">房屋名称</view>
-			<input placeholder="请输入标题(26字内)"/>
+			<input v-model="houseName" placeholder="请输入标题(26字内)"/>
 		</view>
 		<view v-if="firstTypeId==1" class="listItem">
 			<view class="star">房屋租金</view>
-			<input placeholder="请输入"/>
+			<input v-model="houseRent" placeholder="请输入"/>
 		</view>
 		<!-- 房屋发布 end -->
 		
@@ -89,7 +89,7 @@
 			<view class="pay_item">
 				<view class="pay_txt">押金</view>
 				<picker @change="bindPickerChange" :range="depositArr">
-					<view class="pay_right">
+					<view class="pay_right" @tap="pushDepositList">
 						<view>{{deposit}}</view>
 						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
 					</view>
@@ -98,29 +98,29 @@
 			<view class="pay_item">
 				<view class="pay_txt">月付</view>
 				<view class="pay_right noborder">
-					<view class="ipt_box"><input type="text" placeholder="请输入租金"></view>
-					<view class="ipt_box"><input type="text" placeholder="请输入服务费"></view>
+					<view class="ipt_box"><input type="number" v-model="monthRent" placeholder="请输入租金"></view>
+					<view class="ipt_box"><input type="number" v-model="monthServiceCharge" placeholder="请输入服务费"></view>
 				</view>
 			</view>
 			<view class="pay_item">
 				<view class="pay_txt">季付</view>
 				<view class="pay_right noborder">
-					<view class="ipt_box"><input type="text" placeholder="请输入租金"></view>
-					<view class="ipt_box"><input type="text" placeholder="请输入服务费"></view>
+					<view class="ipt_box"><input type="number" v-model="seasonRent" placeholder="请输入租金"></view>
+					<view class="ipt_box"><input type="number" v-model="seasonServiceCharge" placeholder="请输入服务费"></view>
 				</view>
 			</view>
 			<view class="pay_item">
 				<view class="pay_txt">半年付</view>
 				<view class="pay_right noborder">
-					<view class="ipt_box"><input type="text" placeholder="请输入租金"></view>
-					<view class="ipt_box"><input type="text" placeholder="请输入服务费"></view>
+					<view class="ipt_box"><input type="number" v-model="halfRent" placeholder="请输入租金"></view>
+					<view class="ipt_box"><input type="number" v-model="halfServiceCharge" placeholder="请输入服务费"></view>
 				</view>
 			</view>
 			<view class="pay_item">
 				<view class="pay_txt">年付</view>
 				<view class="pay_right noborder">
-					<view class="ipt_box"><input type="text" placeholder="请输入租金"></view>
-					<view class="ipt_box"><input type="text" placeholder="请输入服务费"></view>
+					<view class="ipt_box"><input type="number" v-model="yearRent" placeholder="请输入租金"></view>
+					<view class="ipt_box"><input type="number" v-model="yearServiceCharge" placeholder="请输入服务费"></view>
 				</view>
 			</view>
 		</view>
@@ -131,34 +131,34 @@
 			<view class="delivery_item">
 				<view class="de_item">
 					<text>水：</text>
-					<input type="text" placeholder="请输入起始度">
+					<input v-model="waterBegin" type="text" placeholder="请输入起始度">
 				</view>
 				<view class="de_item">
 					<text>1m³/元：</text>
-					<input type="text" placeholder="请输入价格">
+					<input type="text" v-model="waterPrice" placeholder="请输入价格">
 				</view>
 			</view>
 			<view class="delivery_item">
 				<view class="de_item">
 					<text>电：</text>
-					<input type="text" placeholder="请输入起始度">
+					<input type="text" v-model="elecBegin" placeholder="请输入起始度">
 				</view>
 				<view class="de_item">
 					<text>1kw·h/元：</text>
-					<input type="text" placeholder="请输入价格">
+					<input type="text" v-model="elecPrice" placeholder="请输入价格">
 				</view>
 			</view>
 			<view class="delivery_select" v-for="(item,index) in deliverySelect" :key="index">
 				<view class="delivery_left">
 					<picker @change="deliveryChange($event,index)" :range="deliveryArr">
 						<view class="box">
-							<view>{{item.delivery}}</view>
+							<view>{{item.name}}</view>
 							<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
 						</view>
 					</picker>
 					<view class="add_minus_box">
 						<view class="minus_btn" @tap="minus(index)">-</view>
-						<view class="num_txt">{{item.num}}</view>
+						<view class="num_txt">{{item.amount}}</view>
 						<view class="add_btn" @tap="add(index)">+</view>
 					</view>
 				</view>
@@ -172,12 +172,92 @@
 				</view>
 			</view>
 		</view>
+		
+		<!-- 房屋信息 -->
+		<view class="housing_info">
+			<view class="pro_title title gray">房屋信息</view>
+			<view class="housing_box">
+				<view class="housing_item">
+					<view class="housing_left">
+						<text>面积：</text>
+						<input v-model="houseArea" type="text" placeholder="请输入" />㎡
+					</view>
+					<view class="housing_right">
+						<text>户型：</text>
+						<picker @change="houseTypeChange" :range="houseTypeArr">
+							<view class="house_select">
+								<view>{{houseType}}</view>
+								<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+							</view>
+						</picker>
+					</view>
+				</view>
+				<view class="housing_item">
+					<view class="housing_left">
+						<text>年代：</text>
+						<input v-model="houseYear" type="text" placeholder="请输入" />
+					</view>
+					<view class="housing_right">
+						<text>房号：</text>
+						<input type="text" v-model="houseNumber" placeholder="请输入" />
+					</view>
+				</view>
+				<view class="housing_item">
+					<view class="housing_left">
+						<text>总楼层数：</text>
+						<input v-model="houseTotalFloor" type="text" placeholder="请输入" />
+					</view>
+					<view class="housing_right">
+						<text>所在楼层：</text>
+						<input v-model="houseFloor" type="text" placeholder="请输入" />
+					</view>
+				</view>
+				<view class="housing_item single nopicker">
+					<text>所在地区：</text>
+					<view class="house_select" @tap="showMulLinkageThreePicker">
+						<view>{{houseDistrict}}</view>
+						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+					</view>
+				</view>
+				<view class="housing_item single nopicker" @tap="chooseAddress">
+					<text>详细地址：</text>
+					<view class="house_select">
+						<view>{{houseAddress}}</view>
+						<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+					</view>
+				</view>
+				<view class="housing_item single">
+					<text>可入住日期：</text>
+					<picker @change="houseDateChange" mode="date" >
+						<view class="house_select">
+							<view>{{houseDate}}</view>
+							<image src="/static/cut/rightIcon.png" mode="widthFix"></image>
+						</view>
+					</picker>
+				</view>
+				<view class="housing_item single">
+					<text>签约时长：</text>
+					<input v-model="houseSignRange" type="text" placeholder="请输入" />
+				</view>
+			</view>
+		</view>
+		
+		<!-- 房屋标签 -->
+		<view class="house_label_box">
+			<view class="pro_title title gray">房屋标签（多选）</view>
+			<view class="house_label_ul">
+				<view class="label_item" :class="[item.is_select != 0?'active':'']" v-for="(item,index) in labelList" @tap="labelMultiple(index)" :key="index">{{item.name}}</view>
+			</view>
+			<view class="input_box">
+				<input type="text" v-model="label_txt" disabled>
+			</view>
+		</view>
 		<!-- 房屋发布 end -->
 		
 		<!-- 维修发布 start -->
 		<view v-if="firstTypeId!=8" class="remark_box">
 			<view class="rel_title"><text v-if="firstTypeId!=5">服务详情</text><text v-if="firstTypeId==5">业务详情</text></view>
-			<textarea placeholder="可以简单介绍一下.." />
+			<textarea v-model="detail" placeholder="可以简单介绍一下.." />
 		</view>
 		<!-- 维修发布 end -->
 		
@@ -223,12 +303,15 @@
 		<view class="bottom_place"></view>
 		<button class="upload_btn noNumber" v-if="isCanUpload == 0" type="primary" @tap="submitUpload">确认上传</button>
 		<button class="upload_btn" v-else type="primary">确认上传</button>
+		
+		<mpvue-city-picker :second="second" :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault" @onCancel="onCancel" @onConfirm="onConfirm"></mpvue-city-picker>
 	</view>
 </template>
 
 <script>
 import settingSpec from '@/components/settingSpec.vue'
 import uploadImgs from '@/components/uploadImgs.vue'
+import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
 import {ProvideModel} from '@/common/models/provide.js'
 import {UserModel} from '@/common/models/user.js'
 import {StoreModel} from '@/common/models/store.js'
@@ -238,10 +321,14 @@ const providemodel = new ProvideModel()
 export default{
 	components:{
 		settingSpec,
-		uploadImgs
+		uploadImgs,
+		mpvueCityPicker
 	},
 	data(){
 		return{
+			second:false,
+			cityPickerValueDefault: [0, 0, 1],
+			themeColor:"#FF6600",
 			provideItem:[],
 			item:'',
 			demand_parent_idx: null,
@@ -254,23 +341,81 @@ export default{
 			secondtypeinfoId:'',
 			secondtypeinfoIdList:[],
 			isCanUpload: 0,
+			detail:'',
 			goods_photos: [],
 			goodsName:'',
 			goodsPrice:'',
 			goodsPost:'',
 			goods_detail_photos: [],
 			sellerId:'',
+			monthRent:'',
+			monthServiceCharge:'',
+			halfRent:'',
+			halfServiceCharge:'',
+			seasonRent:'',
+			seasonServiceCharge:'',
+			yearRent:'',
+			yearServiceCharge:'',
+			waterBegin:'',
+			waterPrice:'',
+			elecBegin:'',
+			elecPrice:'',
+			houseArea:'',
+			houseYear:'',
+			houseNumber:'',
+			houseTotalFloor:'',
+			houseFloor:'',
+			houseLatitude:'',
+			houseLongitude:'',
 			deposit: "请选择",
-			depositArr: ["押金选择1","押金选择2"],
+			depositArr: [],
 			delivery: "请选择",
 			deliveryArr: ["床"],
 			deliverySelect: [
 				{
-					delivery: "请选择",
-					num: 0,
+					name: "请选择",
+					amount: 0,
 					isAdd: false
 				}
 			],
+			houseType: "请选择",
+			houseTypeArr: ["户型1","户型2"],
+			houseDistrict: '请选择',
+			houseAddress: '请选择',
+			houseDate: '请选择',
+			houseName:'',
+			houseRent:'',
+			houseSignRange:'',
+			labelList: [
+				{
+					name: "短租房",
+					is_select: 0
+				},{
+					name: "长租房",
+					is_select: 0
+				},{
+					name: "近地铁",
+					is_select: 0
+				},{
+					name: "免物业费",
+					is_select: 0
+				},{
+					name: "家具齐全",
+					is_select: 0
+				},{
+					name: "首次出租",
+					is_select: 0
+				},{
+					name: "拎包入住",
+					is_select: 0
+				},{
+					name: "智能锁",
+					is_select: 0
+				}
+			],
+			label_select_arr: [],
+			label_txt_arr: [],
+			label_txt: '',
 			rangeList:[
 				{
 					title: "请选择",
@@ -283,12 +428,24 @@ export default{
 		}
 	},
 	onLoad(){
-		usermodel.getInfo((data)=>{
+		new Promise((resolve)=>{
+			usermodel.getInfo((data)=>{
+				resolve(data)
+			})
+		}).then((data)=>{
 			this.sellerId = data.storeId
-			storemodel.getSellerStore({sellerId:this.sellerId},(data)=>{
+			return new Promise((resolve)=>{
+				storemodel.getSellerStore({sellerId:this.sellerId},(data)=>{
+					resolve(data)
+				})
+			}).then((data)=>{
 				this.firstType = data.firstType
 				this.firstTypeId = data.firstTypeId
-				providemodel.getSecondType({firstType:this.firstType,type:2},(data)=>{
+				return new Promise((resolve)=>{
+					providemodel.getSecondType({firstType:this.firstType,type:2},(data)=>{
+						resolve(data)
+					})
+				}).then((data)=>{
 					this.provideItem = []
 					this.secondtypeinfoIdList = []
 					for(let i of data){
@@ -297,11 +454,11 @@ export default{
 					}
 				})
 			})
-			this.getCateList()
 		})
-	},
-	onShow(){
-		
+		this.getCateList()
+		providemodel.queryRentType((data)=>{
+			console.log(data)
+		})
 	},
 	methods:{
 		goodsPhoto(e){
@@ -326,29 +483,75 @@ export default{
 			this.deposit = this.depositArr[e.target.value];
 		},
 		deliveryChange(e,index){
-			this.deliverySelect[index].delivery = this.deliveryArr[e.detail.value];
+			this.deliverySelect[index].name = this.deliveryArr[e.detail.value];
 		},
 		add(idx){
-			this.deliverySelect[idx].num++;
-			if(this.deliverySelect[idx].num > 99){
-				this.deliverySelect[idx].num = 99;
+			this.deliverySelect[idx].amount++;
+			if(this.deliverySelect[idx].amount > 99){
+				this.deliverySelect[idx].amount = 99;
 			}
 		},
 		minus(idx){
-			this.deliverySelect[idx].num--;
-			if(this.deliverySelect[idx].num < 0){
-				this.deliverySelect[idx].num = 0;
+			this.deliverySelect[idx].amount--;
+			if(this.deliverySelect[idx].amount < 0){
+				this.deliverySelect[idx].amount = 0;
 			}
 		},
 		deliveryAdd(index){
 			this.deliverySelect.push({
-				delivery: "请选择",
-				num: 0,
+				name: "请选择",
+				amount: 0,
 				isAdd: true
 			})
 		},
 		deliveryDel(index){
 			this.deliverySelect.splice(index, 1);
+		},
+		houseTypeChange(e){
+			this.houseType = this.houseTypeArr[e.target.value];
+		},
+		showMulLinkageThreePicker() {
+			this.$refs.mpvueCityPicker.show()
+		},
+		onConfirm(data){
+			console.log(data);
+			this.houseDistrict = data.label;
+		},
+		chooseAddress(){
+			var that = this;
+			uni.chooseLocation({
+			    success: function (res) {
+			        console.log('位置名称：' + res.name);
+			        console.log('详细地址：' + res.address);
+			        console.log('纬度：' + res.latitude);
+			        console.log('经度：' + res.longitude);
+					that.houseAddress = res.name;
+					that.houseLatitude = res.latitude
+					that.houseLongitude = res.longitude
+			    }
+			});
+		},
+		houseDateChange(e){
+			this.houseDate = e.detail.value;
+		},
+		labelMultiple(idx){
+			if(this.labelList[idx].is_select == 0){
+				this.labelList[idx].is_select = 1;
+				this.label_select_arr.push(idx);
+				this.label_txt_arr.push(this.labelList[idx].name);
+			}else{
+				this.labelList[idx].is_select = 0;
+				if (this.label_select_arr.indexOf(idx) > -1) { 
+					this.label_select_arr.splice(this.label_select_arr.indexOf(idx),1);
+					this.label_txt_arr.splice(this.label_txt_arr.indexOf(this.labelList[idx].name),1);
+				}
+			}
+			let txt = '';
+			for(let i in this.label_txt_arr){
+				txt += this.label_txt_arr[i]+',';
+			}
+			this.label_txt = txt;
+			console.log(this.label_txt_arr,this.label_select_arr);
 		},
 		rangeChange(e,index){
 			this.rangeList[index].title = this.rangeArry[e.detail.value];
@@ -378,6 +581,9 @@ export default{
 			}
 			
 		},
+		pushDepositList(){
+			
+		},
 		getCateList(){
 			providemodel.checkSellerGroup((data)=>{
 				this.cateList = []
@@ -389,84 +595,283 @@ export default{
 			})
 		},
 		submitUpload(){
-			if(this.demand_parent_idx==null){
-				uni.showToast({
-					title:'请选择服务商子类',
-					duration:1500,
-					icon:'none'
+			if(this.firstTypeId==8){
+				if(this.demand_parent_idx==null){
+					uni.showToast({
+						title:'请选择服务商子类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goodsName==''){
+					uni.showToast({
+						title:'请输入商品名称',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goodsPrice==''){
+					uni.showToast({
+						title:'请输入商品价格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goodsPost==''){
+					uni.showToast({
+						title:'请设置商品配送费',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.$refs.specData.specLists[0].img_pic==''){
+					uni.showToast({
+						title:'请设置商品规格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.goods = {}
+				req.goods.city = '深圳市'
+				req.goods.goodsFirsttype = this.firstTypeId
+				req.goods.goodsName = this.goodsName
+				req.goods.goodsSecondtype = this.secondtypeinfoId
+				req.goods.latitudeLongitude = '114.258072,22.727932'
+				req.goods.price = this.goodsPrice
+				req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.goods.sellerId = this.sellerId
+				req.goods.postFee = this.goodsPost
+				// req.goods.serviceScope = 60
+				req.goodsDesc = {}
+				req.goodsDesc.itemImages = this.goods_photos.join(',')
+				req.itemList = this.$refs.specData.specLists
+				for(let i of req.itemList){
+					delete i.isAdd
+				}
+				let goodsJSON = JSON.stringify(req)
+				providemodel.addSellerGoods({goodsJSON},(data)=>{
+					console.log(data)
 				})
-				return
+			}else if(this.firstTypeId==1){
+				if(this.demand_parent_idx==null){
+					uni.showToast({
+						title:'请选择服务商子类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseName==''){
+					uni.showToast({
+						title:'请输入房屋名称',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseRent==''){
+					uni.showToast({
+						title:'请输入房屋租金',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.deposit=='请选择'){
+					uni.showToast({
+						title:'请选择押金方式',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.waterBegin==''){
+					uni.showToast({
+						title:'请设置水起始度',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.waterPrice==''){
+					uni.showToast({
+						title:'请设置水费单价',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.elecBegin==''){
+					uni.showToast({
+						title:'请设置电起始度',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.elecPrice==''){
+					uni.showToast({
+						title:'请设置电费单价',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.deliverySelect[0].name=='请选择'){
+					uni.showToast({
+						title:'请补充房屋家具信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseArea==''){
+					uni.showToast({
+						title:'请补充房屋面积信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseType=='请选择'){
+					uni.showToast({
+						title:'请补充房屋户型信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseYear==''){
+					uni.showToast({
+						title:'请补充房屋年份信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseNumber==''){
+					uni.showToast({
+						title:'请补充房屋门号信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseTotalFloor==''){
+					uni.showToast({
+						title:'请补充房屋总楼层信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseFloor==''){
+					uni.showToast({
+						title:'请补充房屋所在楼层信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseDistrict=='请选择'){
+					uni.showToast({
+						title:'请补充房屋所在地区信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseAddress=='请选择'){
+					uni.showToast({
+						title:'请补充房屋详细地址信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseDate=='请选择'){
+					uni.showToast({
+						title:'请设置房屋可入住日期',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.houseSignRange==''){
+					uni.showToast({
+						title:'请补充房屋签约时长信息',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.label_txt==''){
+					uni.showToast({
+						title:'请设置房屋标签',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.sellerId = this.sellerId
+				req.servMain = this.firstTypeId
+				req.servSon = this.secondtypeinfoId
+				req.title = this.houseName
+				req.price = this.houseRent
+				req.houseType = this.houseType
+				req.latitude = this.houseLatitude
+				req.longitude = this.houseLongitude
+				req.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.depositMode = this.deposit
+				if(this.monthRent!=''){
+					req.paMonthly = this.monthRent
+				}
+				if(this.monthServiceCharge!=''){
+					req.monthServiceCharge = this.monthServiceCharge
+				}
+				if(this.seasonRent!=''){
+					req.quarterlyPayment = this.seasonRent
+				}
 			}
-			if(this.goodsName==''){
-				uni.showToast({
-					title:'请输入商品名称',
-					duration:1500,
-					icon:'none'
-				})
-				return
-			}
-			if(this.goodsPrice==''){
-				uni.showToast({
-					title:'请输入商品价格',
-					duration:1500,
-					icon:'none'
-				})
-				return
-			}
-			if(this.goodsPost==''){
-				uni.showToast({
-					title:'请设置商品配送费',
-					duration:1500,
-					icon:'none'
-				})
-				return
-			}
-			if(this.cate_idx==null){
-				uni.showToast({
-					title:'请选择店铺商品分类',
-					duration:1500,
-					icon:'none'
-				})
-				return
-			}
-			if(this.$refs.specData.specLists[0].img_pic==''){
-				uni.showToast({
-					title:'请设置商品规格',
-					duration:1500,
-					icon:'none'
-				})
-				return
-			}
-			if(this.goods_photos.length==0){
-				uni.showToast({
-					title:'请上传商品图片',
-					duration:1500,
-					icon:'none'
-				})
-				return
-			}
-			let req = {}
-			req.goods = {}
-			req.goods.city = '深圳市'
-			req.goods.goodsFirsttype = this.firstType
-			req.goods.goodsName = this.goodsName
-			req.goods.goodsSecondtype = this.secondtypeinfoId
-			req.goods.latitudeLongitude = '114.258072,22.727932'
-			req.goods.price = this.goodsPrice
-			req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
-			req.goods.sellerId = this.sellerId
-			req.goods.postFee = this.goodsPost
-			// req.goods.serviceScope = 60
-			req.goodsDesc = {}
-			req.goodsDesc.itemImages = this.goods_photos.join(',')
-			req.itemList = this.$refs.specData.specLists
-			for(let i of req.itemList){
-				delete i.isAdd
-			}
-			let goodsJSON = JSON.stringify(req)
-			providemodel.addSellerGoods({goodsJSON},(data)=>{
-				console.log(data)
-			})
 		}
 	}
 }
@@ -880,6 +1285,124 @@ export default{
 			align-items: center;
 			font-size:30rpx;
 			color:#fff;
+		}
+	}
+}
+.housing_info{
+	padding: 20rpx 20rpx 30rpx;
+	background: #fff;
+	margin-top: 15rpx;
+	.housing_box{
+		.housing_item{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 64rpx;
+			margin-bottom: 20rpx;
+			&.single{
+				justify-content: flex-start;
+				border:1px solid rgba(160,160,160,1);
+				border-radius:8rpx;
+				padding-left: 20rpx;
+				box-sizing: border-box;
+				text{
+					width: 26%;
+				}
+				picker{
+					width: 71%;
+				}
+			}
+			&.nopicker{
+				.house_select{
+					width: 71%;
+				}
+			}
+			input{
+				width: 46%;
+				font-size: 26rpx;
+				margin-right: 10rpx;
+			}
+			.housing_left{
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				padding: 0 20rpx;
+				box-sizing: border-box;
+				height: 64rpx;
+				width: 46%;
+				border:1px solid rgba(160,160,160,1);
+				border-radius:8rpx;
+			}
+			.housing_right{
+				width: 46%;
+				height: 64rpx;
+				display: flex;
+				align-items: center;
+				padding: 0 0 0 20rpx;
+				box-sizing: border-box;
+				border:1px solid rgba(160,160,160,1);
+				border-radius:8rpx;
+			}
+			picker{
+				width: 66%;
+			}
+			.house_select{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				view{
+					width: 80%;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					overflow: hidden;
+					font-size: 26rpx;
+					color: #B4B4B4;
+				}
+				image{
+					display: block;
+					width: 15rpx;
+					height: 25rpx;
+				}
+			}
+		}
+	}
+}
+.house_label_box{
+	padding: 20rpx 20rpx 30rpx;
+	background: #fff;
+	margin-top: 15rpx;
+	.house_label_ul{
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		.label_item{
+			display: block;
+			width: 140rpx;
+			text-align: center;
+			padding: 12rpx 0;
+			border:1px solid rgba(200,200,200,1);
+			border-radius:8rpx;
+			color: #646464;
+			margin: 0 20rpx 20rpx 0;
+			&.active{
+				color: #FF6600;
+				border-color: #FE6600;
+			}
+		}
+	}
+	.input_box{
+		padding: 15rpx 20rpx;
+		box-sizing: border-box;
+		border:1px solid rgba(160,160,160,1);
+		border-radius:8rpx;
+		display: flex;
+		align-items: center;
+		margin-top: 20rpx;
+		input{
+			width: 100%;
+			color: #3C3C3C;
+			font-size: 26rpx;
 		}
 	}
 }
