@@ -1,5 +1,5 @@
 <template name="itemService">
-	<view class="item">
+	<view class="item" @tap="toInfo()">
 		<view class="lf">
 			<image class="goodImg" :src="src"></image>
 		</view>
@@ -59,6 +59,11 @@ export default {
 		return {
 			
 		};
+	},
+	methods:{
+		toInfo(){
+			this.$emit('toNextPage')
+		}
 	}
 }
 </script>
