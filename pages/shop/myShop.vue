@@ -78,11 +78,12 @@
 					<text class="s-item">{{items.name}}</text>
 					<view class="t-list">
 						<view @click="navToList(titem.id,titem.goodsFirsttype)" class="t-item" v-for="titem in items.goodsList" :key="titem.id">
-							<image :src="titem.smallPic" mode="widthFix"></image>
+							<image :src="titem.smallPic" class="pic_img" mode="widthFix"></image>
 							<view class="right_word">
 								<view class="t_info">{{titem.goodsName}}</view>
 								<view class="p_info"><view class="price_txt"><text>￥</text>{{titem.price}}</view><text>已接单{{titem.totalSale}}</text></view>
 							</view>
+							<image src="/static/cut/address_edit.png" @tap.stop="toEdit()" class="edit_img" mode="widthFix"></image>
 						</view>
 					</view>
 				</view>
@@ -244,8 +245,17 @@ export default {
 	   	})
 	   },
 	   showPopup(){
-		 this.$refs.popup.open()  
-		 this.value = [9999, this.month - 1, this.day - 1]
+		   uni.showModal({
+		   	content: "关店后买家将无法下单，是否确认关店？",
+			confirmColor: "#FF6600",
+			success: (res) => {
+				if(res.confirm == true){
+					this.$refs.popup.open()
+					this.value = [9999, this.month - 1, this.day - 1]
+				}
+			}
+		   })
+		 
 	   },
 	   //收藏
 	   keep(letter){
@@ -331,61 +341,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-	.open_close_box{
-		// margin-top: 88rpx;
-		.open_close_shop{
-			border-top: 20rpx solid #F2F2F2;
-			border-bottom: 20rpx solid #F2F2F2;
-			box-sizing: border-box;
-			padding: 25rpx 20rpx;
-			view{
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				color: #8C8C8C;
-				font-size: 26rpx;
-				button{
-					width:120rpx;
-					height:54rpx;
-					line-height: 54rpx;
-					background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
-					border-radius:8rpx;
-					font-size:26rpx;
-					color:rgba(255,255,255,1);
-				}
-				&.gray{
-					button{
-						color: #3C3C3C;
-						background: #F0F0F0;
-					}
-				}
-			}
-		}
-		.popup_title{
-			width: 100%;
-			padding: 0 0 30rpx;
-			background: #fff;
-			box-sizing: border-box;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			font-size: 30rpx;
-			text{
-				font-size: 28rpx;
-				color: #FF9801;
-			}
-		}
-		picker-view{
-			height: 400rpx;
-			picker-view-column{
-				text-align: center;
-				.item{
-					font-size: 26rpx;
-					line-height: 50px !important;
-				}
-			}
-		}
-	}
+	
 	.content {
 		padding-top: 88rpx;
 	}
@@ -509,14 +465,21 @@ export default {
 				font-size: 26upx;
 				color: #666;
 				margin-bottom: 30rpx;
-				image{
+				.pic_img{
 					display: block;
 					width: 160upx !important;
 					height: 160upx !important;
 					margin-right: 20rpx;
 				}
+				.edit_img{
+					display: block;
+					width: 36rpx;
+					height: 37rpx;
+					margin-top: 40rpx;
+				}
 				.right_word{
 					width: 62%;
+					margin-right: 20rpx;
 					.t_info{
 						margin-bottom: 30rpx;
 						overflow : hidden;

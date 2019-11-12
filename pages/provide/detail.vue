@@ -55,6 +55,7 @@
 			<image class="intoIcon" src="/static/cut/right_orange.png"></image>
 		</view>
 		
+		<!-- v-if="isOpenDate == 0"  0:关店  1：开店 -->
 		<view class="bottomFix">
 			<!-- <view class="collect" @tap="toCollect()">
 				<image v-if="data.goods.isCollect==0" src="/static/cut/no_collect.png"></image>
@@ -70,6 +71,11 @@
 			</view>
 			<view class="theme-button" @tap="chooseSpec">立即下单</view>
 		</view>
+		
+		<!-- 编辑商品 -->
+		<!-- <view class="editFix">
+			<view class="theme-button" @tap="editGood()">编辑商品</view>
+		</view> -->
 		
 		<uni-popup ref="popbottom" type="bottom">
 			<view class="popBox">
@@ -97,6 +103,12 @@
 				<view class="signButton" @tap="confirmSign">确定</view>
 			</view>
 		</uni-popup>
+		
+		<!-- <view class="shadow_box"></view>
+		<view class="show_close_box">
+			<image src="/static/cut/shop_close.png" mode="widthFix"></image>
+			<view>该店铺今天已暂停营业</view>
+		</view> -->
 	</view>
 </template>
 
@@ -138,7 +150,8 @@ export default{
 			number:1,
 			speced:'请选择',
 			comment:[],
-			commentNum:0
+			commentNum:0,
+			isOpenDate: ''
 		}
 	},
 	onLoad(options){

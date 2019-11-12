@@ -1,5 +1,15 @@
 <template>
 	<view>
+		<view class="common_navigation">
+			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
+			<view>房屋详情</view>
+			<view class="mul_icon_box" @tap="toCollect()">
+				 <!-- v-if="data.goods.isCollect==0" -->
+				<image class="collect_icon" src="/static/cut/no_collect.png"></image>
+				<!-- <image v-else src="/static/cut/collected.png" class="collect_icon" ></image> -->
+			</view>
+		</view>
+		
 		<view class="carousel-section">
 			<swiper class="swiper" circular="true" autoplay="true">
 				<swiper-item v-for="(item,index) in picture" :key="index">
@@ -73,20 +83,25 @@
 			<view class="into" @tap="toStore()">进店看看</view>
 			<image class="intoIcon" src="/static/cut/right_orange.png"></image>
 		</view>
-		
-		<view class="bottomFix">
-			<view class="collect" @tap="toCollect()">
-				<image src="/static/cut/no_collect.png"></image>
+		<!-- v-if="isOpenDate == 0"  0:关店  1：开店 -->
+		<view class="bottomFix" >
+			<!-- <view class="collect" @tap="toCollect()"> -->
+				<!-- <image src="/static/cut/no_collect.png"></image> -->
 				<!-- <image v-if="data.isCollect==0" src="/static/cut/no_collect.png"></image> -->
 				<!-- <image v-else src="/static/cut/collected.png"></image> -->
-				<view>收藏</view>
-			</view>
+				<!-- <view>收藏</view> -->
+			<!-- </view> -->
 			<view class="contact">
 				<image src="/static/cut/message.png"></image>
-				<view>联系</view>
+				<view>联系TA</view>
 			</view>
 			<view class="theme-button" @tap="toSign()">立即签约</view>
 		</view>
+		
+		<!-- 编辑商品 -->
+		<!-- <view class="editFix">
+			<view class="theme-button" @tap="editGood()">编辑商品</view>
+		</view> -->
 	</view>
 </template>
 
@@ -94,6 +109,8 @@
 	import provideTitle from '@/components/provide-title.vue'
 	import {LikeModel} from '@/common/models/like.js'
 	const likemodel = new LikeModel()
+	import {StoreModel} from '@/common/models/store.js'
+	const storemodel = new StoreModel()
 	
 	export default{
 		components:{
@@ -105,7 +122,8 @@
 				label:[],
 				starSrc:'/static/cut/star_on.png',
 				starIndex:[0,1,2,3,4],
-				picture:[]
+				picture:[],
+				isOpenDate: ''
 			}
 		},
 		methods:{
@@ -137,12 +155,22 @@
 				uni.navigateTo({
 					url:'paytype?data=' + JSON.stringify(this.data) 
 				})
+			},
+			toBack(){
+				uni.navigateBack({
+					delta: 1
+				})
 			}
 		},
 		onLoad:function(options){
 			let jsondata = JSON.parse(options.data)
 			this.data = jsondata;
 			console.log(this.data);
+			// 
+			storemodel.getSellerStore({sellerId: this.data.sellerId},(res)=>{
+				console.log(res);
+				this.isOpenDate = res.isOpenDate;
+			})
 			this.data.mainScore = parseInt(this.data.mainScore)
 			this.label = this.data.label.split(',')
 			this.picture = this.data.picture.split(',')
@@ -151,6 +179,12 @@
 </script>
 
 <style lang="scss">
+	.bottomFix{
+		.theme-button{
+			width: 470rpx;
+		}
+	}
+	
 page{
 	background-color: #f2f2f2;
 	padding-bottom:130rpx;

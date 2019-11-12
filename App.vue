@@ -320,6 +320,7 @@
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
+		z-index: 100;
 		.collect{
 			width:45rpx;
 			margin-left: 34rpx;
@@ -371,6 +372,55 @@
 			line-height: 70rpx;
 			width:230rpx;
 			font-size:30rpx;
+		}
+	}
+	
+	.editFix{
+		position: fixed;
+		width: 100%;
+		height: 110rpx;
+		padding: 20rpx;
+		box-sizing: border-box;
+		left: 0;
+		bottom: 0;
+		z-index: 100;
+		background: #fff;
+		.theme-button{
+			height:70rpx;
+			line-height: 70rpx;
+		}
+	}
+	
+	.shadow_box{
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		top: 0;
+		z-index: 120;
+		background: rgba(0,0,0,.5);
+	}
+	.show_close_box{
+		position: fixed;
+		width: 100%;
+		height:500rpx;
+		background:rgba(255,255,255,1);
+		border-radius:20rpx 20rpx 0px 0px;
+		left: 0;
+		bottom: 0;
+		z-index: 120;
+		text-align: center;
+		overflow: hidden;
+		image{
+			width: 267rpx;
+			height: 200rpx;
+			margin: 108rpx auto 50rpx;
+		}
+		view{
+			font-size:38rpx;
+			font-family:Source Han Sans CN;
+			font-weight:500;
+			color:rgba(60,60,60,1);
 		}
 	}
 	
@@ -439,7 +489,7 @@
 		background:#fff;
 		position:fixed;
 		width: 100%;
-		z-index: 100;
+		z-index: 150;
 		left: 0;
 		top: 0;
 		display: flex;
@@ -508,6 +558,63 @@
 			text{
 				font-size:26rpx;
 				color:rgba(180,180,180,1);
+			}
+		}
+	}
+	
+	.open_close_box{
+		background: #fff;
+		// margin-top: 88rpx;
+		.open_close_shop{
+			border-top: 20rpx solid #F2F2F2;
+			border-bottom: 20rpx solid #F2F2F2;
+			box-sizing: border-box;
+			padding: 25rpx 20rpx;
+			view{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				color: #8C8C8C;
+				font-size: 26rpx;
+				button{
+					width:120rpx;
+					height:54rpx;
+					line-height: 54rpx;
+					background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+					border-radius:8rpx;
+					font-size:26rpx;
+					color:rgba(255,255,255,1);
+				}
+				&.gray{
+					button{
+						color: #3C3C3C;
+						background: #F0F0F0;
+					}
+				}
+			}
+		}
+		.popup_title{
+			width: 100%;
+			padding: 0 0 30rpx;
+			background: #fff;
+			box-sizing: border-box;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 30rpx;
+			text{
+				font-size: 28rpx;
+				color: #FF9801;
+			}
+		}
+		picker-view{
+			height: 400rpx;
+			picker-view-column{
+				text-align: center;
+				.item{
+					font-size: 26rpx;
+					line-height: 50px !important;
+				}
 			}
 		}
 	}

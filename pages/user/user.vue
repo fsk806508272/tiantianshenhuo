@@ -231,6 +231,8 @@
 	let loginModel = new LoginModel();
 	import {CheckModel} from '../../common/models/check.js';
 	let checkModel = new CheckModel();
+	import {StoreModel} from '../../common/models/store.js';
+	let storemodel = new StoreModel();
 	import {mapState,mapMutations} from 'vuex';  
 export default{
 	data () {
@@ -435,8 +437,17 @@ export default{
 							url:'/pages/user/store/mystore?storeId=' + data.storeId
 						})
 					}else{
-						uni.navigateTo({
-							url:'/pages/shop/myShop?storeId=' + data.storeId
+						console.log(data);
+						storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
+							if(res.firstTypeId == 1){
+								uni.navigateTo({
+									url:'/pages/shop/myStoreindex?sellerId=' + data.storeId
+								})
+							}else{
+								uni.navigateTo({
+									url:'/pages/shop/myShop?storeId=' + data.storeId
+								})
+							}
 						})
 					}
 				}else{

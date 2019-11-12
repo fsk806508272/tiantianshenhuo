@@ -1,7 +1,48 @@
 <template>
 	<view>
-		<bavigationbar></bavigationbar>
-		<view class="storeInfo">
+		<view class="common_navigation">
+			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
+			<view>我的店铺</view>
+			<view class="mul_icon_box"></view>
+		</view>
+		<view class="open_close_box">
+			<bavigationbar></bavigationbar>
+			<view class="open_close_shop">
+				<view v-if="isOpenDate == 0">
+					<text>暂停营业中，快打开店铺营业吧~</text>
+					<button type="primary" @tap="openShop">开店</button>
+				</view>
+				<view class="gray" v-else>
+					<text>正在营业中，关店时需手动关闭。</text>
+					<button type="primary" @tap="showPopup">关店</button>
+				</view>
+			</view>
+			<uni-popup ref="popup" type="bottom">
+				<view class="popup_title">
+					<text @tap="cancelPopup">取消</text>
+					<block v-if="is_select_start == 0">
+						选择关店起始日期
+						<text @tap="okStartPopup">确定</text>
+					</block>
+					<block v-else>
+						选择关店结束日期
+						<text @tap="okEndPopup">确定</text>
+					</block>
+				</view>
+				<picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange">
+					<picker-view-column>
+						<view class="item" v-for="(item,index) in years" :key="index">{{item}}年</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="item" v-for="(item,index) in months" :key="index">{{item}}月</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="item" v-for="(item,index) in days" :key="index">{{item}}日</view>
+					</picker-view-column>
+				</picker-view>
+			</uni-popup>
+		</view>
+		<!-- <view class="storeInfo">
 			<image class="item-img" :src="store.pic" alt=""></image>
 			<view class="main-left">
 				<view class="main-title">
@@ -15,7 +56,7 @@
 					<text class="iconfont icon-dingwei"></text>{{store.address}}
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<view class="content">
 			<view class="box">
 				<view :class="[index==typebarIndex?'on':'']" class="item" v-for="(item,index) in apartmentType" :key="index" @tap="showType(index)">
@@ -27,7 +68,7 @@
 			<view class="list">
 				<view class="title">{{apartmentType[typebarIndex]}}</view>
 				<view class="detail" v-for="(row,number) in data" @tap="toStoreDetail(number)" :key="number">
-					<image :src="row.picture"></image>
+					<image class="picture" :src="row.picture"></image>
 					<view class="descri">
 						<view class="servey">{{row.title}}</view>
 						<view class="issue">
@@ -35,6 +76,7 @@
 							<view class="floor">{{row.squareMetre}}㎡ | {{row.floor}}/{{row.attribute}}</view>
 						</view>
 					</view>
+					<image src="/static/cut/address_edit.png" @tap.stop="toEdit()" class="edit_img" mode="widthFix"></image>
 				</view>
 			</view>
 		</view>
@@ -55,15 +97,43 @@ import {StoreModel} from '@/common/models/store.js'
 let Likemodel=new LikeModel()
 let storemodel = new StoreModel()
 import bavigationbar from '@/components/bavigation-bar.vue'
+import uniPopup from '@/components/uni-popup/uni-popup.vue'
 import {HouseModel} from '@/common/models/house.js'
 import like from "@/components/like.vue"
 let housemodel = new HouseModel()
+import {UserModel} from '@/common/models/user.js'
+let usermodel=new UserModel()
 export default{
 	components:{
 		bavigationbar,
-		like
+		like,
+		uniPopup
 	},
 	data(){
+		const date = new Date()
+		const years = []
+		const year = date.getFullYear()
+		const months = []
+		const month = date.getMonth() + 1
+		const days = []
+		const day = date.getDate()
+		for (let i = 1990; i <= date.getFullYear(); i++) {
+				  years.push(i)
+		}
+		for (let i = 1; i <= 12; i++) {
+				  if(i<10){
+					  months.push('0'+i)
+					}else{
+						months.push(i)
+					}
+		}
+		for (let i = 1; i <= 31; i++) {
+				  if(i<10){
+					  days.push('0'+i)
+					}else{
+						days.push(i)
+					}
+		}
 		return{
 			request:{
 				pageNo:1,
@@ -79,7 +149,23 @@ export default{
 			data:[],
 			apartmentType:['全部分类'],
 			typebarIndex:0,
-			like:null
+			like:null,
+			
+			isOpenDate: 1,
+			is_select_start: 0,
+			startDay: '',
+			dateStart: '',
+			dateEnd: '',
+			title: 'picker-view',
+			years,
+			year,
+			months,
+			month,
+			days,
+			day,
+			value: [9999, month - 1, day - 1],
+			visible: true,
+			indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`
 		}
 	},
 	onLoad:function(option){
@@ -92,7 +178,10 @@ export default{
 			this.store.pic = data.logoPic
 			
 		})
-		
+		usermodel.checkStoreInfo({sellerId: option.sellerId},(res)=>{
+			console.log(res.isOpenDate);
+			this.isOpenDate = res.isOpenDate;
+		})
 		
 		housemodel.getHouseList(this.request,(data)=>{
 			this.data = data.houseList
@@ -107,6 +196,85 @@ export default{
 				url:'/pages/house/housedetail?data='+JSON.stringify(this.data[number])
 			})
 		},
+		bindChange: function (e) {
+		   const val = e.detail.value
+		   this.year = this.years[val[0]]
+		   this.month = this.months[val[1]]
+		   this.day = this.days[val[2]]
+		   console.log(val);
+	   },
+	   cancelPopup(){
+			this.$refs.popup.close()
+	   },
+	   okStartPopup(e){
+		   let now = new Date();
+		   var selectDate = new Date();
+		   selectDate.setFullYear(this.year);
+		   selectDate.setMonth(this.month - 1);
+		   selectDate.setDate(this.day);
+		   if(selectDate.toDateString() != now.toDateString()){
+			   this.$api.msg("起始时间必须是今天");
+			   return;
+		   }
+		   this.dateStart = this.year+'-'+this.month+'-'+this.day
+		   this.startDay = this.day
+		   this.is_select_start = 1
+		   console.log(this.dateStart);
+	   },
+	   okEndPopup(e){
+		   let now = new Date();
+		   var selectDate = new Date();
+		   selectDate.setFullYear(this.year);
+		   selectDate.setMonth(this.month - 1);
+		   selectDate.setDate(this.day);
+		   
+		   if(selectDate < now){
+			   this.$api.msg("结束时间不能小于今天");
+			   return;
+		   }
+		   this.dateEnd = this.year+'-'+this.month+'-'+this.day
+		   console.log(this.dateStart,this.dateEnd);
+		   
+		   this.is_select_start = 0
+			this.$refs.popup.close()
+			usermodel.closeShop({
+				sellerId: this.request.sellerId,
+				closeStatsDate: this.dateStart,
+				closeEndDate: this.dateEnd
+			},(data)=>{
+				console.log(data);
+				usermodel.checkStoreInfo({sellerId: this.request.sellerId},(res)=>{
+					console.log(res.isOpenDate);
+					this.isOpenDate = res.isOpenDate;
+				})
+			})
+	   },
+	   openShop(){
+		   usermodel.openShop({sellerId: this.request.sellerId},(data)=>{
+			   console.log(data);
+			   usermodel.checkStoreInfo({sellerId: this.request.sellerId},(res)=>{
+			   	console.log(res.isOpenDate);
+			   	this.isOpenDate = res.isOpenDate;
+			   })
+		   })
+	   },
+	   toBack(){
+	   	uni.navigateBack({
+	   		delta: 1
+	   	})
+	   },
+	   showPopup(){
+		   uni.showModal({
+			content: "关店后买家将无法下单，是否确认关店？",
+			confirmColor: "#FF6600",
+			success: (res) => {
+				if(res.confirm == true){
+					this.$refs.popup.open()
+					this.value = [9999, this.month - 1, this.day - 1]
+				}
+			}
+		   })
+	   },
 		showType(index){
 			this.typebarIndex = index;
 			if(index==0){
@@ -191,7 +359,7 @@ page{
 		margin-left: 180rpx;
 		background-color: #fff;
 		width:570rpx;
-		height:800rpx;
+		height:72vh;
 		overflow-y:scroll;
 		overflow-x: hidden;
 		.title{
@@ -206,13 +374,18 @@ page{
 			margin-left: 30rpx;
 			margin-top: 40rpx;
 			display: flex;
-			image{
+			.picture{
 				width:160rpx;
 				height:160rpx;
 				border-radius:10rpx;
 			}
+			.edit_img{
+				display: block;
+				width: 36rpx;
+				height: 37rpx;
+			}
 			.descri{
-				width:380rpx;
+				width:320rpx;
 				padding:0 30rpx 0 20rpx;
 				display: flex;
 				flex-direction: column;
