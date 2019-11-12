@@ -193,6 +193,18 @@ class OrderModel extends HTTP {
 		}
 		this.request(params)
 	}
+	
+	//商家查看订单
+	checkSellerOrder(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsOrder/getSellerOrderListByTake',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
 }
 
 export {OrderModel}

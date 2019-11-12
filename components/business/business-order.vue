@@ -3,31 +3,30 @@
 		<view class="top">
 			<view class="lf">
 				<image src="/static/cut/user/billicon.png"></image>
-				<view class="ordercode"></view>
+				<view class="ordercode">{{orderNum}}</view>
 			</view>
-			<view class="rt"></view>
+			<view class="rt">{{createTime}}</view>
 		</view>
 		
 		<view class="middle">
-			<image src="../../static/cut/alipay.png"></image>
+			<image :src="pic"></image>
 			<view class="list">
 				<view class="title">
-					<view class="name">卫浴Jon共同爱好开发哈克的回复困惑和思考解放后开始是否是科技示范卫浴Jon共同爱好开发哈克的回复困惑和思考解放后开始是否是科技示范</view>
+					<view class="name">回复困惑和思考解放后开始是否是科技示范</view>
 					<view class="content">36.9</view>
 				</view>
 				<view class="title">
-					<view class="spec">位于i速回复</view>
-					<view class="content">dfa</view>
+					<view class="spec">手持花洒(五年质保)；</view>
 				</view>
-				<view class="title">
+				<view v-if="id==8" class="title">
+					<view class="fee">配送(运费)</view>
+					<view class="content">￥20</view>
+				</view>
+				<view v-if="id!=8" class="title">
 					<view class="fee">位于i速回复</view>
 					<view class="content">dfa</view>
 				</view>
-				<view class="title">
-					<view class="fee">位于i速回复</view>
-					<view class="content">dfa</view>
-				</view>
-				<view class="title">
+				<view v-if="id!=8" class="title">
 					<view class="fee">位于i速回复</view>
 					<view class="content">dfa</view>
 				</view>
@@ -35,27 +34,43 @@
 		</view>
 		
 		<view class="bottom">
-			<view class="content">sfs fs sf sd s f </view>
+			<view class="content">
+				<text v-if="id==8">共计{{num}}个，实收￥{{price}}</text>
+				<text v-if="id==1">实收</text>
+			</view>
 			<view class="status">待接单</view>
 		</view>
 		
 		<view class="other">
-			<view class="item">
+			<!-- 地址 -->
+			<view class="item" v-if="id==8">
 				<image src="/static/cut/user/address_on.png"></image>
 				<view class="content">
 					<view class="address">广东深圳市龙岗区龙翔大道9002号志联佳大厦508</view>
 					<view class="name">唐笑笑 1374545554</view>
 				</view>
 			</view>
-			<view class="item">
+			<!-- 留言 -->
+			<view class="item" v-if="id==8">
 				<image src="/static/cut/user/message.png"></image>
 				<view class="content">急需要穿！！帮忙快点发货好吗，拜托了</view>
 			</view>
-			<view class="item">
+			<view class="item" v-if="id==1">
+				<image src="/static/cut/user/userInfo.png"></image>
+				<view class="content">
+					<view class="address">54545454545</view>
+					<view class="name">唐笑笑 1374545554</view>
+				</view>
+			</view>
+			<view class="item" v-if="id==1">
+				<image src="/static/cut/user/signtime.png"></image>
+				<view class="content">租期时长：</view>
+			</view>
+			<view class="item" v-if="id==10">
 				<image src="/static/cut/user/reason.png"></image>
 				<view class="content">急需要穿！！帮忙快点发货好吗，拜托了</view>
 			</view>
-			<view class="item">
+			<view class="item" v-if="id==10">
 				<image src="/static/cut/user/backtype.png"></image>
 				<view class="content">急需要穿！！帮忙快点发货好吗</view>
 			</view>
@@ -66,7 +81,37 @@
 <script>
 export default{
 	name:'businessOrder',
-	
+	props:{
+		id:{
+			type:Number,
+			value:8
+		},
+		num:{
+			type:Number,
+			value:1
+		},
+		price:{
+			type:String,
+			value:'52.03'
+		},
+		createTime:{
+			type:String
+		},
+		orderNum:{
+			type:String
+		},
+		pic:{
+			type:String
+		}
+	},
+	data(){
+		return{
+			statusObj:{
+				waitingRecieve:'待接单',
+				waitingDeal:'待处理'
+			}
+		}
+	}
 }
 </script>
 
@@ -76,6 +121,7 @@ page{
 }
 .box{
 	background-color: #fff;
+	margin-bottom: 20rpx;
 }
 .top{
 	border-bottom: 1rpx solid #f2f2f2;
@@ -83,11 +129,23 @@ page{
 	height:87rpx;
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	.lf{
+		display: flex;
+		align-items: center;
 		image{
 			width:24rpx;
 			height:27rpx;
+			margin-right: 10rpx;
 		}
+		.ordercode{
+			font-size:20rpx;
+			color:rgba(100,100,100,1);
+		}
+	}
+	.rt{
+		font-size:20rpx;
+		color:rgba(140,140,140,1);
 	}
 }
 

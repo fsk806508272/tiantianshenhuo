@@ -20,7 +20,7 @@
 			<block v-for="(item,index) in data" :key="index">
 				<item-service :src="item.smallPic" :money="item.price" 
 				:title="item.goodsName|titleFormat" :deliver="item.postFee" :sales="item.monthSale"
-				@tap="toDetail(item)"></item-service>
+				@toNextPage="toDetail(item)"></item-service>
 			</block>
 		</block>
 		<uni-popup ref="poptop" type="top">

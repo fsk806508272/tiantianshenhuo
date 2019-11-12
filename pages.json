@@ -755,6 +755,13 @@
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
+        ,{
+            "path" : "pages/user/sellerorder/sellerorder",
+            "style" : {
+				"navigationBarTitleText": "我的提供",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

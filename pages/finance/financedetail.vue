@@ -7,15 +7,15 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<provide-title :price="[data.releaseFinance.price]" :title="data.releaseFinance.title" disc="km"></provide-title>
+		<provide-title :price="data.price" :title="data.title" disc="km"></provide-title>
 		
-		<view v-if="data.releaseFinance.financeType =='代理财务' " class="choose" @tap="toSign">
+		<view v-if="data.secondTypeId =='6364df4f0ede49da9063b6cc5d4dfc72' " class="choose" @tap="toSign">
 			<view class="title">类型</view>
 			<view class="tips">请选择</view>
 			<image src="/static/cut/grayright.png"></image>
 		</view>
 		
-		<view v-if="data.releaseFinance.financeType =='代理财务'" class="range">
+		<view v-if="data.secondTypeId =='6364df4f0ede49da9063b6cc5d4dfc72'" class="range">
 			<view class="title">委托业务范围</view>
 			<view class="label gray">
 				<view>业务名称</view>
@@ -29,7 +29,7 @@
 		
 		<view class="detail">
 			<view class="title">业务详情</view>
-			<view class="content">{{data.releaseFinance.details}}</view>
+			<view class="content">{{data.details}}</view>
 		</view>
 		
 		<view class="store">
@@ -107,11 +107,12 @@ export default{
 	},
 	onLoad(options){
 		console.log(options)
-		let req = {financeId:options.financeId,financeCode:options.code,sellerId:options.sellerId}
+		let req = {id:options.financeId,financeCode:options.code,sellerId:options.sellerId}
 		financemodel.getFinanceDetail(req,(data)=>{
 			console.log(data)
-			this.picture = data.releaseFinance.picture.split(',')
+			this.picture = data.picture.split(',')
 			this.data = data
+			console.log(data)
 		})
 		this.sellerId = options.sellerId
 		let storeReq = {sellerId:options.sellerId}
@@ -126,7 +127,7 @@ export default{
 			})
 		},
 		toSign(){
-			if(this.data.releaseFinance.financeType =='代理财务'){
+			if(this.data.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'){
 				this.$refs.popbottom.open()
 			}
 		},

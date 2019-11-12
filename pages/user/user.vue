@@ -1,17 +1,15 @@
 <template>
 	<view>
 		<view v-if="!hasLogin" class="hasLogin">
-			
-				<view>
-					<image src="../../static/notlogged.png" mode=""></image>
-				</view>
-				<view class="title">
-					<text>登录后可查看“我的”页面</text>
-				</view>
-				<view class="theme-button" @tap="navToLogin"><text>立即登录</text></view>
-			
-			
+			<view>
+				<image src="../../static/notlogged.png" mode=""></image>
+			</view>
+			<view class="title">
+				<text>登录后可查看“我的”页面</text>
+			</view>
+			<view class="theme-button" @tap="navToLogin"><text>立即登录</text></view>
 		</view>
+		
 		<view v-else>
 			<view class="use-top">
 				<view class="sweep-code">
@@ -65,23 +63,23 @@
 						</view>
 					</view>
 					<view class="lower">
-						<view class="orderType">
+						<view class="orderType" @tap="toSellerOrder(0)">
 							<image src="/static/cut/user/waitingorder.png"></image>
 							<view class="title">待接单</view>
 						</view>
-						<view class="orderType">
+						<view class="orderType" @tap="toSellerOrder(1)">
 							<image src="/static/cut/user/dealingorder.png"></image>
 							<view class="title">待处理</view>
 						</view>
-						<view class="orderType">
+						<view class="orderType" @tap="toSellerOrder(2)">
 							<image src="/static/cut/user/dealedorder.png"></image>
 							<view class="title">已处理</view>
 						</view>
-						<view class="orderType">
+						<view class="orderType" @tap="toSellerOrder(3)">
 							<image src="/static/cut/user/completeorder.png"></image>
 							<view class="title">已完成</view>
 						</view>
-						<view class="orderType">
+						<view class="orderType" @tap="toSellerOrder(4)">
 							<image src="/static/cut/user/backdealorder.png"></image>
 							<view class="title">退款中</view>
 						</view>
@@ -319,7 +317,6 @@ export default{
 				  success: function (loginRes) {
 					console.log(loginRes);
 					loginModel.getOpenid(loginRes.code,(data)=>{
-						console.log(data)
 						// 获取用户信息
 						uni.getUserInfo({
 						  provider: 'weixin',
@@ -428,9 +425,37 @@ export default{
 				url:'share/share'
 			})
 		},
+		toSellerOrder(index){
+			userModel.getInfo((data)=>{
+				if(data.personalCerStatus==3||data.companyCerStatus==3){
+					if(data.storeId==null){
+						uni.navigateTo({
+							url:'/pages/user/store/mystore?storeId=' + data.storeId
+						})
+					}else{
+						storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
+							uni.navigateTo({
+								url:'/pages/user/sellerorder/sellerorder?type=' + index + '&id=' + res.firstTypeId
+							})
+						})
+					}
+				}else{
+					uni.showModal({
+						title:'您还没有认证，请先做认证',
+						confirmText:'去认证',
+						success(res){
+							if(res.confirm){
+								uni.navigateTo({
+									url:'/pages/modify/certification'
+								})
+							}
+						}
+					})
+				}
+			})
+		},
 		toMyStore(){
 			userModel.getInfo((data)=>{
-				console.log(data.storeId);
 				if(data.personalCerStatus==3||data.companyCerStatus==3){
 					if(data.storeId==null){
 						uni.navigateTo({

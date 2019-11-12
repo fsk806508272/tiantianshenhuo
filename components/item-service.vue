@@ -1,12 +1,12 @@
 <template name="itemService">
-	<view class="item" @tap="toInfo()">
+	<view class="item" @tap="toDetail()">
 		<view class="lf">
 			<image class="goodImg" :src="src"></image>
 		</view>
 		<view class="rg">
 			<view class="topBox">
 				<view class="title">{{title}}</view>
-				<view class="distance">{{distance}}km</view>
+				<view class="distance">{{distance}}</view>
 			</view>
 			<view class="bottom">
 				<view class="money">
@@ -39,7 +39,7 @@ export default {
 		},
 		money:{
 			type:Number,
-			value:0
+			value:''
 		},
 		desc:{           //销量 楼层等
 			type:String,
@@ -61,7 +61,7 @@ export default {
 		};
 	},
 	methods:{
-		toInfo(){
+		toDetail(){
 			this.$emit('toNextPage')
 		}
 	}
@@ -93,7 +93,7 @@ export default {
 			display: flex;
 			justify-content: space-between;
 			.title{
-				width:378rpx;
+				width:478rpx;
 				font-size:26rpx;
 				font-weight:400;
 				color:rgba(60,60,60,1);
