@@ -200,6 +200,28 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//开店
+	openShop(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/seller/cancelCloseDate',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//关店
+	closeShop(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/seller/setCloseDate',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

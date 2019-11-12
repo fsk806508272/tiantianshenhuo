@@ -321,7 +321,7 @@ export default{
 						// 获取用户信息
 						uni.getUserInfo({
 						  provider: 'weixin',
-						  success: function (infoRes) {
+						  success: function (infoRes) {150
 							console.log(infoRes.userInfo);
 							
 							data.nickname = infoRes.userInfo.nickName;
@@ -428,6 +428,7 @@ export default{
 		},
 		toMyStore(){
 			userModel.getInfo((data)=>{
+				console.log(data.storeId);
 				if(data.personalCerStatus==3||data.companyCerStatus==3){
 					if(data.storeId==null){
 						uni.navigateTo({

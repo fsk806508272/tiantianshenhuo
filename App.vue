@@ -409,6 +409,38 @@
 	} 
 	.page_bg{background: #F2F2F2 !important;min-height: 100%;position: fixed;width: 100%;z-index: -1;left: 0;top: 0;}
 	
+	// 公共头部
+	.common_navigation{
+		height:88rpx;
+		background:#fff;
+		position:fixed;
+		width: 100%;
+		z-index: 100;
+		left: 0;
+		top: 0;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0 20rpx;
+		box-sizing: border-box;
+		image{
+			// position: absolute;
+			width:20rpx;
+			height:34rpx;
+			// top:67rpx;
+			// left:20rpx;
+		}
+		view{
+			font-size:36rpx;
+			font-weight:400;
+			color:#3C3C3C;
+			// line-height:36rpx;
+			// position: absolute;
+			// top:67rpx;
+			// left:300rpx;
+		}
+	}	
+	
 	// 用户详细列表公共样式
 	.commission_item{
 		padding: 30rpx 20rpx;

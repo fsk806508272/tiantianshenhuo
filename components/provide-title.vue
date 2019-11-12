@@ -94,6 +94,13 @@ export default {
 		font-weight:500;
 		color:rgba(60,60,60,1);
 		line-height:40rpx;
+		// overflow : hidden;
+		// text-overflow: ellipsis;
+		// display: -webkit-box;
+		// -webkit-line-clamp: 2;
+		// -webkit-box-orient: vertical;
+		// word-wrap: break-word;
+		// word-break: break-all;
 	}
 	.bottom{
 		display: flex;

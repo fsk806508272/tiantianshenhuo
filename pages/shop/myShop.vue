@@ -1,15 +1,60 @@
 <template>
 	
 	<view class="content">
-		<view class="top">
+		<view class="common_navigation">
+			<image src="/static/cut/leftIcon.png" @tap="toBack()"></image>
+			<view>我的店铺</view>
+			<view class="mul_icon_box">
+				<!-- <image src="" mode=""></image> -->
+			</view>
+		</view>
+		
+		<view class="open_close_box">
+			<bavigationbar></bavigationbar>
+			<view class="open_close_shop">
+				<view v-if="isOpenDate == 0">
+					<text>暂停营业中，快打开店铺营业吧~</text>
+					<button type="primary" @tap="openShop">开店</button>
+				</view>
+				<view class="gray" v-else>
+					<text>正在营业中，关店时需手动关闭。</text>
+					<button type="primary" @tap="showPopup">关店</button>
+				</view>
+			</view>
+			<uni-popup ref="popup" type="bottom">
+				<view class="popup_title">
+					<text @tap="cancelPopup">取消</text>
+					<block v-if="is_select_start == 0">
+						选择关店起始日期
+						<text @tap="okStartPopup">确定</text>
+					</block>
+					<block v-else>
+						选择关店结束日期
+						<text @tap="okEndPopup">确定</text>
+					</block>
+				</view>
+				<picker-view v-if="visible" :indicator-style="indicatorStyle" :value="value" @change="bindChange">
+					<picker-view-column>
+						<view class="item" v-for="(item,index) in years" :key="index">{{item}}年</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="item" v-for="(item,index) in months" :key="index">{{item}}月</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="item" v-for="(item,index) in days" :key="index">{{item}}日</view>
+					</picker-view-column>
+				</picker-view>
+			</uni-popup>
+		</view>
+		<!-- <view class="top">
 			<bavigationbar></bavigationbar>
 			<view class="spacing"></view>
 			<view class="shop-head">
 						<image class="item-img" src="../../static/logo.png" alt=""></image>
 						<view class="main-left">
 							<view class="main-title">
-								<text class="tit">就凉快 <text class="iconfont icon-renyuanbaoming"></text></text>
-								<!-- <text class="distance iconfont icon-shoucang"></text>       -->                   <like class="icon" :isKeep=like @like="keep"></like>
+								<text class="tit">就凉快 <text class="iconfont icon-renyuanbaoming"></text></text> -->
+								<!-- <text class="distance iconfont icon-shoucang"></text>       -->                   <!-- <like class="icon" :isKeep=like @like="keep"></like>
 								
 							</view>
 							<view class="main-parameter">
@@ -22,7 +67,7 @@
 						</view>
 			</view>
 			<view class="spacing"></view>
-		</view>
+		</view> -->
 
 		<view class="main-scroll">
 			<scroll-view scroll-y class="left-aside">
@@ -53,10 +98,13 @@
 </template>
 
 <script>
+	import uniPopup from '@/components/uni-popup/uni-popup.vue'
 	import {LikeModel} from '@/common/models/like.js'
 	let Likemodel=new LikeModel()
 	import {StoreModel} from '@/common/models/store.js'
 	let storemodel=new StoreModel()
+	import {UserModel} from '@/common/models/user.js'
+	let usermodel=new UserModel()
 	import bavigationbar from "@/components/bavigation-bar.vue"
 	import like from "@/components/like.vue"
 
@@ -64,10 +112,34 @@ export default {
   name: '',
   components: {
    bavigationbar,
-   like
-
+   like,
+   uniPopup
   },
   data () {
+	  const date = new Date()
+	  const years = []
+	  const year = date.getFullYear()
+	  const months = []
+	  const month = date.getMonth() + 1
+	  const days = []
+	  const day = date.getDate()
+	  for (let i = 1990; i <= date.getFullYear(); i++) {
+		  years.push(i)
+	  }
+	  for (let i = 1; i <= 12; i++) {
+		  if(i<10){
+			  months.push('0'+i)
+			}else{
+				months.push(i)
+			}
+	  }
+	  for (let i = 1; i <= 31; i++) {
+		  if(i<10){
+			  days.push('0'+i)
+			}else{
+				days.push(i)
+			}
+	  }
     return {
 	  like:null,
       sizeCalcState: false,
@@ -78,17 +150,103 @@ export default {
       tlist: [],
 	  list:[],
 	  sellerId: '',
-	  slideTop: ''
+	  slideTop: '',
+	  
+	  isOpenDate: 1,
+	  is_select_start: 0,
+	  startDay: '',
+	  dateStart: '',
+	  dateEnd: '',
+	  title: 'picker-view',
+	  years,
+	  year,
+	  months,
+	  month,
+	  days,
+	  day,
+	  value: [9999, month - 1, day - 1],
+	  visible: true,
+	  indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`
     }
   },
   onLoad(option) {
 		this.sellerId = option.storeId;
+		console.log(this.sellerId);
 		this.loadData()	
   },
   onReady() {
   
   },
    methods: {
+	   bindChange: function (e) {
+		   const val = e.detail.value
+		   this.year = this.years[val[0]]
+		   this.month = this.months[val[1]]
+		   this.day = this.days[val[2]]
+		   console.log(val);
+	   },
+	   cancelPopup(){
+			this.$refs.popup.close()
+	   },
+	   okStartPopup(e){
+		   let year = new Date().getFullYear();
+		   let month = new Date().getMonth() + 1<10?'0'+new Date().getMonth() + 1:new Date().getMonth() + 1;
+		   let day = new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate();
+		   console.log(year,month,day);
+		   console.log(this.year,this.month,this.day);
+		   console.log(parseInt(month),this.month);
+		   if(this.year <= year && parseInt(this.month) <= parseInt(month) && parseInt(this.day) < parseInt(day)){
+			   this.$api.msg("起始时间必须大于今天");
+			   return;
+		   }
+		   this.dateStart = this.year+'-'+this.month+'-'+this.day
+		   this.startDay = this.day
+		   this.is_select_start = 1
+		   console.log(this.dateStart);
+	   },
+	   okEndPopup(e){
+		   let year = new Date().getFullYear();
+		   let month = new Date().getMonth() + 1<10?'0'+new Date().getMonth() + 1:new Date().getMonth() + 1;
+		   let day = new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate();
+		   if(this.year <= year && parseInt(this.month) <= parseInt(month) && parseInt(this.day) < parseInt(day)){
+			   this.$api.msg("结束时间必须大于今天");
+			   return;
+		   }
+		   this.dateEnd = this.year+'-'+this.month+'-'+this.day
+		   console.log(this.dateStart,this.dateEnd);
+		   
+		   this.is_select_start = 0
+			this.$refs.popup.close()
+			usermodel.closeShop({
+				sellerId: this.sellerId,
+				closeStatsDate: this.dateStart,
+				closeEndDate: this.dateEnd
+			},(data)=>{
+				console.log(data);
+				usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
+					console.log(res.isOpenDate);
+					this.isOpenDate = res.isOpenDate;
+				})
+			})
+	   },
+	   openShop(){
+		   usermodel.openShop({sellerId: this.sellerId},(data)=>{
+			   console.log(data);
+			   usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
+			   	console.log(res.isOpenDate);
+			   	this.isOpenDate = res.isOpenDate;
+			   })
+		   })
+	   },
+	   toBack(){
+	   	uni.navigateBack({
+	   		delta: 1
+	   	})
+	   },
+	   showPopup(){
+		 this.$refs.popup.open()  
+		 this.value = [9999, this.month - 1, this.day - 1]
+	   },
 	   //收藏
 	   keep(letter){
 	   	console.log(letter)
@@ -105,6 +263,10 @@ export default {
 	   	})
 	   },
 	 loadData(){
+			usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
+				console.log(res.isOpenDate);
+				this.isOpenDate = res.isOpenDate;
+			})
 			storemodel.getShopGoods({sellerId:this.sellerId},(data)=>{
 				this.list = data;
 				this.currentId = this.list[0].id;
@@ -168,9 +330,68 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+	.open_close_box{
+		// margin-top: 88rpx;
+		.open_close_shop{
+			border-top: 20rpx solid #F2F2F2;
+			border-bottom: 20rpx solid #F2F2F2;
+			box-sizing: border-box;
+			padding: 25rpx 20rpx;
+			view{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				color: #8C8C8C;
+				font-size: 26rpx;
+				button{
+					width:120rpx;
+					height:54rpx;
+					line-height: 54rpx;
+					background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+					border-radius:8rpx;
+					font-size:26rpx;
+					color:rgba(255,255,255,1);
+				}
+				&.gray{
+					button{
+						color: #3C3C3C;
+						background: #F0F0F0;
+					}
+				}
+			}
+		}
+		.popup_title{
+			width: 100%;
+			padding: 0 0 30rpx;
+			background: #fff;
+			box-sizing: border-box;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-size: 30rpx;
+			text{
+				font-size: 28rpx;
+				color: #FF9801;
+			}
+		}
+		picker-view{
+			height: 400rpx;
+			picker-view-column{
+				text-align: center;
+				.item{
+					font-size: 26rpx;
+					line-height: 50px !important;
+				}
+			}
+		}
+	}
+	.content {
+		padding-top: 88rpx;
+	}
 	page,
 	.content {
+		box-sizing: border-box;
 		height: 100%;
 		background-color: #FFFFFF;     
 		.top{
@@ -218,7 +439,8 @@ export default {
 			}
 		}
 		.main-scroll {
-			height: 72%;
+			// height: 72%;
+			height: 75vh;
 			display: flex;
 			.left-aside {
 				flex-shrink: 0;
