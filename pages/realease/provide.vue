@@ -370,7 +370,7 @@ export default{
 			deposit: "请选择",
 			depositArr: [],
 			delivery: "请选择",
-			deliveryArr: ["床"],
+			deliveryArr: [],
 			deliverySelect: [
 				{
 					name: "请选择",
@@ -379,7 +379,7 @@ export default{
 				}
 			],
 			houseType: "请选择",
-			houseTypeArr: ["户型1","户型2"],
+			houseTypeArr: [],
 			houseDistrict: '请选择',
 			houseAddress: '请选择',
 			houseDate: '请选择',
@@ -428,6 +428,7 @@ export default{
 		}
 	},
 	onLoad(){
+		this.getCateList()
 		new Promise((resolve)=>{
 			usermodel.getInfo((data)=>{
 				resolve(data)
@@ -451,14 +452,40 @@ export default{
 					for(let i of data){
 						this.provideItem.push(i.title)
 						this.secondtypeinfoIdList.push(i.secondtypeinfoId)
+						if(this.firstTypeId==1){
+							return new Promise((resolve)=>{
+								providemodel.queryRentType((data)=>{
+									resolve(data)
+								})
+							}).then((data)=>{
+								this.depositArr = []
+								for(let i of data){
+									this.depositArr.push(i.housePayType)
+								}
+								return new Promise((resolve)=>{
+									providemodel.queryHouseGoods({firsttypeId:this.firstTypeId},(data)=>{
+										resolve(data)
+									})
+								}).then((data)=>{
+									this.deliveryArr = data
+									return new Promise((resolve)=>{
+										providemodel.queryHouseApartmentType({},(data)=>{
+											resolve(data)
+										})
+									}).then(data=>{
+										this.houseTypeArr = []
+										for(let i of data){
+											this.houseTypeArr.push(i.houseApartmentName)
+										}
+									})
+								})
+							})
+						}
 					}
 				})
 			})
 		})
-		this.getCateList()
-		providemodel.queryRentType((data)=>{
-			console.log(data)
-		})
+		
 	},
 	methods:{
 		goodsPhoto(e){
@@ -588,6 +615,7 @@ export default{
 			providemodel.checkSellerGroup((data)=>{
 				this.cateList = []
 				this.cateIdList = []
+				
 				for(let i of data){
 					this.cateList.push(i.name)
 					this.cateIdList.push(i.id)
@@ -862,6 +890,13 @@ export default{
 				req.longitude = this.houseLongitude
 				req.sellerGroupId = this.cateIdList[this.cate_idx]
 				req.depositMode = this.deposit
+				if(this.deposit.startsWith('押一')){
+					req.deposit = this.houseRent
+				}else if(this.deposit.startsWith('押二')){
+					req.deposit = this.houseRent * 2
+				}else if(this.deposit.startsWith('无')){
+					req.deposit = 0
+				}
 				if(this.monthRent!=''){
 					req.paMonthly = this.monthRent
 				}
@@ -871,6 +906,52 @@ export default{
 				if(this.seasonRent!=''){
 					req.quarterlyPayment = this.seasonRent
 				}
+				if(this.seasonServiceCharge!=''){
+					req.seasonServiceCharge = this.seasonServiceCharge
+				}
+				if(this.halfRent!=''){
+					req.halfPay = this.halfRent
+				}
+				if(this.halfServiceCharge!=''){
+					req.halfServiceCharge = this.halfServiceCharge
+				}
+				if(this.yearRent!=''){
+					req.yearPay = this.yearRent
+				}
+				if(this.yearServiceCharge!=''){
+					req.yearServiceCharge = this.yearServiceCharge
+				}
+				req.waterRise = this.waterBegin
+				req.waterCost = this.waterPrice
+				req.electricRise = this.elecBegin
+				req.electricCost = this.elecPrice
+				req.squareMetre = this.houseArea
+				req.years = this.houseYear
+				req.houseCode = this.houseNumber
+				req.attribute = this.houseTotalFloor
+				req.floor = this.houseFloor
+				req.region = this.houseDistrict
+				req.address = this.houseAddress
+				req.checkTime = this.houseDate
+				req.signing = this.houseSignRange
+				req.label = this.label_txt
+				req.picture = this.goods_photos
+				req.survey = this.detail
+				req.informationList = []
+				for(let i of this.deliverySelect){
+					if(i.name=='请选择'){
+						continue
+					}else{
+						let obj = {}
+						obj.name = i.name
+						obj.amount = i.amount
+						req.informationList.push(obj)
+					}
+				}
+				req.informationList = JSON.stringify(req.informationList)
+				providemodel.addHouse(req,(data)=>{
+					
+				})
 			}
 		}
 	}

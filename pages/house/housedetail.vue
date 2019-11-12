@@ -7,7 +7,7 @@
 				</swiper-item>
 			</swiper>
 		</view>
-		<provide-title :price="[data.price + '/月']" :spec="data.squareMetre+'㎡  ' + '|' + '  ' + data.floor + '/' + data.attribute + '层'"
+		<provide-title :price="data.price + '/月'" :spec="data.squareMetre+'㎡  ' + '|' + '  ' + data.floor + '/' + data.attribute + '层'"
 		:title="data.title" disc="km"></provide-title>
 		
 		<view class="payType" @tap="toPayType">

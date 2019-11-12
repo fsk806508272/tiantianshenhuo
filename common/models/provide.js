@@ -95,11 +95,10 @@ class ProvideModel extends HTTP{
 	}
 	
 	// 查询房屋押金方式
-	queryRentType(data,success){
+	queryRentType(success){
 		let params = {
 			method:'POST',
 			url:'/app/housePayType/getlistAll',
-			data:data,
 			success:success
 		}
 		this.request(params)
@@ -110,6 +109,28 @@ class ProvideModel extends HTTP{
 		let params = {
 			method:'POST',
 			url:'/app/house/queryHouseGoods',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询房屋户型
+	queryHouseApartmentType(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/houseApartment/getlistAll',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//发布房屋
+	addHouse(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/house/addHouse',
 			data:data,
 			success:success
 		}

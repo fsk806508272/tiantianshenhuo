@@ -25,6 +25,12 @@
 			<view class="content">等待审核中，耐心等候哦</view>
 			<view class="indexButton" @tap="toIndex">去首页看看</view>
 		</view>
+		<view v-if="type==5">
+			<image src="/static/cut/user/uploadgoodssuccess.png"></image>
+			<view class="uploadTitle">商品上传成功</view>
+			<view class="whiteButton" @tap="toIndex">返回首页</view>
+			<view class="yellowButton" @tap="toProvide">继续上传</view>
+		</view>
 	</view>
 </template>
 
@@ -63,6 +69,11 @@ export default{
 				})
 				break;
 			}
+		},
+		toProvide(){
+			uni.switchTab({
+				url:'/pages/realease/provide'
+			})
 		}
 	}
 }
@@ -117,6 +128,13 @@ image{
 	position:absolute;
 	top:456rpx;
 	left:305rpx;
+	font-size:36rpx;
+	color:rgba(60,60,60,1);
+}
+.uploadTitle{
+	position:absolute;
+	top:456rpx;
+	left:280rpx;
 	font-size:36rpx;
 	color:rgba(60,60,60,1);
 }
