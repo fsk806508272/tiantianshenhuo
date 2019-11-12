@@ -612,7 +612,10 @@
 		    "path" : "pages/provide/detail",
 		    "style" : {
 				"navigationBarTitleText": "提供详情",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"app-plus":{
+					"titleNView": false
+				}
 			}
 		},
 		{

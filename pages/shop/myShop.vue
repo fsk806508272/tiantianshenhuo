@@ -2,11 +2,9 @@
 	
 	<view class="content">
 		<view class="common_navigation">
-			<image src="/static/cut/leftIcon.png" @tap="toBack()"></image>
+			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
 			<view>我的店铺</view>
-			<view class="mul_icon_box">
-				<!-- <image src="" mode=""></image> -->
-			</view>
+			<view class="mul_icon_box"></view>
 		</view>
 		
 		<view class="open_close_box">
@@ -189,14 +187,13 @@ export default {
 			this.$refs.popup.close()
 	   },
 	   okStartPopup(e){
-		   let year = new Date().getFullYear();
-		   let month = new Date().getMonth() + 1<10?'0'+new Date().getMonth() + 1:new Date().getMonth() + 1;
-		   let day = new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate();
-		   console.log(year,month,day);
-		   console.log(this.year,this.month,this.day);
-		   console.log(parseInt(month),this.month);
-		   if(this.year <= year && parseInt(this.month) <= parseInt(month) && parseInt(this.day) < parseInt(day)){
-			   this.$api.msg("起始时间必须大于今天");
+		   let now = new Date();
+		   var selectDate = new Date();
+		   selectDate.setFullYear(this.year);
+		   selectDate.setMonth(this.month - 1);
+		   selectDate.setDate(this.day);
+		   if(selectDate.toDateString() != now.toDateString()){
+			   this.$api.msg("起始时间必须是今天");
 			   return;
 		   }
 		   this.dateStart = this.year+'-'+this.month+'-'+this.day
@@ -205,11 +202,14 @@ export default {
 		   console.log(this.dateStart);
 	   },
 	   okEndPopup(e){
-		   let year = new Date().getFullYear();
-		   let month = new Date().getMonth() + 1<10?'0'+new Date().getMonth() + 1:new Date().getMonth() + 1;
-		   let day = new Date().getDate()<10?'0'+new Date().getDate():new Date().getDate();
-		   if(this.year <= year && parseInt(this.month) <= parseInt(month) && parseInt(this.day) < parseInt(day)){
-			   this.$api.msg("结束时间必须大于今天");
+		   let now = new Date();
+		   var selectDate = new Date();
+		   selectDate.setFullYear(this.year);
+		   selectDate.setMonth(this.month - 1);
+		   selectDate.setDate(this.day);
+		   
+		   if(selectDate < now){
+			   this.$api.msg("结束时间不能小于今天");
 			   return;
 		   }
 		   this.dateEnd = this.year+'-'+this.month+'-'+this.day

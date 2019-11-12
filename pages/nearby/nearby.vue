@@ -22,7 +22,7 @@
 		<view class="map_box" v-if="isMap == true">
 			<cover-view>
 				 <!-- :controls="controls" -->
-			<map id="mapId" style="width: 750rpx; height: 72vh" :latitude="latitude" :longitude="longitude" :markers="covers" @callouttap="markerClick" @controltap="controlTap" show-location></map>
+			<map id="mapId" style="width: 750rpx; height: 72vh" :latitude="latitude" :longitude="longitude" :markers="covers" @callouttap="markerClick" show-location></map>
 			</cover-view>
 		</view>
 		<!-- 列表 -->
@@ -158,25 +158,25 @@ export default{
 			// 	url: '/pages/nearby/nearbyDetail?id=' + e.detail.markerId
 			// })
 		},
-		controlTap(e){
-			uni.getLocation({
-			    type: 'gcj02', //返回可以用于uni.openLocation的经纬度
-			    success: function (res) {
-			        const latitude = res.latitude;
-			        const longitude = res.longitude;
-			        uni.openLocation({
-			            latitude: latitude,
-			            longitude: longitude,
-			            success: function () {
-			                console.log('success');
-			            }
-			        });
-			    }
-			});
-			this.latitude = 39.909;
-			this.longitude = 116.39742;
-			console.log(this.latitude,this.longitude);
-		}
+		// controlTap(e){
+		// 	uni.getLocation({
+		// 	    type: 'gcj02', //返回可以用于uni.openLocation的经纬度
+		// 	    success: function (res) {
+		// 	        const latitude = res.latitude;
+		// 	        const longitude = res.longitude;
+		// 	        uni.openLocation({
+		// 	            latitude: latitude,
+		// 	            longitude: longitude,
+		// 	            success: function () {
+		// 	                console.log('success');
+		// 	            }
+		// 	        });
+		// 	    }
+		// 	});
+		// 	this.latitude = 39.909;
+		// 	this.longitude = 116.39742;
+		// 	console.log(this.latitude,this.longitude);
+		// }
 	}
 }
 </script>

@@ -311,11 +311,13 @@
 	//店铺详情底部签约
 	.bottomFix{
 		position: fixed;
-		bottom:0;
+		left:0;
 		width:100%;
 		background-color: #fff;
 		bottom:0;
 		height:110rpx;
+		padding: 20rpx;
+		box-sizing: border-box;
 		display: flex;
 		align-items: center;
 		.collect{
@@ -331,22 +333,44 @@
 			}
 		}
 		.contact{
-			margin-left: 57rpx;
-			width:45rpx;
+			// margin-left: 57rpx;
+			width:200rpx;
+			height: 70rpx;
+			border:1px solid rgba(255,102,0,1);
+			border-radius:10rpx;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 30rpx;
+			margin-right: 40rpx;
 			image{
-				width:38rpx;
-				height:38rpx;
+				display: block;
+				margin-right: 10rpx;
+				width:28rpx;
+				height:28rpx;
 			}
 			view{
-				font-size:22rpx;
+				font-size:30rpx;
 				color:rgba(255,102,0,1);
 			}
 		}
-		.theme-button{
-			margin-left: 59rpx;
+		.add_car_button{
+			width:230rpx;
 			height:70rpx;
-			width:500rpx;
-			
+			text-align: center;
+			line-height: 70rpx;
+			background:linear-gradient(-90deg,rgba(255,180,0,1),rgba(250,226,67,1));
+			border-radius:10rpx;
+			font-size:30rpx;
+			color:rgba(255,255,255,1);
+			margin-right: 10rpx;
+		}
+		.theme-button{
+			height:70rpx;
+			text-align: center;
+			line-height: 70rpx;
+			width:230rpx;
+			font-size:30rpx;
 		}
 	}
 	
@@ -423,7 +447,7 @@
 		align-items: center;
 		padding: 0 20rpx;
 		box-sizing: border-box;
-		image{
+		.back_icon{
 			// position: absolute;
 			width:20rpx;
 			height:34rpx;
@@ -438,6 +462,13 @@
 			// position: absolute;
 			// top:67rpx;
 			// left:300rpx;
+		}
+		.mul_icon_box{
+			.collect_icon{
+				display: block;
+				width: 42rpx;
+				height: 35rpx;
+			}
 		}
 	}	
 	

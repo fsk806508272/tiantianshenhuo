@@ -1,5 +1,14 @@
 <template>
 	<view>
+		<view class="common_navigation">
+			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
+			<view>提供详情</view>
+			<view class="mul_icon_box" @tap="toCollect()">
+				
+				<image v-if="data.goods.isCollect==0" class="collect_icon" src="/static/cut/no_collect.png"></image>
+				<image v-else src="/static/cut/collected.png" class="collect_icon" ></image>
+			</view>
+		</view>
 		<view class="carousel-section">
 			<swiper class="swiper" circular="true" autoplay="true">
 				<swiper-item v-for="(item,index) in pic" :key="index">
@@ -47,14 +56,17 @@
 		</view>
 		
 		<view class="bottomFix">
-			<view class="collect" @tap="toCollect()">
+			<!-- <view class="collect" @tap="toCollect()">
 				<image v-if="data.goods.isCollect==0" src="/static/cut/no_collect.png"></image>
 				<image v-else src="/static/cut/collected.png"></image>
 				<view>收藏</view>
-			</view>
+			</view> -->
 			<view class="contact">
 				<image src="/static/cut/message.png"></image>
-				<view>联系</view>
+				<view>联系TA</view>
+			</view>
+			<view class="add_car_button" @tap="addCar">
+				加入购物车
 			</view>
 			<view class="theme-button" @tap="chooseSpec">立即下单</view>
 		</view>
@@ -113,6 +125,7 @@ export default{
 			type:'',
 			data:'',
 			id:'',
+			skuId: '',
 			pic:[],
 			sellerId:'',
 			sellerdata:'',
@@ -142,6 +155,7 @@ export default{
 		if(this.type!=3){
 			providemodel.getItemDetail({goodsId:this.id},(data)=>{
 				this.data = data
+				this.skuId = data.goods.defaultItemId;
 				let image = data.goodsDesc.itemImages
 				image = image.split(',')
 				this.pic = image
@@ -151,6 +165,11 @@ export default{
 		}
 	},
 	methods:{
+	   toBack(){
+	   	uni.navigateBack({
+	   		delta: 1
+	   	})
+	   },
 		toCollect(){
 			console.log(this.data.goods.isCollect);
 			if(this.data.goods.isCollect == 0){
@@ -202,8 +221,17 @@ export default{
 			uni.navigateTo({
 				url:'goodsComment?data=' + JSON.stringify(this.comment)
 			})
+		},
+		addCar(){
+			console.log(this.skuId,this.number);
+			providemodel.addCart({goodsItemId:this.skuId,num:this.number},(data)=>{
+				uni.showToast({
+					title:"添加购物车成功",
+					duration:1500,
+					icon:'none'
+				})
+			})
 		}
-		
 	}
 }
 </script>
