@@ -26,11 +26,11 @@
 		<!-- 维修发布 start -->
 		<view v-if="firstTypeId==9||firstTypeId==5" class="listItem">
 			<view class="star">服务名称</view>
-			<input placeholder="请输入标题(26字内)"/>
+			<input v-model="serviceName" placeholder="请输入标题(26字内)"/>
 		</view>
 		<view v-if="firstTypeId==5" class="listItem">
 			<view class="star">服务价格</view>
-			<input placeholder="请输入"/>
+			<input v-model="servicePrice" placeholder="请输入"/>
 		</view>
 		<view v-if="firstTypeId==9" class="listItem">
 			<view class="star">上门费</view>
@@ -174,7 +174,7 @@
 		</view>
 		
 		<!-- 房屋信息 -->
-		<view class="housing_info">
+		<view class="housing_info" v-if="firstTypeId==1">
 			<view class="pro_title title gray">房屋信息</view>
 			<view class="housing_box">
 				<view class="housing_item">
@@ -243,7 +243,7 @@
 		</view>
 		
 		<!-- 房屋标签 -->
-		<view class="house_label_box">
+		<view class="house_label_box" v-if="firstTypeId==1">
 			<view class="pro_title title gray">房屋标签（多选）</view>
 			<view class="house_label_ul">
 				<view class="label_item" :class="[item.is_select != 0?'active':'']" v-for="(item,index) in labelList" @tap="labelMultiple(index)" :key="index">{{item.name}}</view>
@@ -254,17 +254,12 @@
 		</view>
 		<!-- 房屋发布 end -->
 		
-		<!-- 维修发布 start -->
-		<view v-if="firstTypeId!=8" class="remark_box">
-			<view class="rel_title"><text v-if="firstTypeId!=5">服务详情</text><text v-if="firstTypeId==5">业务详情</text></view>
-			<textarea v-model="detail" placeholder="可以简单介绍一下.." />
-		</view>
-		<!-- 维修发布 end -->
+		
 		
 		<!-- 金融发布 start -->
 		
 		<!-- 委托方业务范围 -->
-		<view v-if="firstTypeId==5" class="financeBox">
+		<view v-if="firstTypeId==5&&item=='财务代理'" class="financeBox">
 			<view class="star">委托业务范围</view>
 			<view class="rangeSelect" v-for="(item,index) in rangeList" :key="index">
 				<picker @change="rangeChange($event,index)" :range="rangeArry">
@@ -278,13 +273,52 @@
 					<image src="/static/cut/user/add.png"></image>
 					<view>添加</view>
 				</view>
-				<view class="button" v-else @tap="deleteRange(index)">
+				<view class="button del" v-else @tap="deleteRange(index)">
 					<image src="/static/cut/user/del.png"></image>
 					<view>删除</view>
 				</view>
 			</view>
 		</view>
+		
+		<!-- 店铺内商品所属分类 -->
+		<view class="loan" v-if="firstTypeId==5&&item=='小额贷款'">
+			<view class="title">贷款信息</view>
+			<view class="itemList">
+				<view class="item">
+					<view class="itemtitle">额度:</view>
+					<input placeholder="请输入" v-model="quota" placeholder-style="font-size:26rpx;"/>
+				</view>
+				<view class="item">
+					<view class="itemtitle">期限:</view>
+					<input placeholder="请输入" v-model="limit" placeholder-style="font-size:26rpx;"/>
+				</view>
+				<view class="item">
+					<view class="itemtitle">费率:</view>
+					<input placeholder="请输入"  v-model="rate" placeholder-style="font-size:26rpx;"/>
+				</view>
+			</view>
+			<view class="applyCondition">
+				<view class="applyTitle">申请条件:</view>
+				<input placeholder="请输入" v-model="applyCondition" placeholder-style="font-size:26rpx;"/>
+			</view>
+			<view class="applyCondition">
+				<view class="applyTitle">申请要点:</view>
+				<input placeholder="请输入" v-model="applyMain" placeholder-style="font-size:26rpx;"/>
+			</view>
+			<view class="applyCondition">
+				<view class="applyTitle">申请材料:</view>
+				<input placeholder="请输入" v-model="applyMaterial" placeholder-style="font-size:26rpx;"/>
+			</view>
+		</view>
+		
 		<!-- 金融发布 end -->
+		
+		<!-- 维修发布 start -->
+		<view v-if="firstTypeId!=8" class="remark_box">
+			<view class="rel_title"><text v-if="firstTypeId!=5">服务详情</text><text v-if="firstTypeId==5">业务详情</text></view>
+			<textarea v-model="detail" placeholder="可以简单介绍一下.." />
+		</view>
+		<!-- 维修发布 end -->
 		
 		<!-- 商品图片 -->
 		<view class="grayButton">商品图片(注：第一张为主图，限6张)</view>
@@ -338,6 +372,14 @@ export default{
 			cate_idx: null,
 			firstTypeId:'',
 			firstType:'',
+			serviceName:'',
+			servicePrice:'',
+			quota:'',
+			rate:'',
+			limit:'',
+			applyCondition:'',
+			applyMain:'',
+			applyMaterial:'',
 			secondtypeinfoId:'',
 			secondtypeinfoIdList:[],
 			isCanUpload: 0,
@@ -423,7 +465,7 @@ export default{
 					add: true
 				}
 			],
-			rangeArry:['工商注册','记账报税','变更/年审','开户/注销','开放公帐户','税务疑难解决','地址挂靠'],
+			rangeArry:[],
 			selectIndex: 0
 		}
 	},
@@ -442,6 +484,7 @@ export default{
 			}).then((data)=>{
 				this.firstType = data.firstType
 				this.firstTypeId = data.firstTypeId
+				console.log(this.firstTypeId)
 				return new Promise((resolve)=>{
 					providemodel.getSecondType({firstType:this.firstType,type:2},(data)=>{
 						resolve(data)
@@ -452,39 +495,52 @@ export default{
 					for(let i of data){
 						this.provideItem.push(i.title)
 						this.secondtypeinfoIdList.push(i.secondtypeinfoId)
-						if(this.firstTypeId==1){
+					}
+					if(this.firstTypeId==1){
+						return new Promise((resolve)=>{
+							providemodel.queryRentType((data)=>{
+								resolve(data)
+							})
+						}).then((data)=>{
+							this.depositArr = []
+							for(let i of data){
+								this.depositArr.push(i.housePayType)
+							}
 							return new Promise((resolve)=>{
-								providemodel.queryRentType((data)=>{
+								providemodel.queryHouseGoods({firsttypeId:this.firstTypeId},(data)=>{
 									resolve(data)
 								})
 							}).then((data)=>{
-								this.depositArr = []
-								for(let i of data){
-									this.depositArr.push(i.housePayType)
-								}
+								this.deliveryArr = data
 								return new Promise((resolve)=>{
-									providemodel.queryHouseGoods({firsttypeId:this.firstTypeId},(data)=>{
+									providemodel.queryHouseApartmentType({},(data)=>{
 										resolve(data)
 									})
-								}).then((data)=>{
-									this.deliveryArr = data
-									return new Promise((resolve)=>{
-										providemodel.queryHouseApartmentType({},(data)=>{
-											resolve(data)
-										})
-									}).then(data=>{
-										this.houseTypeArr = []
-										for(let i of data){
-											this.houseTypeArr.push(i.houseApartmentName)
-										}
-									})
+								}).then(data=>{
+									this.houseTypeArr = []
+									for(let i of data){
+										this.houseTypeArr.push(i.houseApartmentName)
+									}
 								})
 							})
-						}
+						})
+					}else if(this.firstTypeId==5){
+						return new Promise(resolve=>{
+							providemodel.queryHouseGoods({firsttypeId:5},data=>{
+								resolve(data)
+							})
+						}).then(data=>{
+							this.rangeArry = data
+						})
 					}
 				})
 			})
 		})
+	},
+	onShow(){
+		
+	},
+	onReady(){
 		
 	},
 	methods:{
@@ -664,7 +720,7 @@ export default{
 					})
 					return
 				}
-				if(this.$refs.specData.specLists[0].img_pic==''){
+				if(this.$refs.specData.specLists[0].image==''){
 					uni.showToast({
 						title:'请设置商品规格',
 						duration:1500,
@@ -952,6 +1008,60 @@ export default{
 				providemodel.addHouse(req,(data)=>{
 					
 				})
+			}else if(this.firstTypeId==5&&this.item=='财务代理'){
+				if(this.serviceName==''){
+					uni.showToast({
+						title:'请输入服务名称',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.servicePrice==''){
+					uni.showToast({
+						title:'请设置服务价格',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.$refs.specData.specLists[0].image==''){
+					uni.showToast({
+						title:'请设置商品规格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.rangeList[0].title=='请选择'){
+					uni.showToast({
+						title:'请选择委托业务范围',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.details = this.detail
+				req.firstTypeId = this.firstTypeId
+				req.picture = this.goods_photos.join(',')
+				req.financeType = this.cateIdList[this.cate_idx]
 			}
 		}
 	}
@@ -1366,9 +1476,63 @@ export default{
 			align-items: center;
 			font-size:30rpx;
 			color:#fff;
+			&.del{
+				border:1px solid rgba(255,102,0,1);
+				background: #fff;
+				color: #FF6600;
+			}
 		}
 	}
 }
+
+.loan{
+	background-color: #fff;
+	margin-top: 20rpx;
+	width:750rpx;
+	height:635rpx;
+	padding:0 20rpx;
+	.title{
+		display: flex;
+		align-items: center;
+		height:83rpx;
+		border-bottom: 1rpx solid #f2f2f2;
+	}
+	.itemList{
+		display: flex;
+		flex-wrap: wrap;
+		height:218rpx;
+		border-bottom: 1rpx solid #F2F2F2;
+		.item{
+			margin-top: 30rpx;
+			margin-right: 20rpx;
+			display: flex;
+			align-items: center;
+			width:330rpx;
+			height:64rpx;
+			border:1rpx solid rgba(160,160,160,1);
+			border-radius:8rpx;
+			.itemtitle{
+				margin-left: 20rpx;
+				width:80rpx;
+				display: flex;
+			}
+			input{
+				width:220rpx;
+			}
+		}
+	}
+	.applyCondition{
+		display: flex;
+		align-items: center;
+		margin-top: 35rpx;
+		width:710rpx;
+		height:64rpx;
+		border:1rpx solid rgba(160,160,160,1);
+		border-radius:8rpx;
+		padding-left:20rpx;
+	}
+}
+
 .housing_info{
 	padding: 20rpx 20rpx 30rpx;
 	background: #fff;

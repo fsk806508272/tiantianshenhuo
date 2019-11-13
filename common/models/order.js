@@ -205,6 +205,60 @@ class OrderModel extends HTTP {
 		this.request(params)
 	}
 	
+	//商户查看房屋合同
+	sellerCheckHouseContract(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryContract',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//商户确认房屋签约
+	sellerConfirmHouseSign(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/addSigningContract',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//商家接单
+	sellerAcceptOrder(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsOrder/serviceGetOrder',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//商家确认服务
+	sellerConfirmService(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsOrder/serviceHandle',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//商家查看退款售后订单
+	sellerCheckBackOrder(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsBackorder/sellerGetList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {OrderModel}

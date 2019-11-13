@@ -761,7 +761,14 @@
 				"navigationBarTitleText": "我的提供",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
-        }
+        },
+		{
+		    "path" : "pages/user/sellerorder/ordercontract",
+		    "style" : {
+				"navigationBarTitleText": "查看合同",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
         ,{
             "path" : "pages/shop/changeShop/changeShop",
             "style" : {

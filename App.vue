@@ -562,6 +562,12 @@
 		}
 	}
 	
+	.flexcenter{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
 	.open_close_box{
 		background: #fff;
 		// margin-top: 88rpx;
@@ -617,5 +623,7 @@
 				}
 			}
 		}
+		
+		
 	}
 </style>
