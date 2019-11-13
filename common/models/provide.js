@@ -136,6 +136,17 @@ class ProvideModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//发布金融
+	addFinance(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/finance/addFinance',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {ProvideModel}

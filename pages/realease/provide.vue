@@ -360,6 +360,7 @@ export default{
 	},
 	data(){
 		return{
+			userId:'',
 			second:false,
 			cityPickerValueDefault: [0, 0, 1],
 			themeColor:"#FF6600",
@@ -476,6 +477,7 @@ export default{
 				resolve(data)
 			})
 		}).then((data)=>{
+			this.userId = data.appuserId
 			this.sellerId = data.storeId
 			return new Promise((resolve)=>{
 				storemodel.getSellerStore({sellerId:this.sellerId},(data)=>{
@@ -1058,10 +1060,42 @@ export default{
 					return
 				}
 				let req = {}
-				req.details = this.detail
-				req.firstTypeId = this.firstTypeId
-				req.picture = this.goods_photos.join(',')
-				req.financeType = this.cateIdList[this.cate_idx]
+				req.rangeList = []
+				for(let i of this.rangeList){
+					let rangeObj = {}
+					rangeObj.rangePrice = i.fee
+					rangeObj.rangeName = i.title
+					req.rangeList.push(rangeObj)
+				}
+				req.releaseFinance = {}
+				req.releaseFinance.details = this.detail
+				req.releaseFinance.financeType = this.cateIdList[this.cate_idx]
+				req.releaseFinance.firstTypeId = this.firstTypeId
+				req.releaseFinance.latitude = '22.731142'
+				req.releaseFinance.longitude = '114.269176'
+				req.releaseFinance.picture = this.goods_photos.join(',')
+				req.releaseFinance.price = this.servicePrice
+				req.releaseFinance.secondTypeId = this.secondtypeinfoId
+				req.releaseFinance.sellerId = this.sellerId
+				req.releaseFinance.title = this.serviceName
+				req.releaseFinance.userId = this.userId
+				req.specList = []
+				for(let i of this.$refs.specData.specLists){
+					let obj = {}
+					obj.specsPicture = i.image
+					obj.specsName = i.spec
+					obj.specsPrice = i.price
+					req.specList.push(obj)
+				}
+				let financeJSON = JSON.stringify(req)
+				providemodel.addFinance({financeJSON },data=>{
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					
+				})
 			}
 		}
 	}
