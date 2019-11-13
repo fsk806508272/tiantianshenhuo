@@ -33,7 +33,9 @@
 
 <script>
 	import {UserModel} from '../../common/models/user.js'
+	import {PayModel} from '@/common/models/pay.js'
 	let usermodel = new UserModel();
+	let payModel = new PayModel();
 	export default{
 		data(){
 			return{
@@ -59,31 +61,28 @@
 				this.number = '';
 			},
 			next(){
-				usermodel.userRecharge({
-					rechargeMoney: this.number
-				},(res)=>{
-					console.log(res);
-					uni.requestPayment({
-					    provider: 'wxpay',
-					    timeStamp: res.timeStamp,
-					    nonceStr: res.nonceStr,
-					    package: res.package,
-					    signType: 'MD5',
-					    paySign: res.paySign,
-					    success: function (res) {
-					    	uni.showToast({
-					    		title: "支付成功！"
-					    	})
-					    },
-					    fail: function (err) {
-					    	uni.showToast({
-					    		title:'您已取消支付，请尽快完成支付',
-					    		duration:2000,
-					    		icon:'none'
-					    	})
-					    }
-					});
+				payModel.webPay({
+					type:1,
+					rechargeMoney:0.01
+				},(res) =>{
+					// let url = res.codeUrl;
+					// #ifdef H5
+					let id = document.getElementById('zy-pay');
+					if( id ){
+						id.remove();
+					}
+					const div = document.createElement('div');
+					div.id = 'zy-pay';
+					
+					div.innerHTML = (res);
+					document.body.appendChild(div);
+					document.forms[0].acceptCharset = 'UTF-8';
+					document.forms[0].submit();
+					// #endif
+				},(err) =>{
+					console.log(err)
 				})
+				
 			}
 		}
 	}

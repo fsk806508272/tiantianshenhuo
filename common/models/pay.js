@@ -87,7 +87,16 @@ class PayModel extends HTTP{
 		this.request(params)
 	}
  
-
+	webPay(data,success,fail){
+		let params = {
+			method:'POST',
+			url:'/app/web/webRechargeNoSendByWechat',
+			data:data,
+			success,
+			fail
+		}
+		this.request(params)
+	}
 
 	
 
