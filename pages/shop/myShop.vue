@@ -83,7 +83,7 @@
 								<view class="t_info">{{titem.goodsName}}</view>
 								<view class="p_info"><view class="price_txt"><text>￥</text>{{titem.price}}</view><text>已接单{{titem.totalSale}}</text></view>
 							</view>
-							<image src="/static/cut/address_edit.png" @tap.stop="toEdit()" class="edit_img" mode="widthFix"></image>
+							<image src="/static/cut/address_edit.png" @tap.stop="toEdit(titem)" class="edit_img" mode="widthFix"></image>
 						</view>
 					</view>
 				</view>
@@ -186,6 +186,12 @@ export default {
 	   },
 	   cancelPopup(){
 			this.$refs.popup.close()
+	   },
+	   toEdit(){
+		   let url = `changeShop/changeShop`;
+		   uni.redirectTo({
+		   	url
+		   })
 	   },
 	   okStartPopup(e){
 		   let now = new Date();
