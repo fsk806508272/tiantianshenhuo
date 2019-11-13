@@ -12,7 +12,7 @@
 			</view>
 			<view class="body-font">
 				<image @click="clickShow" src="/static/shareLink.png"></image>
-				<image src="/static/cut/share_pic.png"></image>
+				<image @click="clickShow" src="/static/cut/share_pic.png"></image>
 			</view>
 		</view>
 		
@@ -20,7 +20,7 @@
 		<view class="share-wrap" @click="changeWrap" id="wrap" v-show="showWrap">
 			<view class="share-wrap-cont">
 				<view class="share-wrap-content">
-					<view class="share-wrap-list" v-for="(item,index) in shareList" :key="index">
+					<view @click="share(index)" class="share-wrap-list" v-for="(item,index) in shareList" :key="index">
 						<image :src="item.src"></image>
 						<text>{{ item.title }}</text>
 					</view>
@@ -33,30 +33,48 @@
 </template>
 
 <script>
+import NativeShare from '../../../common/SDK/NativeShare.js'
 export default{
 	data(){
 		return{
 			displayLink:true,
 			shareList:[{
 				title:'微信好友',
-				src:'/static/shareWx.png'
+				src:'/static/shareWx.png',
+				type:'wechatFriend'
 			},{
 				title:"微信朋友圈",
-				src:'/static/shareP.png'
+				src:'/static/shareP.png',
+				type:'wechatTimeline'
 			},{
 				title:"QQ好友",
-				src:'/static/shareQQ.png'
+				src:'/static/shareQQ.png',
+				type:'qqFriend'
 			},{
 				title:'QQ空间',
-				src:'/static/shareK.png'
+				src:'/static/shareK.png',
+				type:'qZone',
 			}],
-			showWrap:false
+			showWrap:false,
+			appVersion:null,
 		}
 	},
 	onShareAppMessage(res){
 		return{
 			title:'江南皮革厂倒闭了',
 			path:'/pages/index/index'
+		}
+	},
+	created(){
+		let u = navigator.appVersion;
+		let uc = u.split('UCBrowser/').length > 1  ? 1 : 0;
+		let qq = u.split('MQQBrowser/').length > 1 ? 2 : 0;
+		let wx = ((u.match(/MicroMessenger/i)) && (u.match(/MicroMessenger/i).toString().toLowerCase() == 'micromessenger'));
+		if( uc ){
+			this.appVersion = 'uc';
+		}
+		if( qq && !wx ){
+			this.appVersion = 'qq';
 		}
 	},
 	methods:{
@@ -79,6 +97,35 @@ export default{
 			if( id === 'wrap' ){
 				this.showWrap = false;
 			}
+		},
+		share(index){
+			// #ifdef H5
+			let nativeShare = new NativeShare()
+			if( this.appVersion ){
+				// 设置分享文案
+				nativeShare.setShareData({
+				    icon: 'https://pic3.zhimg.com/v2-080267af84aa0e97c66d5f12e311c3d6_xl.jpg',
+				    link: 'https://github.com/fa-ge/NativeShare',
+				    title: 'NativeShare',
+				    desc: 'NativeShare是一个整合了各大移动端浏览器调用原生分享的插件',
+				    from: '@fa-ge',
+				})
+				// 唤起浏览器原生分享组件(如果在微信中不会唤起，此时call方法只会设置文案。类似setShareData)
+				try {
+					nativeShare.call(this.shareList[index].type);
+				    // 如果是分享到微信则需要 nativeShare.call('wechatFriend')
+				    // 类似的命令下面有介绍
+				} catch(err) {
+				  // 如果不支持，你可以在这里做降级处理
+				}
+				return;
+			}
+			uni.showToast({
+				icon:'none',
+				title:`可以用浏览器分享按钮分享到${this.shareList[index].title}哦`
+			})
+			// #endif
+			
 		}
 	}
 }
