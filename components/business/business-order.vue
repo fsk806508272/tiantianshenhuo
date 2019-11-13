@@ -8,42 +8,66 @@
 			<view class="rt">{{createTime}}</view>
 		</view>
 		
-		<view class="middle">
+		<view v-if="id!=1" class="lifeMiddle">
+			<block v-for="(item,index) in goodsItemList" :key="index">
+				<view class="item">
+					<image :src="item.picPath"></image>
+					<view class="list">
+						<view class="title">
+							<view class="name">{{item.title}}</view>
+							<view class="content">￥{{item.price}}</view>
+						</view>
+						<view class="title">
+							<view class="spec">{{item.spec}}</view>
+							<view class="content">×{{item.num}}</view>
+						</view>
+					</view>
+				</view>
+			</block>
+			<view class="delivery">
+				<view class="title">配送费(运费)</view>
+				<view>{{deliver}}</view>
+			</view>
+		</view>
+		
+		<view v-if="id==1" class="houseMiddle">
 			<image :src="pic"></image>
 			<view class="list">
 				<view class="title">
-					<view class="name">回复困惑和思考解放后开始是否是科技示范</view>
-					<view class="content">36.9</view>
+					<view class="name">{{title}}</view>
+					<view class="content">{{price}}</view>
 				</view>
 				<view class="title">
-					<view class="spec">手持花洒(五年质保)；</view>
+					<view class="spec">{{spec}}</view>
 				</view>
-				<view v-if="id==8" class="title">
-					<view class="fee">配送(运费)</view>
-					<view class="content">￥20</view>
+				<view v-if="id==1&&status=='houseFinished'" class="title">
+					<view class="fee">押金</view>
+					<view class="content">{{deposit}}</view>
 				</view>
-				<view v-if="id!=8" class="title">
-					<view class="fee">位于i速回复</view>
-					<view class="content">dfa</view>
+				<view v-if="id==1&&status=='houseFinished'" class="title">
+					<view class="fee">租金</view>
+					<view class="content">{{price}}</view>
 				</view>
-				<view v-if="id!=8" class="title">
-					<view class="fee">位于i速回复</view>
-					<view class="content">dfa</view>
+				<view v-if="id==1&&status=='houseFinished'" class="title">
+					<view class="fee">服务费</view>
+					<view class="content">{{houseService}}</view>
 				</view>
 			</view>
 		</view>
 		
 		<view class="bottom">
 			<view class="content">
-				<text v-if="id==8">共计{{num}}个，实收￥{{price}}</text>
-				<text v-if="id==1">实收</text>
+				<text v-if="id==8||id==9">共计{{length}}件商品，实收￥{{sum}}</text>
+				<text v-if="id==1&&status=='houseWaitingDeal'" class="gray">签约后，租户才可以付款哦~</text>
+				<text v-if="id==1&&status=='houseDealed'" class="gray">已签约，等待租户付款吧~</text>
+				<text v-if="id==1&&status=='houseFinished'" class="gray">实收:{{houseSum}}</text>
 			</view>
-			<view class="status">待接单</view>
+			<view class="status">{{statusObj[status]}}</view>
 		</view>
 		
 		<view class="other">
 			<!-- 地址 -->
-			<view class="item" v-if="id==8">
+			<view class="item" v-if="(id==8&&type==1)||id==9">
 				<image src="/static/cut/user/address_on.png"></image>
 				<view class="content">
 					<view class="address">广东深圳市龙岗区龙翔大道9002号志联佳大厦508</view>
@@ -51,29 +75,46 @@
 				</view>
 			</view>
 			<!-- 留言 -->
-			<view class="item" v-if="id==8">
+			<view class="item" v-if="id==8&&type==1">
 				<image src="/static/cut/user/message.png"></image>
 				<view class="content">急需要穿！！帮忙快点发货好吗，拜托了</view>
 			</view>
 			<view class="item" v-if="id==1">
 				<image src="/static/cut/user/userInfo.png"></image>
 				<view class="content">
-					<view class="address">54545454545</view>
-					<view class="name">唐笑笑 1374545554</view>
+					<view class="address">{{identityCard}}</view>
+					<view class="name">{{username}} {{phone}}</view>
 				</view>
 			</view>
 			<view class="item" v-if="id==1">
 				<image src="/static/cut/user/signtime.png"></image>
-				<view class="content">租期时长：</view>
+				<view class="content">租期时长：{{duration}}</view>
 			</view>
-			<view class="item" v-if="id==10">
+			<view class="item" v-if="id==8&&type==7">
 				<image src="/static/cut/user/reason.png"></image>
-				<view class="content">急需要穿！！帮忙快点发货好吗，拜托了</view>
+				<view class="content">申请原因:{{applyReason}}</view>
 			</view>
-			<view class="item" v-if="id==10">
+			<view class="item" v-if="id==8&&type==7">
 				<image src="/static/cut/user/backtype.png"></image>
-				<view class="content">急需要穿！！帮忙快点发货好吗</view>
+				<view class="content">售后方式:{{applyMode}}</view>
 			</view>
+			<view class="item" v-if="id==8&&type!=1">
+				<image src="/static/cut/user/message.png"></image>
+				<view class="content">申请备注:{{applyExplain}}</view>
+			</view>
+		</view>
+		<view class="buttons">
+			<block v-if="status=='houseWaitingDeal'"><view class="gray default">取消订单</view><view class="white">联系TA</view><view @tap.stop="toContract" class="yellow">查看合同并签约</view></block>
+			<block v-if="status=='houseDealed'"><view class="gray default">联系TA</view></block>
+			<block v-if="status=='houseFinished'"><view class="gray default">联系TA</view></block>
+			<block v-if="status=='waitingRecieve'"><view class="gray default">拒收订单</view><view class="white">联系TA</view><view @tap.stop="accept" class="yellow">接收订单</view></block>
+			<block v-if="status=='waitingDeal'"><view class="white">联系TA</view><view @tap.stop="confirmService" class="yellow">确认服务</view></block>
+			<block v-if="status=='dealed'"><view class="gray default">联系TA</view></block>
+			<block v-if="status=='applyBack'"><view class="gray default">联系TA</view><view class="gray default">拒绝申请</view><view @tap.stop="toContract" class="yellow">同意售后</view></block>
+			<block v-if="status=='applyMoney'"><view class="gray default">联系TA</view><view class="gray default">拒绝退款</view><view @tap.stop="toContract" class="yellow">同意退款</view></block>
+			<block v-if="status=='serviced'"><view class="default">联系TA</view><view class="pay" @tap.stop="cancelApply">取消申请</view></block>
+			<block v-if="status=='waiting'"><view class="default">联系TA</view></block>
+			<block v-if="status=='finished'"><view @tap.stop="checkComment" class="yellow">查看评价</view></block>
 		</view>
 	</view>
 </template>
@@ -86,13 +127,22 @@ export default{
 			type:Number,
 			value:8
 		},
+		type:[String,Number],
+		status:{
+			type:String
+		},
+		spec:{
+			type:String
+		},
+		title:{
+			type:String
+		},
 		num:{
 			type:Number,
 			value:1
 		},
 		price:{
-			type:String,
-			value:'52.03'
+			type:Number
 		},
 		createTime:{
 			type:String
@@ -102,14 +152,71 @@ export default{
 		},
 		pic:{
 			type:String
-		}
+		},
+		duration:{
+			type:String
+		},
+		username:{
+			type:String
+		},
+		identityCard:{
+			type:String
+		},
+		phone:{
+			type:String
+		},
+		houseSum:{
+			type:String
+		},
+		houseService:{
+			type:String
+		},
+		deposit:{
+			type:String
+		},
+		goodsItemList:{
+			type:Array
+		},
+		sum:{
+			type:Number
+		},
+		deliver:{
+			type:String
+		},
+		length:{
+			type:Number
+		},
+		applyExplain:{
+			type:String
+		},
+		applyMode:{
+			type:String
+		},
+		applyReason:''
 	},
 	data(){
 		return{
 			statusObj:{
 				waitingRecieve:'待接单',
-				waitingDeal:'待处理'
+				waitingDeal:'待处理',
+				houseWaitingDeal:'待处理',
+				houseDealed:'已处理',
+				dealed:'已处理',
+				finished:'交易完成',
+				applyBack:'申请售后',
+				applyMoney:'申请退款'
 			}
+		}
+	},
+	methods:{
+		toContract(){
+			this.$emit('checkCont')
+		},
+		accept(){
+			this.$emit('acceptOrder')
+		},
+		confirmService(){
+			this.$emit('confirm')
 		}
 	}
 }
@@ -141,6 +248,14 @@ page{
 		.ordercode{
 			font-size:20rpx;
 			color:rgba(100,100,100,1);
+			width:400rpx;
+			overflow : hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			word-wrap: break-word;
+			word-break: break-all;
 		}
 	}
 	.rt{
@@ -149,7 +264,54 @@ page{
 	}
 }
 
-.middle{
+.lifeMiddle{
+	margin-top: 20rpx;
+	border-bottom: 1rpx solid #f2f2f2;
+	.item{
+		margin-bottom: 20rpx;
+		height:120rpx;
+		display: flex;
+		padding:0 20rpx;
+		image{
+			width:120rpx;
+			height:120rpx;
+		}
+		.list{
+			margin-left: 20rpx;
+			width:570rpx;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			.title{
+				display: flex;
+				justify-content: space-between;
+				.name{
+					width:400rpx;
+					overflow : hidden;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
+					word-wrap: break-word;
+					word-break: break-all;
+				}
+				.spec{
+					font-size:22rpx;
+					color:rgba(0,138,255,1);
+				}
+			}
+		}
+	}
+	.delivery{
+		padding:0 20rpx;
+		height:80rpx;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+}
+
+.houseMiddle{
 	display: flex;
 	margin-top: 20rpx;
 	border-bottom: 1rpx solid #f2f2f2;
@@ -208,6 +370,47 @@ page{
 		.content{
 			margin-left: 20rpx;
 		}
+	}
+}
+
+.buttons{
+	height:100rpx;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	border-top: 1rpx solid #f2f2f2;
+	padding-right: 20rpx;
+	.default{
+		margin-left: 20rpx;
+		font-size: 26rpx;
+		line-height:60rpx; 
+		height:60rpx;
+		padding:0 20rpx;
+		background:rgba(255,255,255,1);
+		border:1rpx solid rgba(200,200,200,1);
+		border-radius:10rpx;
+	}
+	.white{
+		margin-left: 20rpx;
+		font-size: 26rpx;
+		line-height:60rpx; 
+		height:60rpx;
+		padding:0 20rpx;
+		background:rgba(255,255,255,1);
+		border:1rpx solid rgba(255,102,0,1);
+		border-radius:10rpx;
+		color:#FF6600;
+	}
+	.yellow{
+		margin-left: 20rpx;
+		font-size: 26rpx;
+		line-height:60rpx; 
+		height:60rpx;
+		padding:0 20rpx;
+		background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+		border:1rpx solid rgba(255,102,0,1);
+		border-radius:10rpx;
+		color:#FFF;
 	}
 }
 </style>
