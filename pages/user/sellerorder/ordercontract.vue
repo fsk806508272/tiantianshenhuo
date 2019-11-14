@@ -56,6 +56,7 @@ export default{
 		req.releaseId = this.data.releaseId
 		req.contractCode = this.data.contractCode
 		req.orderCode = this.data.orderCode
+		req.type = 2
 		let that = this
 		uni.request({
 			url:'https://sgz.wdttsh.com/app/signing/queryContract',
