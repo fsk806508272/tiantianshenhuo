@@ -9,22 +9,16 @@
 			</view>
 		</view>
 		
-		<!-- <view class="typeTitle">充值方式</view>
+		<view class="typeTitle">充值方式</view>
 		
 		<view class="chargeType">
-			<view>
-				<image class="pay" src="/static/cut/wechat.png"></image>
-				<view>微信充值</view>
-				<image v-if="wxPay==0" class="icon" src="/static/cut/unchoose.png"></image>
-				<image v-if="wxPay==1" class="icon" src="/static/cut/choosed.png"></image>
+			<view @click="changePayType(index)" v-for="(item,index) in payType" :key="index">
+				<image class="pay" :src="item.src"></image>
+				<view>{{  item.title }}</view>
+				<image v-show="!item.onoff" class="icon" src="/static/cut/unchoose.png"></image>
+				<image v-show="item.onoff" class="icon" src="/static/cut/choosed.png"></image>
 			</view>
-			<view>
-				<image class="pay" src="/static/cut/alipay.png"></image>
-				<view>支付宝充值</view>
-				<image v-if="aliPay==0" class="icon" src="/static/cut/unchoose.png"></image>
-				<image v-if="aliPay==1" class="icon" src="/static/cut/choosed.png"></image>
-			</view>
-		</view> -->
+		</view>
 		
 		<view v-if="number=='' || isOver==1" class="submit-button noNumber"> 确认充值</view>
 		<view v-if="number!='' && isOver==0" class="submit-button" @tap="next()">确认充值</view>
@@ -39,7 +33,16 @@
 	export default{
 		data(){
 			return{
-				wxPay:0,
+				payType:[{
+					title:'微信支付',
+					onoff:true,
+					src:'/static/cut/wechat.png'
+				},{
+					title:'支付宝支付',
+					onoff:false,
+					src:'/static/cut/alipay.png'
+				}],
+				wxPay:1,
 				aliPay:0,
 				number:"",
 				isOver: 0	//是否超过 0：没超过   1：超过
@@ -54,6 +57,12 @@
 			
 		},
 		methods:{
+			changePayType(index){
+				this.payType.forEach(item =>{
+					item.onoff = false;
+				})
+				this.payType[index].onoff = true;
+			},
 			checkChange(e){
 				this.number = this.number.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');
 			},
@@ -61,23 +70,34 @@
 				this.number = '';
 			},
 			next(){
+				let type = 1;
+				if( this.payType[0].onoff ){  //微信支付
+					type = 2;
+				}
+				
 				payModel.webPay({
-					type:1,
+					type,
 					rechargeMoney:0.01
 				},(res) =>{
-					// let url = res.codeUrl;
+					console.log(res);
 					// #ifdef H5
-					let id = document.getElementById('zy-pay');
-					if( id ){
-						id.remove();
+					if( type === 1 ){   //支付宝支付
+						let id = document.getElementById('zy-pay');
+						if( id ){
+							id.remove();
+						}
+						const div = document.createElement('div');
+						div.id = 'zy-pay';
+						
+						div.innerHTML = (res);
+						document.body.appendChild(div);
+						document.forms[0].acceptCharset = 'UTF-8';
+						document.forms[0].submit();
+						return;
+					}else{
+						let src = res.mwebUrl;
+						window.location = src;
 					}
-					const div = document.createElement('div');
-					div.id = 'zy-pay';
-					
-					div.innerHTML = (res);
-					document.body.appendChild(div);
-					document.forms[0].acceptCharset = 'UTF-8';
-					document.forms[0].submit();
 					// #endif
 				},(err) =>{
 					console.log(err)
