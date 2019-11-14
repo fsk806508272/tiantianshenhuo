@@ -51,7 +51,6 @@ class GoodsModel extends HTTP{
 		  this.request(params)
 	}	
 	 findOneDetailed(obj,success){
-	 	  console.log(obj)
 	 	  let params={
 	 		  method:"POST",
 	 		  url:"/app/seller/findOneDetailed",
@@ -60,6 +59,17 @@ class GoodsModel extends HTTP{
 	 	  }
 	 	  this.request(params)
 	 }	
+	 
+	findGoodsDetails(data,success,fail){
+		let params={
+			method:"POST",
+			url:"/app/goodsDesc/findOne",
+			data,
+			success,
+			fail
+		}
+		this.request(params)
+	}
 	
 
 }

@@ -7,7 +7,7 @@
 			<view class="all-header">
 				<view class="all-header-h1">服务商子类</view>
 				<view class="all-header-cont">
-					<view :class="item.onoff?'select-view':''" v-for="(item,index) in childClassList" :key="index">
+					<view @click="changeChild(index)" :class="item.onoff?'select-view':''" v-for="(item,index) in childClassList" :key="index">
 						{{ item.title }}
 					</view>
 				</view>
@@ -20,7 +20,7 @@
 					<view class="all-news-content" v-for="(item,index) in newsList" :key="index">
 						<text :class="item.must?'must-input':''">{{ item.title }}</text>
 						<view class="all-news-content-right">
-							<em v-if="index === 1 || index === 3">￥</em> <input type="text" :type="item.type" placeholder="123">
+							<em v-if="index === 1 || index === 3">￥</em> <input :value="item.val" :type="item.type" :placeholder="item.place">
 						</view>
 					</view>
 				</view>
@@ -36,7 +36,7 @@
 						已有分类
 					</view>
 					<view class="all-class-cont-right">
-						<view :class="item.onoff?'select-view':''" v-for="(item,index) in classList" :key="index">
+						<view @click="changeClass(index)" :class="item.onoff?'select-view':''" v-for="(item,index) in classList" :key="index">
 							{{ item.title }}
 						</view>
 					</view>
@@ -53,18 +53,18 @@
 							<image :src="item.src"></image>
 						</view>
 						<view class="all-set-content-center">
-							<view class="center1">规格名：<input></input></view>
+							<view class="center1">规格名：<input type="text" :placeholder="item.namePlace"></input></view>
 							<view class="center2">
-								<view>单价：<input></input></view>
-								<view>库存：<input></input></view>
+								<view>单价：<input type="number" :placeholder="item.pricePlace"></input></view>
+								<view>库存：<input type="number" :placeholder="item.inventoryPlace"></input></view>
 							</view>
 						</view>
-						<view class="all-set-content-right" v-if="index === 0">
+						<view @click="addSet" class="all-set-content-right" v-if="index === 0">
 							<view class="add">+</view>
 							<em>添</em>
 							<em>加</em>
 						</view>
-						<view class="del-right" v-if="index !== 0">
+						<view @click="delSet(index)" class="del-right" v-if="index !== 0">
 							<image src="../../../static/cut/user/del.png"></image>
 							<em>删</em>
 							<em>除</em>
@@ -81,15 +81,17 @@
 				
 				<scroll-view class="scroll-view" scroll-x="true">
 					
-					<view class="scroll-view-all">
+					<view class="scroll-view-all" v-for="(item,index) in imgList" :key="index">
 						<image src="../../../static/cut/upload_photo.png"></image>
 						<view class="scroll-view-bottom">
 							<image src="../../../static/cut/cancel.png"></image>
 						</view>
 					</view>
+					
 					<view class="scroll-view-all">
-						<image src="../../../static/cut/upload_photo.png"></image>
+						<image @click="addImg" src="../../../static/cut/upload_photo.png"></image>
 					</view>
+					
 				</scroll-view>
 			</view>
 		</view>
@@ -100,79 +102,129 @@
 </template>
 
 <script>
-	// import {GoodsModel} from '@/common/models/goods.js'
-	// let goodsModel=new GoodsModel()
+	import {ProvideModel} from '@/common/models/provide.js'
+	import {StoreModel} from '@/common/models/store.js'
+	let provideModel=new ProvideModel()
+	let storeModel = new StoreModel()
 	export default {
 		data() {
 			return {
-				childClassList:[{
-					title:'便利店',
-					onoff:true,
-				},{
-					title:'煤气店',
-					onoff:false
-				}],
+				childClassList:[],
 				newsList:[{
 					title:'商品标题',
 					must:true,
-					type:'text'
+					place:"请输入商品标题",
+					type:'text',
+					val:''
 				},{
 					title:'商品价格',
 					must:true,
-					type:'number'
+					place:"请输入商品价格",
+					type:'number',
+					val:''
 				},{
 					title:'服务范围',
 					must:false,
-					type:'text'
+					place:"例如:20KM以内",
+					type:'text',
+					val:''
 				},{
 					title:'定配送费',
 					must:false,
-					type:'number'
+					place:"请输入配送费",
+					type:'number',
+					val:''
 				}],
 				classList:[{
 					title:"汽水饮料",
-					onoff:true,
+					onoff:false,
 				},{
 					title:"生活用品",
-					onoff:true,
+					onoff:false,
 				},{
 					title:'生活用品',
-					onoff:true,
+					onoff:false,
 				},{
 					title:"汽水饮料123",
-					onoff:true,
+					onoff:false,
 				}],
 				addNormList:[{
-					src:'../../../static/cut/upload_photo.png',
-					name:'',
-					price:'',
-					inventory:'',
-					type:0,
-				},{
 					src:'',
 					name:'',
+					namePlace:'请输入规格名',
 					price:'',
+					pricePlace:'例:20',
 					inventory:'',
-					type:1
+					inventoryPlace:'例:20',
+					type:0,
 				}],
+				addData:{
+					src:'../../../static/cut/upload_photo.png',
+					name:'',
+					namePlace:'请输入规格名',
+					price:'',
+					pricePlace:'例:20',
+					inventory:'',
+					inventoryPlace:'例:20',
+					type:1,
+				},
+				imgList:[],
 				id:null,
+				news:{},
 			};
 		},
 		onLoad(options) {
 			this.id = options.id;
 		},
 		created(){
+			this.inits();
 			this.init();
 		},
 		methods:{
+			inits(){
+				this.news = JSON.parse(sessionStorage.getItem('z_news'));
+				console.log(this.news);
+				this.newsList[0].val = this.news.goodsName;
+				this.newsList[1].val = this.news.price;
+				this.newsList[2].val = this.news.city;
+				this.newsList[3].val = this.news.bookingMoney;
+				this.addNormList[0].src = this.news.smallPic;
+				storeModel.getShopGoods({sellerId:this.news.sellerId },(res) =>{
+					console.log(res);
+				})
+			},
 			init(){
-				// goodsModel.changeShop({
-				// 	goods_id: Number(this.id)
-				// },(res) =>{
-				// 	console.log(res);
-				// },(err) =>{
-				// 	console.log(err);
-				// })
+				provideModel.checkSellerGroup(res =>{
+					res.forEach(item =>{
+						let onoff = false;
+						if( item.name === this.news.sellerGroupName ){
+							onoff = true;
+						}
+						let obj = {
+							title:item.name,
+							onoff,
+						};
+						this.childClassList.push(obj);
+					})
+				})
+			},
+			changeChild(index){
+				this.childClassList.forEach(item =>{
+					item.onoff = false;
+				});
+				this.childClassList[index].onoff = true;
+			},
+			changeClass(index){
+				this.classList[index].onoff = !this.classList[index].onoff;
+			},
+			addSet(){
+				this.addNormList.push(this.addData);
+			},
+			delSet(index){
+				this.addNormList.splice(index,1);
+			},
+			addImg(){
+				
 			}
 		}
 	}

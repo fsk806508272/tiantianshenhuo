@@ -106,6 +106,9 @@
 	let usermodel=new UserModel()
 	import bavigationbar from "@/components/bavigation-bar.vue"
 	import like from "@/components/like.vue"
+	
+	import { GoodsModel } from '@/common/models/goods.js';
+	let goodsModel = new GoodsModel();
 
 export default {
   name: '',
@@ -176,6 +179,9 @@ export default {
   onReady() {
   
   },
+  created(){
+	  sessionStorage.removeItem('z_news');
+  },
    methods: {
 	   bindChange: function (e) {
 		   const val = e.detail.value
@@ -187,9 +193,12 @@ export default {
 	   cancelPopup(){
 			this.$refs.popup.close()
 	   },
-	   toEdit(){
+	   toEdit(item){
+		   // console.log(item);
+		   let news = JSON.stringify(item);
+		   sessionStorage.setItem('z_news',news);
 		   let url = `changeShop/changeShop`;
-		   uni.redirectTo({
+		   uni.navigateTo({
 		   	url
 		   })
 	   },
@@ -206,7 +215,6 @@ export default {
 		   this.dateStart = this.year+'-'+this.month+'-'+this.day
 		   this.startDay = this.day
 		   this.is_select_start = 1
-		   console.log(this.dateStart);
 	   },
 	   okEndPopup(e){
 		   let now = new Date();
@@ -220,8 +228,6 @@ export default {
 			   return;
 		   }
 		   this.dateEnd = this.year+'-'+this.month+'-'+this.day
-		   console.log(this.dateStart,this.dateEnd);
-		   
 		   this.is_select_start = 0
 			this.$refs.popup.close()
 			usermodel.closeShop({
@@ -286,6 +292,7 @@ export default {
 			storemodel.getShopGoods({sellerId:this.sellerId},(data)=>{
 				this.list = data;
 				this.currentId = this.list[0].id;
+				console.log(data)
 			})
 			// this.list.forEach(item=>{
 			// 	if(!item.pid){
@@ -334,7 +341,6 @@ export default {
 			this.sizeCalcState = true;
 		},
 		navToList(id, type){
-			console.log(this.sellerId,id,type);
 			uni.navigateTo({
 				url: `/pages/provide/detail?sellerId=${this.sellerId}&id=${id}&type=${type}`
 			})
