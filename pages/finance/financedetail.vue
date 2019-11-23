@@ -1,5 +1,14 @@
 <template>
 	<view>
+		<view class="common_navigation">
+			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
+			<view>提供详情</view>
+			<view class="mul_icon_box" @tap="toCollect()">
+				
+				<image v-if="data.isCollect==0" class="collect_icon" src="/static/cut/no_collect.png"></image>
+				<image v-else src="/static/cut/collected.png" class="collect_icon" ></image>
+			</view>
+		</view>
 		<view class="carousel-section">
 			<swiper class="swiper" circular="true" autoplay="true">
 				<swiper-item v-for="(item,index) in picture" :key="index">
@@ -49,10 +58,6 @@
 		</view>
 		
 		<view class="bottomFix">
-			<view class="collect">
-				<image src="/static/cut/no_collect.png"></image>
-				<view>收藏</view>
-			</view>
 			<view class="contact">
 				<image src="/static/cut/message.png"></image>
 				<view>联系</view>
@@ -61,7 +66,7 @@
 		</view>
 		
 		<uni-popup ref="popbottom" type="bottom">
-			<view class="popBox">
+			<view v-if="data.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'" class="popBox">
 				<view class="descri">
 					<image :src="data.specsList[labelIndex].specsPicture"></image>
 					<view class="content">
@@ -87,6 +92,8 @@ import provideTitle from '@/components/provide-title.vue'
 import uniPopup from "@/components/uni-popup/uni-popup.vue"
 import {FinanceModel} from '@/common/models/finance.js'
 import {StoreModel} from '@/common/models/store.js'
+import {LikeModel} from '@/common/models/like.js'
+const likemodel = new LikeModel()
 let storemodel = new StoreModel()
 let financemodel = new FinanceModel()
 export default{
@@ -109,7 +116,6 @@ export default{
 		console.log(options)
 		let req = {id:options.financeId,financeCode:options.code,sellerId:options.sellerId}
 		financemodel.getFinanceDetail(req,(data)=>{
-			console.log(data)
 			this.picture = data.picture.split(',')
 			this.data = data
 			console.log(data)
@@ -121,6 +127,21 @@ export default{
 		})
 	},
 	methods:{
+		toCollect(){
+			if(this.data.isCollect == 0){
+				this.data.isCollect = 1;
+			}else{
+				this.data.isCollect = 0;
+			}
+			likemodel.like(this.data.id,this.data.firstTypeId,this.data.isCollect,(data)=>{
+				
+			})
+		},
+		toBack(){
+			uni.navigateBack({
+				delta: 1
+			})
+		},
 		toStore(){
 			uni.navigateTo({
 				url:'/pages/shop/storeindex?sellerId=' + this.sellerId
@@ -129,6 +150,10 @@ export default{
 		toSign(){
 			if(this.data.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'){
 				this.$refs.popbottom.open()
+			}else{
+				uni.navigateTo({
+					url:`/pages/finance/appointment?data=${JSON.stringify(this.data)}`
+				})
 			}
 		},
 		confirmSign(){
@@ -152,6 +177,12 @@ page{
 	background-color: #f2f2f2;
 	padding-bottom:110rpx;
 }
+
+.bottomFix{
+		.theme-button{
+			width: 470rpx;
+		}
+	}
 .carousel-section{
 	swiper{
 		width:750rpx;

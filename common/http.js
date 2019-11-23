@@ -21,7 +21,7 @@ class HTTP {
       method: params.method,
       header: {
         'content-type':'application/x-www-form-urlencoded',
-	    'token':store.state.uerInfo.token||null
+	    'token':store.state.uerInfo.token||''
 		// #ifdef MP
 		// 'appkey':config.appkey
 		// #endif

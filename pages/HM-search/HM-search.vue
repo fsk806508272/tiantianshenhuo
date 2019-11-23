@@ -1,17 +1,9 @@
 <template>
 	<view class="content">
 		<view class="search-box">
-			<!-- mSearch组件 如果使用原样式，删除组件元素-->
+
 			<mSearch class="mSearch-input-box" :mode="2" button="inside" :placeholder="defaultKeyword" @search="doSearch(false)" @input="inputChange" @confirm="doSearch(false)" v-model="keyword"></mSearch>
-			<!-- 原样式 如果使用原样式，恢复下方注销代码 -->
-			<!-- 			
-			<view class="input-box">
-				<input type="text" :placeholder="defaultKeyword" @input="inputChange" v-model="keyword" @confirm="doSearch(false)"
-				 placeholder-class="placeholder-class" confirm-type="search">
-			</view>
-			<view class="search-btn" @tap="doSearch(false)">搜索</view> 
-			-->
-			<!-- 原样式 end -->
+
 		</view>
 		<view class="search-keyword" @touchstart="blur">
 			<scroll-view class="keyword-list-box" v-show="isShowKeywordList" scroll-y>
@@ -56,7 +48,6 @@
 </template>
 
 <script>
-	//引用mSearch组件，如不需要删除即可
 	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
 	export default {
 		data() {
@@ -67,11 +58,14 @@
 				hotKeywordList: [],
 				keywordList: [],
 				forbid: '',
-				isShowKeywordList: false
+				isShowKeywordList: false,
+				type:''
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			this.init();
+			this.type = options.type
+			console.log(this.type)
 		},
 		components: {
 			//引用mSearch组件，如不需要删除即可
@@ -172,18 +166,10 @@
 				key = key ? key : this.keyword ? this.keyword : this.defaultKeyword;
 				this.keyword = key;
 				this.saveKeyword(key); //保存为历史 
-				uni.showToast({
-					title: key,
-					icon: 'none',
-					duration: 2000
-				});
-				//以下是示例跳转淘宝搜索，可自己实现搜索逻辑
-				//#ifdef APP-PLUS
-				plus.runtime.openURL(encodeURI('taobao://s.taobao.com/search?q=' + key));
-				//#endif
-				//#ifdef H5
-				window.location.href = 'taobao://s.taobao.com/search?q=' + key
-				//#endif
+				uni.navigateTo({
+					url:`searchpage?type=${this.type}&key=${key}`
+				})
+				
 			},
 			//保存关键字到历史记录
 			saveKeyword(keyword) {

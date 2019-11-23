@@ -375,6 +375,8 @@
 		}
 	}
 	
+
+	
 	.editFix{
 		position: fixed;
 		width: 100%;

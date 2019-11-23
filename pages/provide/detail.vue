@@ -4,7 +4,6 @@
 			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
 			<view>提供详情</view>
 			<view class="mul_icon_box" @tap="toCollect()">
-				
 				<image v-if="data.goods.isCollect==0" class="collect_icon" src="/static/cut/no_collect.png"></image>
 				<image v-else src="/static/cut/collected.png" class="collect_icon" ></image>
 			</view>
@@ -55,16 +54,19 @@
 			<image class="intoIcon" src="/static/cut/right_orange.png"></image>
 		</view>
 		
-		<view class="bottomFix">
-			<!-- <view class="collect" @tap="toCollect()">
-				<image v-if="data.goods.isCollect==0" src="/static/cut/no_collect.png"></image>
-				<image v-else src="/static/cut/collected.png"></image>
-				<view>收藏</view>
-			</view> -->
+		<view v-if="type==8||type==10" class="bottomFix">
+			
 			<view class="contact">
 				<image src="/static/cut/message.png"></image>
 				<view>联系TA</view>
 			</view>
+			<view class="add_car_button" @tap="addCar">
+				加入购物车
+			</view>
+			<view class="theme-button" @tap="chooseSpec">立即下单</view>
+		</view>
+		
+		<view v-if="type==3||type==9" class="longwidth bottomFix">
 			<view class="add_car_button" @tap="addCar">
 				加入购物车
 			</view>
@@ -162,19 +164,18 @@ export default{
 		
 	},
 	methods:{
-	   toBack(){
-	   	uni.navigateBack({
-	   		delta: 1
-	   	})
+	    toBack(){
+			uni.navigateBack({
+				delta: 1
+			})
 	   },
 		toCollect(){
-			console.log(this.data.goods.isCollect);
 			if(this.data.goods.isCollect == 0){
 				this.data.goods.isCollect = 1;
 			}else{
 				this.data.goods.isCollect = 0;
 			}
-			likemodel.like(this.data.goods.id,this.data.goods.isCollect,(data)=>{
+			likemodel.like(this.data.goods.id,this.type,this.data.goods.isCollect,(data)=>{
 				// likemodel.getCollectgood(1,(res)=>{
 					
 				// })
@@ -237,6 +238,12 @@ export default{
 page{
 	background-color: #f2f2f2;
 	padding-bottom: 110rpx;
+}
+
+.longwidth{
+	.theme-button{
+		width: 470rpx;
+	}
 }
 .carousel-section{
 	swiper{

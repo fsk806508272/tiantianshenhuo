@@ -19,6 +19,15 @@ class CheckModel extends HTTP {
 	  }
 	  this.request(params)
 	}
+	
+	getUserInfo(success){
+		let params = {
+			method:"POST",
+			url:"/app/appuser/getAppUser",
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {CheckModel}

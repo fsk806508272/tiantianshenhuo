@@ -62,6 +62,17 @@ class ProvideModel extends HTTP{
 		this.request(params)
 	}
 	
+	//添加访问记录
+	addVisitRecord(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/historyRecord/add',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
 	//商家查看分组
 	checkSellerGroup(success){
 		let params = {

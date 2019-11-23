@@ -48,6 +48,26 @@ class HouseModel extends HTTP {
 		}
 		this.request(params)
 	}
+	
+	checkSingingContract(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryContract',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	changeSingningStatus(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/addSigningContract',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {HouseModel}

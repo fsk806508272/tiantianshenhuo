@@ -194,6 +194,17 @@ class OrderModel extends HTTP {
 		this.request(params)
 	}
 	
+	//用户退款
+	userApplyDraw(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/goodsOrder/userNeedCancel',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
 	//商家查看订单
 	checkSellerOrder(data,success){
 		let params = {

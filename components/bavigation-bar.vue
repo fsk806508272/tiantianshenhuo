@@ -15,7 +15,9 @@
 <script>
 	export default{
 		props:{
-			
+			firsttype:{
+				type:String
+			}
 		},
 		data () {
 			return {
@@ -25,7 +27,7 @@
 		methods:{
 			clicksearch () {
 				uni.navigateTo({
-					url: '/pages/HM-search/HM-search'
+					url: '/pages/HM-search/HM-search' + this.firsttype
 				});
 			}
 		}

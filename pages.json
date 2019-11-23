@@ -1,17 +1,10 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+	"pages": [
 		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "天天生活",
-				"navigationBarBackgroundColor":"#FFFFFF",
-				// //#ifdef H5
-				// "navigationBarTitleText": "首页",			
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-				}
-				// //#endif
+				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		},
 		{
@@ -37,16 +30,6 @@
 			"path": "pages/user/user",
 			"style": {
 				"navigationBarTitleText": "我的",
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-				}
-			}
-		},
-		{
-			"path": "pages/goods/goods",
-			"style": {
-				"navigationBarTitleText": "详情",
 				"app-plus": {
 					"titleNView": false ,//禁用原生导航栏
 					"bounce":"none"
@@ -149,16 +132,6 @@
 		    "path" : "pages/login/replace",
 		    "style" : {
 				"navigationBarTitleText": "更换手机号码"
-			}
-		},
-		{
-		    "path" : "pages/goods/ratings/ratings",
-		    "style" : {
-				"navigationBarTitleText" : "",
-				"enablePullDownRefresh": true,
-				"app-plus": {
-					"bounce":"none"
-				}
 			}
 		},
 		{
@@ -612,7 +585,10 @@
 		    "path" : "pages/finance/financedetail",
 		    "style" : {
 				"navigationBarTitleText": "提供详情",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"app-plus":{
+					"titleNView": false
+				}
 			}
 		},
 		{
@@ -779,48 +755,77 @@
         ,{
             "path" : "pages/wallet/webPay/webPay",
             "style" : {}
-        }
+        },
+		{
+		    "path" : "pages/classify/classify",
+		    "style" : {
+				"navigationBarTitleText": "编辑商品",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/shop/store",
+		    "style" : {
+				"navigationBarTitleText": "店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/finance/appointment",
+		    "style" : {
+				"navigationBarTitleText": "预约",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/HM-search/searchpage",
+		    "style" : {
+				"navigationBarTitleText": "商品搜索",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
-	},
-		"tabBar": {
-	    "color": "#7A7E83",
-	    "selectedColor": "#FF6600",
-	    "borderStyle": "white",
-	    "backgroundColor": "#fafafa",
-	    "list": [{
-	        "pagePath": "pages/index/index",
-	        "iconPath": "static/tab/tab_home_unselected.png",
-	        "selectedIconPath": "static/tab/tab_home_onselected.png",
-	        "text": "首页"
-	    }, 
+		},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#FF6600",
+		"borderStyle": "white",
+		"backgroundColor": "#fafafa",
+		"list": [{
+			"pagePath": "pages/index/index",
+			"iconPath": "static/tab/tab_home_unselected.png",
+			"selectedIconPath": "static/tab/tab_home_onselected.png",
+			"text": "首页"
+		}, 
 		 {
-		    "pagePath": "pages/nearby/nearby",
-		    "iconPath": "static/tab/tab_near_unselected.png",
-		    "selectedIconPath": "static/tab/tab_near_selected.png",
-		    "text": "附近"
+			"pagePath": "pages/nearby/nearby",
+			"iconPath": "static/tab/tab_near_unselected.png",
+			"selectedIconPath": "static/tab/tab_near_selected.png",
+			"text": "附近"
 		},  
 		 {
 			"pagePath": "pages/realease/provide",
 			"iconPath": "static/tab/tab_add_onselected.png",
 			"selectedIconPath": "static/tab/tab_add_onselected.png"
 		},{
-	        "pagePath": "pages/order/order",
-	        "iconPath": "static/tab/tab_order_unselected.png",
-	        "selectedIconPath": "static/tab/tab_order_onselected.png",
-	        "text": "订单"
-	    },
+			"pagePath": "pages/order/order",
+			"iconPath": "static/tab/tab_order_unselected.png",
+			"selectedIconPath": "static/tab/tab_order_onselected.png",
+			"text": "订单"
+		},
 		{
-	        "pagePath": "pages/user/user",
-	        "iconPath": "static/tab/tab_my_unselected.png",
-	        "selectedIconPath": "static/tab/tab_my_onselected.png",
-	        "text": "我的"
-	    }]
-	},
+			"pagePath": "pages/user/user",
+			"iconPath": "static/tab/tab_my_unselected.png",
+			"selectedIconPath": "static/tab/tab_my_onselected.png",
+			"text": "我的"
+		}
+	]
+},
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式（list 的索引项）
 		"list": [{

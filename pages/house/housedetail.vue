@@ -4,12 +4,10 @@
 			<image src="/static/cut/leftIcon.png" class="back_icon" @tap="toBack()"></image>
 			<view>房屋详情</view>
 			<view class="mul_icon_box" @tap="toCollect()">
-				 <!-- v-if="data.goods.isCollect==0" -->
-				<image class="collect_icon" src="/static/cut/no_collect.png"></image>
-				<!-- <image v-else src="/static/cut/collected.png" class="collect_icon" ></image> -->
+				<image v-if="isCollect==0" class="collect_icon" src="/static/cut/no_collect.png"></image>
+				<image v-else src="/static/cut/collected.png" class="collect_icon" ></image>
 			</view>
 		</view>
-		
 		<view class="carousel-section">
 			<swiper class="swiper" circular="true" autoplay="true">
 				<swiper-item v-for="(item,index) in picture" :key="index">
@@ -85,12 +83,6 @@
 		</view>
 		<!-- v-if="isOpenDate == 0"  0:关店  1：开店 -->
 		<view class="bottomFix" >
-			<!-- <view class="collect" @tap="toCollect()"> -->
-				<!-- <image src="/static/cut/no_collect.png"></image> -->
-				<!-- <image v-if="data.isCollect==0" src="/static/cut/no_collect.png"></image> -->
-				<!-- <image v-else src="/static/cut/collected.png"></image> -->
-				<!-- <view>收藏</view> -->
-			<!-- </view> -->
 			<view class="contact">
 				<image src="/static/cut/message.png"></image>
 				<view>联系TA</view>
@@ -111,7 +103,8 @@
 	const likemodel = new LikeModel()
 	import {StoreModel} from '@/common/models/store.js'
 	const storemodel = new StoreModel()
-	
+	import {HouseModel} from '@/common/models/house.js'
+	const housemodel = new HouseModel()
 	export default{
 		components:{
 			provideTitle
@@ -123,17 +116,18 @@
 				starSrc:'/static/cut/star_on.png',
 				starIndex:[0,1,2,3,4],
 				picture:[],
-				isOpenDate: ''
+				isOpenDate: '',
+				isCollect:''
 			}
 		},
 		methods:{
 			toCollect(){
-				if(this.data.goods.isCollect == 0){
-					this.data.goods.isCollect = 1;
+				if(this.isCollect == 0){
+					this.isCollect = 1;
 				}else{
-					this.data.goods.isCollect = 0;
+					this.isCollect = 0;
 				}
-				likemodel.like(this.data.goods.id,this.data.goods.isCollect,(data)=>{
+				likemodel.like(this.data.id,this.data.firsttypeId,this.isCollect,(data)=>{
 					// likemodel.getCollectgood(1,(res)=>{
 						
 					// })
@@ -163,17 +157,18 @@
 			}
 		},
 		onLoad:function(options){
-			let jsondata = JSON.parse(options.data)
-			this.data = jsondata;
-			console.log(this.data);
-			// 
-			storemodel.getSellerStore({sellerId: this.data.sellerId},(res)=>{
-				console.log(res);
-				this.isOpenDate = res.isOpenDate;
+			let id = options.data
+			housemodel.getHouseList({houseId:id},data=>{
+				this.data = data.houseList[0]
+				this.isCollect = data.isCollect
+				storemodel.getSellerStore({sellerId: this.data.sellerId},(res)=>{
+					this.isOpenDate = res.isOpenDate;
+				})
+				this.data.mainScore = parseInt(this.data.mainScore)
+				this.label = this.data.label.split(',')
+				this.picture = this.data.picture.split(',')
 			})
-			this.data.mainScore = parseInt(this.data.mainScore)
-			this.label = this.data.label.split(',')
-			this.picture = this.data.picture.split(',')
+			
 		}
 	}
 </script>

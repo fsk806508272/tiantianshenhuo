@@ -15,7 +15,7 @@
 			<!-- <view class="top-Location" @click="showMulLinkageThreePicker">
 				<text>{{pickerText}}</text><image class="drop-down" src="/static/cut/drop-down.png" mode=""></image>
 			</view> -->
-			<view class="top-search" @click="clicksearch">
+			<view class="top-search" @click="clicksearch(8)">
 				<view>
 					<image class="lf" src="../../static/cut/ss.png" mode=""></image>
 					<text>搜索标题</text>
@@ -114,7 +114,7 @@
 						<view class="main-left">
 							<view class="main-title">
 								<view class="tit ellipsis">{{item.goodsName}}</view>
-								<text class="distance">1.6km</text>
+								<text class="distance">{{item.distance|formatDistance}}</text>
 							</view>
 							<view class="main-parameter">
 								<view>
@@ -126,188 +126,9 @@
 								<image src="/static/cut/car.png" mode=""></image>
 							</view>
 						</view>
-						
 					</view>
-					
 				</view>
-				<!-- TA的需求 -->
-				<view class="list-rt" v-else>
-					
-					<view class="item"  @click="toGoods(item.id)">
-						<view class="upper-part">
-							<image class="item-img" src="../../static/logo.png" alt=""></image>
-							<view class="main-left">
-								<view class="main-title">
-									<text class="tit">就凉快 <text class="iconfont icon-renyuanbaoming"></text></text>
-									<text class="distance">1.6km</text>
-									
-								</view>
-								<view class="main-parameter">
-									<text class="score"><text class="iconfont icon-xing"></text>4.4</text>
-									<text class="serviceunm">享受服务：10次</text>
-								</view>
-							</view>
-						</view>
-						<view class="central-section">
-							<view class="it">
-								<text class="iconfont icon-wenzhang2"></text><text>我现需要：一罐5kg煤气</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-shijian"></text><text>服务时间：3月11日</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务地点：广东省深圳市龙岗区志联佳大厦508号</text>
-							</view>
-						</view>
-						<view class="lower-part">
-							<text>2018年10月15日 15:30</text>
-							<view class="buts">
-								<view class="theme-button-inverse">联系TA</view>															
-								<view class="theme-button">立即抢单</view>
-							</view>
-						</view>
-					</view>
-					<view class="item">
-						<view class="upper-part">
-							<image class="item-img" src="../../static/logo.png" alt=""></image>
-							<view class="main-left">
-								<view class="main-title">
-									<text class="tit">就凉快 <text class="iconfont icon-xing"></text></text>
-									<text class="distance">1.6km</text>
-									
-								</view>
-								<view class="main-parameter">
-									<text class="score"><text class="iconfont icon-xing"></text>4.4</text>
-									<text class="serviceunm">享受服务：10次</text>
-								</view>
-							</view>
-						</view>
-						<view class="central-section">
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>我现需要：一罐5kg煤气</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务时间：3月11日</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务地点：广东省深圳市龙岗区志联佳大厦508号</text>
-							</view>
-						</view>
-						<view class="lower-part">
-							<text>2018年10月15日 15:30</text>
-							<view class="buts">
-								<view class="theme-button-inverse">联系TA</view>															
-								<view class="theme-button">立即抢单</view>
-							</view>
-						</view>
-					</view>
-					<view class="item">
-						<view class="upper-part">
-							<image class="item-img" src="../../static/logo.png" alt=""></image>
-							<view class="main-left">
-								<view class="main-title">
-									<text class="tit">就凉快 <text class="iconfont icon-xing"></text></text>
-									<text class="distance">1.6km</text>
-									
-								</view>
-								<view class="main-parameter">
-									<text class="score"><text class="iconfont icon-xing"></text>4.4</text>
-									<text class="serviceunm">享受服务：10次</text>
-								</view>
-							</view>
-						</view>
-						<view class="central-section">
-							<view class="it">
-								<text class="iconfont icon-wenzhang2"></text><text>我现需要：一罐5kg煤气</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-shijian"></text><text>服务时间：3月11日</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务地点：广东省深圳市龙岗区志联佳大厦508号</text>
-							</view>
-						</view>
-						<view class="lower-part">
-							<text>2018年10月15日 15:30</text>
-							<view class="buts">
-								<view class="theme-button-inverse">联系TA</view>															
-								<view class="theme-button">立即抢单</view>
-							</view>
-						</view>
-					</view>
-					<view class="item">
-						<view class="upper-part">
-							<image class="item-img" src="../../static/logo.png" alt=""></image>
-							<view class="main-left">
-								<view class="main-title">
-									<text class="tit">就凉快 <text class="iconfont icon-xing"></text></text>
-									<text class="distance">1.6km</text>
-									
-								</view>
-								<view class="main-parameter">
-									<text class="score"><text class="iconfont icon-xing"></text>4.4</text>
-									<text class="serviceunm">享受服务：10次</text>
-								</view>
-							</view>
-						</view>
-						<view class="central-section">
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>我现需要：一罐5kg煤气</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务时间：3月11日</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务地点：广东省深圳市龙岗区志联佳大厦508号</text>
-							</view>
-						</view>
-						<view class="lower-part">
-							<text>2018年10月15日 15:30</text>
-							<view class="buts">
-								<view class="theme-button-inverse">联系TA</view>															
-								<view class="theme-button">立即抢单</view>
-							</view>
-						</view>
-					</view>
-					<view class="item">
-						<view class="upper-part">
-							<image class="item-img" src="../../static/logo.png" alt=""></image>
-							<view class="main-left">
-								<view class="main-title">
-									<text class="tit">就凉快 <text class="iconfont icon-xing"></text></text>
-									<text class="distance">1.6km</text>
-									
-								</view>
-								<view class="main-parameter">
-									<text class="score"><text class="iconfont icon-xing"></text>4.4</text>
-									<text class="serviceunm">享受服务：10次</text>
-								</view>
-							</view>
-						</view>
-						<view class="central-section">
-							<view class="it">
-								<text class="iconfont icon-wenzhang2"></text><text>我现需要：一罐5kg煤气</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-shijian"></text><text>服务时间：3月11日</text>
-							</view>
-							<view class="it">
-								<text class="iconfont icon-dingwei"></text><text>服务地点：广东省深圳市龙岗区志联佳大厦508号</text>
-							</view>
-						</view>
-						<view class="lower-part">
-							<text>2018年10月15日 15:30</text>
-							<view class="buts">
-								<view class="theme-button-inverse">联系TA</view>															
-								<view class="theme-button">立即抢单</view>
-							</view>
-						</view>
-					</view>
-			
-				</view>
-			
 			</view>
-			
 		</view>
 		<mpvue-city-picker :second="second" :themeColor="themeColor" ref="mpvueCityPicker" :pickerValueDefault="cityPickerValueDefault"
 		 @onCancel="onCancel" @onConfirm="onConfirm"></mpvue-city-picker>
@@ -327,8 +148,13 @@
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	import store from '@/store/index.js'
 	import {mapState} from 'vuex'
-
+	import {mapMutations} from "vuex"
 	export default {
+		filters:{
+			formatDistance(value){
+				return (parseInt(value)/1000).toFixed(1) + 'km'
+			}
+		},
 		components: {
 			mpvueCityPicker,
 			uniLoadMore
@@ -357,49 +183,40 @@
 			}
 		},
 		computed:{
-			...mapState(['hasLogin'])
+			...mapState(['hasLogin','lat','lon'])
 		},
 		onLoad() {
-			console.log();
+			let that = this
 			uni.getLocation({
 			    type: 'wgs84',
 			    success: function (res) {
 			        console.log('当前位置的经度：' + res.longitude);
 			        console.log('当前位置的纬度：' + res.latitude);
+					that.getLat(res.latitude)
+					that.getLon(res.longitude)
 			    }
 			});
 			//#ifdef MP
 			this.BMap = new bmap.BMapWX({
-			           ak: 'nsFKMwl7mT7b6Actb465GqRu65v7LBSX' 
+				ak: 'nsFKMwl7mT7b6Actb465GqRu65v7LBSX' 
 			});
 			this.BMap.regeocoding({ 
-			            success: data => {
-			            	console.log(data)
-			            	this.pickerText = data.originalData.result.addressComponent.city.replace(/市/g, ''); //把"市"去掉
-										}
+				success: data => {
+			        console.log(data)
+			        this.pickerText = data.originalData.result.addressComponent.city.replace(/市/g, ''); //把"市"去掉
+						}
 			});
 			//#endif
 	
 		},
 		onShow(){
-			// #ifndef H5
-	// 		uni.getSetting({
-	// 			success(res) {
-	// 				if (res.authSetting['scope.userInfo']){
-	
-	// 				}else{
-	// 					uni.navigateTo({
-	// 						url: '/pages/login/getUserinfo' //跳转到授权页面
-	// 					})
-	// 				}
-	// 			}
-	// 		})
-			// #endif
+
 		},
 		onReady(){
 			this.loadData()					
 		},
 		methods: {
+			...mapMutations(['getLat','getLon']),
 			toSelectFixed(){
 				uni.navigateTo({
 					url: '/pages/index/fixed/select_fixed'
@@ -541,25 +358,22 @@
 			changeSwiper(e) {
 			    this.swiperCurrent = e.detail.current;
 			},
-			clicksearch () {
+			clicksearch (type) {
 				uni.navigateTo({
-					url: '../HM-search/HM-search'
+					url:`/pages/HM-search/HM-search?type=${type}`
 				});
 			},	
 			 getprovide (pagelfunm){
-				  // housemodel.getHouseSecondType({firstType:'家政',type:2},(data)=>{
-					 //  if(data.length==0){
-						//  this.loadingType="noMore"
-					 //  }
-					 //  this.listlf=this.listlf.concat(data)
-				  // })
-				  indexModel.getLatest(pagelfunm,(data)=>{
-					  console.log(data.length)
-					 if(data.length==0){
-						 this.loadingType="noMore"
-					 }
-				     this.listlf=this.listlf.concat(data)
-				    })
+				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10},data=>{
+					if(data.length==0){
+						this.loadingType = 'nomore'
+						return
+					}else if(this.pagelfunm==1){
+						this.listlf = data
+					}else{
+						this.listlf = this.listlf.concat(data)
+					}
+				})
 			},
 			//商品跳转
 			toGoods(item) {
@@ -753,7 +567,7 @@
 			}
 			
 		}
-		.place{height: 176rpx;}// height: 232rpx;
+		.place{height: 88rpx;}// height: 232rpx;
 		.carousel-section{
 			width: 100%;
 			height: 33.3vw;

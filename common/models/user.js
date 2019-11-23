@@ -222,6 +222,61 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	// 查看访问记录
+	checkVisitRecord(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/historyRecord/getList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//取消退租
+	cancelBackHouse(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/cancel',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询账单
+	queryBill(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryPayment',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询续约信息
+	queryRerentInfo(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryRenewContract',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询金融续约信息
+	queryResignInfo(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/FinancialContracts/queryChangeContract',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

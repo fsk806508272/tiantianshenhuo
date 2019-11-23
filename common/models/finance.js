@@ -41,6 +41,16 @@ class FinanceModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	modifyFinancialOrders(data,success){
+		let params = {
+			method:"POST",
+			url:"/app/FinancialContracts/modifyFinancialOrders",
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 

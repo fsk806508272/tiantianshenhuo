@@ -74,7 +74,7 @@
 		methods: {
 			toDetail(number){
 				uni.navigateTo({
-					url:'housedetail?data='+JSON.stringify(this.houseList[number])
+					url:'housedetail?data='+ this.houseList[number].id
 				})
 			},
 			pop(){

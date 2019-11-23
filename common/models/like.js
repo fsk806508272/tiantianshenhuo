@@ -3,10 +3,10 @@ import { HTTP } from '../http.js'
 
 class LikeModel extends HTTP{
  
-  like(goodsId,type,success){ //商品收藏
+  like(goodsId,firsttypeId,type,success){ //商品收藏
 	  console.log(type)
 	  let url = type ? '/app/collectGoods/add' : '/app/collectGoods/deleteOne'
-	  let data={goodsId:goodsId}
+	  let data={goodsId:goodsId,firsttypeId:firsttypeId}
   	  let params = {
   		method:"POST",
   		url:url, 

@@ -10,19 +10,23 @@
 			<block v-for="(row,index) in provideList" :key="index">
 				<view class="item">
 					<view class="image">
-						<image :src="row.smallPic"></image>
+						<image :src="row.smallPic|pictureOne"></image>
 					</view>
 					
 					<view class="detail">
-						<view class="title col2">{{row.goodsName}}</view>
+						<view v-if="row.goodsFirsttype!=1" class="title col2">{{row.goodsName}}</view>
+						<view v-if="row.goodsFirsttype==1" class="title col2">{{row.title}}</view>
 						<view class="price">
 							<view class="singlePrice">￥<text>{{row.price}}</text></view>
-							<view class="sales">月售{{row.monthSale}}</view>
-							<view class="deliver">配送费￥{{row.postFee}}</view>
+							<view v-if="row.goodsFirsttype!=1" class="sales">月售{{row.monthSale}}</view>
+							<view v-if="row.goodsFirsttype!=1" class="deliver">配送费￥{{row.postFee}}</view>
 						</view>
 					</view>
 					
-					<view class="like" @tap="delCollectGoods(row.id)">
+					<view v-if="row.goodsFirsttype!=1" class="like" @tap="delCollectGoods(row.goodsId,row.goodsFirsttype)">
+						<image src="/static/cut/collected.png"></image>
+					</view>
+					<view v-if="row.goodsFirsttype==1" class="like" @tap="delCollectGoods(row.houseId,row.goodsFirsttype)">
 						<image src="/static/cut/collected.png"></image>
 					</view>
 				</view>
@@ -93,6 +97,11 @@
 	let Likemodel=new LikeModel()
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 export default{
+	filters:{
+		pictureOne(value){
+			return value.toString().split(',')[0]
+		}
+	},
 	components:{
 		uniLoadMore
 	},
@@ -132,7 +141,6 @@ export default{
 		this.getCollectcard(this.page)
 	},
 	onReady (){
-		
 	},
 	onReachBottom (){
 		this.page++
@@ -143,7 +151,6 @@ export default{
 			Likemodel.getCollectgood(page,(data)=>{
 				console.log(data)
 				this.provideList=this.provideList.concat(data)
-				console.log(this.provideList);
 			})
 		},
 		getCollectshop(page){
@@ -158,8 +165,9 @@ export default{
 				console.log(this.vipcardList);
 			})
 		},
-		delCollectGoods(id){
-			Likemodel.like(id,false,(datas)=>{
+		delCollectGoods(id,type){
+			console.log(id)
+			Likemodel.like(id,type,false,(datas)=>{
 				Likemodel.getCollectgood(1,(data)=>{
 					this.provideList=data
 				})
