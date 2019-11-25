@@ -7,31 +7,63 @@
 		</view>
 		
 		<view v-if='tabbarIndex!=4'>
-			<block v-for="(item,index) in orderList" :key="index">
-				<block v-if="id==1">
-					<business-order :id="id" :status="status" :orderNum="item.orderCode"
-					:createTime="item.createDate" :pic="item.picture.split(',')[0]"
-					:duration="item.duration" :username="item.name" :identityCard="item.identityCard"
-					:phone="item.telephone" :title="item.title" :spec="item.paymentMethod"
-					:price="item.rental" @checkCont="toContract(item)" :houseSum="item.sum"
-					:houseService="item.serviceCharge" :deposit="item.deposit"></business-order>
+			<view v-if="orderList.length==0" class="noOrder">
+				<image src="/static/cut/noSearchRecord.png"></image>
+				<view v-if="tabbarIndex==0">暂无待接单订单哦，快去发布商品</view>
+				<view v-if="tabbarIndex==1">暂无待处理订单哦，快去接单吧</view>
+				<view v-if="tabbarIndex==2">暂无已处理订单哦，快去接单吧</view>
+				<view v-if="tabbarIndex==3">暂无已完成订单哦，快去接单吧</view>
+				<view v-if="tabbarIndex==4">暂无售后订单哦</view>
+			</view>
+			
+			<view v-else>
+				<block v-for="(item,index) in orderList" :key="index">
+					<block v-if="id==1">
+						<business-order :id="id" :status="status" :orderNum="item.orderCode"
+						:createTime="item.createDate" :pic="item.picture.split(',')[0]"
+						:duration="item.duration" :username="item.name" :identityCard="item.identityCard"
+						:phone="item.telephone" :title="item.title" :spec="item.paymentMethod"
+						:price="item.rental" @checkCont="toContract(item)" :houseSum="item.sum"
+						:houseService="item.serviceCharge" :deposit="item.deposit"></business-order>
+					</block>
+					
+					<block v-if="id==8||id==9||id==3||id==10">
+						<business-order :id="id" :status="status" :orderNum="item.orderId" type='1'
+						:createTime="item.createTime" :goodsItemList="item.goodsOrderItemList"
+						:sum="item.payment" :length="item.goodsOrderItemList.length" :deliver="item.postFee"
+						@acceptOrder="accept(item)" @confirm="confirmService(item)"></business-order>
+					</block>
+					
+					<block v-if="id==5">
+						<business-order :id="id" :status="status" :orderNum="item.orderCode"
+						:createTime="item.createDate" :pic="item.picture.split(',')[0]"
+						:title="item.title"></business-order>
+					</block>
 				</block>
-				
-				<block v-if="id==8||id==9||id==3">
-					<business-order :id="id" :status="status" :orderNum="item.orderId" type='1'
-					:createTime="item.createTime" :goodsItemList="item.goodsOrderItemList"
-					:sum="item.payment" :length="item.goodsOrderItemList.length" :deliver="item.postFee"
-					@acceptOrder="accept(item)" @confirm="confirmService(item)"></business-order>
-				</block>
-			</block>
+			</view>
+			
+			
 		</view>
 		
 		<view v-if="tabbarIndex==4">
 			<block v-for="(item,index) in orderList" :key="index">
-				<business-order :id="id" :status="item.myStatus" :orderNum="item.goodsOrderId"
-				:createTime="item.createTime" :goodsItemList="item.goodsOrderItem"
-				deliver="售后中" :length="item.goodsOrderItem.length" :type='item.type' :applyExplain="item.applyExplain"
-				:applyMode="item.applyMode" :applyReason="item.applyReason"></business-order>
+				
+				<block v-if="id==8||id==9||id==3||id==10">
+					<business-order :id="id" :status="item.myStatus" :orderNum="item.goodsOrderId"
+					:createTime="item.createTime" :goodsItemList="item.goodsOrderItem"
+					:deliver="item.postFee" :length="item.goodsOrderItem.length" :type='item.type' :applyExplain="item.applyExplain"
+					:applyMode="item.applyMode" :applyReason="item.applyReason"></business-order>
+				</block>
+				
+				<block v-if="id==1">
+					<business-order :id="id" :status="item.myStatus" :orderNum="item.orderCode"
+					:createTime="item.createDate" :pic="item.picture.split(',')[0]"
+					:title="item.title" :price="item.rental" :moveReason="item.evacuateReason"
+					:duration="item.evacuateDate" :username="item.name" :identityCard="item.identityCard"
+					:phone="item.telephone" :spec="item.paymentMethod"
+					 @agree="agreeMove(item)" :houseSum="item.sum" :deposit="item.deposit"></business-order>
+				</block>
+				
 			</block>
 		</view>
 		
@@ -77,7 +109,7 @@
 				if(tbIndex == 0){
 					if(this.id==1){
 						
-					}else if(this.id==8){
+					}else if(this.id==8||this.id==10){
 						this.status = 'waitingRecieve'
 					}
 					ordermodel.checkSellerOrder({type:1},(data)=>{
@@ -86,8 +118,16 @@
 				}else if(tbIndex==1){
 					if(this.id==1){
 						this.status = 'houseWaitingDeal'
-					}else if(this.id==8){
+					}else if(this.id==8||this.id==3||this.id==9||this.id==10){
 						this.status = 'waitingDeal'
+					}else if(this.id==5){
+						for(let i of this.orderList){
+							if(i.secondtypeinfoId=="6364df4f0ede49da9063b6cc5d4dfc72"){
+								i.myStatus = 'agentWaitingDeal'
+							}else{
+								i.myStatus = 'financeWaitingDeal'
+							}
+						}
 					}
 					ordermodel.checkSellerOrder({type:2},(data)=>{
 						this.orderList = data
@@ -114,13 +154,17 @@
 					ordermodel.sellerCheckBackOrder({},data=>{
 						this.orderList = data
 						for(let i of this.orderList){
-							if(i.type==7){
-								i.myStatus = 'applyBack'
-							}else if(i.type==9){
-								i.myStatus = 'applyMoney'
+							if(i.firsttypeId==8||i.firsttypeId==10||i.firsttypeId==3||i.firsttypeId==9){
+								if(i.type==7){
+									i.myStatus = 'applyBack'
+								}else if(i.type==9){
+									i.myStatus = 'applyMoney'
+								}
+							}else if(i.firsttypeId==1){
+								i.myStatus = 'houseBack'
 							}
+							
 						}
-						console.log(this.orderList)
 					})
 				}
 			},
@@ -152,6 +196,11 @@
 					setTimeout(()=>{
 						this.showType(2)
 					},1500)
+				})
+			},
+			agreeMove(item){
+				uni.navigateTo({
+					url:`/pages/user/sellerorder/backmoney?data=${JSON.stringify(item)}`
 				})
 			}
 		}
@@ -189,6 +238,19 @@ page{
 				border-bottom: solid 2rpx #FF6600;
 			}
 		}
+	}
+}
+
+.noOrder{
+	image{
+		width:402rpx;
+		height:389rpx;
+		margin-top: 300rpx;
+		margin-left: 174rpx;
+	}
+	view{
+		margin-left: 200rpx;
+		margin-top: 39rpx;
 	}
 }
 </style>

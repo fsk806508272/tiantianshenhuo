@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<bavigationbar></bavigationbar>
-		<swiper :swiperImage="swiperImage"></swiper>
+		<Swiper :swiperImage="swiperImage"></Swiper>
 		<view class="chooseType">
 			<view class="title">房屋服务</view>
 			<view class="icon" @tap="pop()">

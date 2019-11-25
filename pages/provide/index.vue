@@ -1,6 +1,6 @@
 <template>
     <view>
-		<bavigationbar></bavigationbar>
+		<bavigationbar :firsttype="type"></bavigationbar>
 		<Swiper :swiperImage="swiperImg"></Swiper>
 		<view class="chooseType">
 			<view class="title">{{position}}服务</view>
@@ -12,7 +12,8 @@
 			<block v-for="(item,index) in data" :key="index">
 				<item-list :src="item.smallPic" :money="item.price" 
 				:title="item.goodsName|titleFormat" :deliver="item.postFee" :sales="item.monthSale"
-				v-on:toDetailPage="toDetail(item)" v-on:addcart="addToCart(item)"></item-list>
+				v-on:toDetailPage="toDetail(item)" v-on:addcart="addToCart(item)"
+				:distance="item.distance|fixOne"></item-list>
 			</block>
 		</block>
 		
@@ -20,7 +21,7 @@
 			<block v-for="(item,index) in data" :key="index">
 				<item-service :src="item.smallPic" :money="item.price" 
 				:title="item.goodsName|titleFormat" :deliver="item.postFee" :sales="item.monthSale"
-				@toNextPage="toDetail(item)"></item-service>
+				:distance="item.distance|fixOne" @toNextPage="toDetail(item)"></item-service>
 			</block>
 		</block>
 		<uni-popup ref="poptop" type="top">
@@ -34,9 +35,9 @@
 				</view>
 				<view class="title">排序</view>
 				<view class="order">
-					<view class="grayButton">价格倒序</view>
-					<view class="grayButton">价格正序</view>
-					<view class="grayButton">距离最近</view>
+					<block v-for="(item,index) in orderItem" :key="index">
+						<view  :class="[orderIndex==index?'secondOn':'grayButton']" @tap="chooseOrder(item,index)">{{item}}</view>
+					</block>
 				</view>
 				<view class="button"  @tap="confirmSecond">确定</view>
 			</view>
@@ -54,6 +55,7 @@ import itemList from '@/components/item-list.vue'
 import itemService from '@/components/item-service.vue'
 import {ProvideModel} from '@/common/models/provide.js'
 const providemodel = new ProvideModel()
+import {mapState} from 'vuex'
 export default {
 	filters: {
 		titleFormat: function(title) {
@@ -61,9 +63,14 @@ export default {
 				return title.substring(0,25) + '...'
 			}else{
 				return title
-			}
-			
+			}	
+		},
+		fixOne(value){
+			return parseInt(value/1000).toFixed(1)
 		}
+	},
+	computed:{
+		...mapState(['lat','lon']),
 	},
 	components: {
 		bavigationbar,
@@ -76,10 +83,13 @@ export default {
 	data () {
 		return {
 			dataReq:{
-				userType:1,
 				pageNo:1,
 				pageSize:10,
-				goodsFirsttype:''
+				goodsFirsttype:'',
+				latitude:'',
+				longitude:'',
+				goodsSecondtype:'',
+				sort:1
 			},
 			data:'',
 			type:'',
@@ -88,7 +98,10 @@ export default {
 			status:'more',
 			typeData:'',
 			secondIndex:null,
-			secondId:''
+			orderIndex:null,
+			secondId:'',
+			orderItem:['价格升序','价格降序','评分升序','评分降序','距离升序','距离降序'],
+			orderNum:1,
 		}
 	},
 	onLoad(options) {
@@ -101,6 +114,8 @@ export default {
 			}
 		})
 		this.dataReq.goodsFirsttype = this.type
+		this.dataReq.latitude = this.lat
+		this.dataReq.longitude = this.lon
 		providemodel.getItemList(this.dataReq,(data)=>{
 			this.data = data
 		})
@@ -158,12 +173,6 @@ export default {
 				this.position = '维修'
 			}
 		},
-		provide:function(e){
-			this.chenck=!this.chenck
-		},
-		provided:function(e){
-			this.chenck=!this.chenck
-		},
 		screen (type) {
 			this.type = type
 			this.$refs["popup"].open()
@@ -182,7 +191,7 @@ export default {
 		},
 		toDetail(item){
 			uni.navigateTo({
-				url:'/pages/provide/detail?sellerId=' + item.sellerId + '&id=' + item.id + '&type=' + this.type
+				url:`detail?sellerId=${item.sellerId}&id=${item.id}&type=${this.type}&distance=${item.distance}`
 			})
 		},
 		addToCart(item){
@@ -209,6 +218,20 @@ export default {
 				}else{
 					this.secondIndex = index
 					this.secondId = item.secondtypeinfoId
+				}
+			}
+		},
+		chooseOrder(item,index){
+			if(this.orderIndex==null){
+				this.orderIndex = index
+				this.orderNum = parseInt(index) + 1
+			}else{
+				if(this.orderIndex == index){
+					this.orderIndex = null
+					this.orderNum = 1
+				}else{
+					this.orderIndex = index
+					this.orderNum = parseInt(index) + 1
 				}
 			}
 		},
@@ -264,13 +287,5 @@ page{
 	}
 }
 
-.secondOn{
-	background:rgba(255,241,232,1);
-	border:1rpx solid rgba(255,102,0,1);
-	border-radius:10rpx;
-	height:58rpx;
-	padding:0 30rpx 0 30rpx;
-	line-height: 58rpx;
-	margin-right: 19rpx;
-}
+
 </style>

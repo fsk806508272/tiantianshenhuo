@@ -3,24 +3,39 @@
 		<view v-for="(item,index) in agreementList" :key="index">
 			<view class="top">
 				<view class="status" v-if="item.contractState==1">履行中</view>
-				<view class="status" v-if="item.contractState!=1">已解约</view>
+				<view class="status" v-if="item.contractState==2">已解约</view>
+				<view class="status" v-if="item.contractState==3">解约中</view>
+				<view class="status" v-if="item.contractState==4&&item.firsttypeId==1">续租中</view>
+				<view class="status" v-if="item.contractState==4&&item.firsttypeId==5">续约中</view>
 				<view class="icon">乙方</view>
 			</view>
 			<view class="middle" @tap="toDetail(item)">
-				<view class="title">#{{item.title}}#</view>
+				<view class="title">{{item.partyaName}}</view>
 				<view class="default">合同编号：{{item.contractCode}}</view>
 				<view class="default">合同时长：{{item.contractStarttime}}至{{item.contractEndtime}}</view>
-				<view class="default">月租金：￥{{item.rental}}</view>
+				<view v-if="item.firsttypeId==1" class="default">月租金：￥{{item.rental}}</view>
+				<view v-if="item.firsttypeId==5" class="default">代理费：￥{{item.specsPrice}}</view>
 			</view>
 			<view class="bottom">
 				<view class="time">{{item.createDate}}</view>
 				<view class="buttons" v-if="item.contractState==1">
 					<view class="button">联系TA</view>
-					<view class="button" @tap="toChange()">合同变更</view>
+					<view class="button" @tap="toChange(item)">合同变更</view>
 				</view>
-				<view v-if="item.contractState!=1" class="buttons">
+				<view v-if="item.contractState==2" class="buttons">
 					<view class="button">删除合同</view>
 					<view class="button">账单详情</view>
+				</view>
+				<view v-if="item.contractState==3&&item.firsttypeId==1" class="buttons">
+					<view class="button">联系TA</view>
+					<view @tap="cancelBack(item)" class="button">取消退租</view>
+				</view>
+				<view v-if="item.contractState==4&&item.firsttypeId==1" class="buttons">
+					<view class="button">联系TA</view>
+				</view>
+				<view v-if="item.contractState==3&&item.firsttypeId==5" class="buttons">
+					<view class="button">联系TA</view>
+					<view @tap="financeBreak(item)" class="button">取消解约</view>
 				</view>
 			</view>
 		</view>
@@ -47,9 +62,51 @@ export default{
 				url:'agreementdetail?data=' + JSON.stringify(item)
 			})
 		},
-		toChange(){
+		toChange(item){
 			uni.navigateTo({
-				url:'agreementchange'
+				url:`agreementchange?data=${JSON.stringify(item)}`
+			})
+		},
+		cancelBack(item){
+			uni.showModal({
+				content: '确认取消退租吗？',
+				success: (res) => {
+					if(res.confirm){
+						usermodel.cancelBackHouse({orderCode:item.orderCode,type:1},data=>{
+							uni.showToast({
+								title:'取消退租成功',
+								duration:1500,
+								icon:'none'
+							})
+							setTimeout(()=>{
+								uni.redirectTo({
+									url:'/pages/user/agreement/agreement'
+								})
+							},1500)
+						})
+					}
+				}
+			})
+		},
+		financeBreak(item){
+			uni.showModal({
+				content: '确认取消解约吗？',
+				success: (res) => {
+					if(res.confirm){
+						usermodel.cancelBackHouse({orderCode:item.orderCode,type:2},data=>{
+							uni.showToast({
+								title:'取消解约成功',
+								duration:1500,
+								icon:'none'
+							})
+							setTimeout(()=>{
+								uni.reLaunch({
+									url:'/pages/user/agreement/agreement'
+								})
+							},1500)
+						})
+					}
+				}
 			})
 		}
 	}
@@ -97,9 +154,17 @@ page{
 	padding-left: 19rpx;
 	padding-top: 29rpx;
 	.title{
+		width:700rpx;
 		font-weight:400;
 		color:rgba(60,60,60,1);
 		line-height:36rpx;
+		overflow : hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		word-wrap: break-word;
+		word-break: break-all;
 	}
 	.default{
 		margin-top: 25rpx;
@@ -124,8 +189,9 @@ page{
 		width:380rpx;
 		display: flex;
 		align-items: center;
-		justify-content: space-around;
+		justify-content: flex-end;
 		.button{
+			margin: 0 10rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;

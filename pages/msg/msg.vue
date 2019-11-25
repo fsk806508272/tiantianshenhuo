@@ -176,13 +176,13 @@
 				// #endif
 			},
 			 te(e){
-				 console.log(e)
-				 this.chatList.splice(e, 1);
-			      //console.log('当前点击的是第'+e.index+'个按钮，点击内容是'+e.content.text)
-			    },
-			    change(open){
-			      console.log('当前开启状态：'+ open)
-			    },
+				console.log(e)
+				this.chatList.splice(e, 1);
+			     //console.log('当前点击的是第'+e.index+'个按钮，点击内容是'+e.content.text)
+			},
+			change(open){
+				console.log('当前开启状态：'+ open)
+			},
 			toChat(chat){
 				uni.navigateTo({
 					url:"chat/chat?name="+chat.username

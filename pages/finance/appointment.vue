@@ -144,7 +144,7 @@ export default{
 			let signingFinanceJson = JSON.stringify(req)
 			financemodel.signFinance({signingFinanceJson},data=>{
 				uni.redirectTo({
-					url:`/pages/success/success?type=4`
+					url:`/pages/success/success?type=6`
 				})
 			})
 		}

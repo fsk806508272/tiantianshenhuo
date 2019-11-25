@@ -273,6 +273,7 @@
 	}
 	
 	.grayButton{
+		margin-top: 10rpx;
 		height:58rpx;
 		padding:0 30rpx 0 30rpx;
 		line-height: 58rpx;
@@ -442,6 +443,7 @@
 	}
 	
 	.secondType{
+		padding-top:84rpx;
 		.typeContent{
 			display: flex;
 			margin-top:20rpx;
@@ -625,7 +627,45 @@
 				}
 			}
 		}
-		
-		
+	}
+	.secondType{
+		.typeContent{
+			display: flex;
+			margin-top:20rpx;
+			padding-bottom: 20rpx;
+			border-bottom: 1rpx solid #f2f2f2;
+			flex-wrap: wrap;
+			.grayButton{
+				margin-bottom: 10rpx;
+			}
+		}
+		.order{
+			display: flex;
+			margin-top:20rpx;
+			padding-bottom: 20rpx;
+			flex-wrap: wrap;
+		}
+		.button{
+			width:100%;
+			margin-top: 30rpx;
+			height:70rpx;
+			background: linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+			border-radius:10rpx;
+			color:#fff;
+			display: flex;
+			justify-content: center;
+			align-items:center;
+		}
+	}
+	
+	.secondOn{
+		background:rgba(255,241,232,1);
+		border:1rpx solid rgba(255,102,0,1);
+		border-radius:10rpx;
+		height:58rpx;
+		padding:0 30rpx 0 30rpx;
+		line-height: 58rpx;
+		margin-right: 19rpx;
+		margin-top:10rpx;
 	}
 </style>

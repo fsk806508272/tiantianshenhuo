@@ -75,11 +75,14 @@ page{
 	}
 	.information{
 		margin-left: 20rpx;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-around;
 		.title{
-			margin-top: 10rpx;
+			
 		}
 		.price{
-			margin-top: 20rpx;
+			
 		}
 	}
 }

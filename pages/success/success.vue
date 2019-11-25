@@ -21,11 +21,23 @@
 		</view>
 		<view v-if="type==4">
 			<image src="/static/cut/pay_ok.png"></image>
+			<view class="payTitle">预约成功</view>
+			<view class="whiteButton" @tap="toIndex">返回首页</view>
+			<view class="yellowButton" @tap="toMyPackage">我的订单</view>
+		</view>
+		<view v-if="type==5">
+			<image src="/static/cut/pay_ok.png"></image>
+			<view class="payTitle">签约成功</view>
+			<view class="whiteButton" @tap="toIndex">返回首页</view>
+			<view class="yellowButton" @tap="toMyPackage">我的订单</view>
+		</view>
+		<view v-if="type==6">
+			<image src="/static/cut/pay_ok.png"></image>
 			<view class="payTitle">资料提交成功</view>
 			<view class="content">等待审核中，耐心等候哦</view>
 			<view class="indexButton" @tap="toIndex">去首页看看</view>
 		</view>
-		<view v-if="type==5">
+		<view v-if="type==7">
 			<image src="/static/cut/user/uploadgoodssuccess.png"></image>
 			<view class="uploadTitle">商品上传成功</view>
 			<view class="whiteButton" @tap="toIndex">返回首页</view>
@@ -60,12 +72,22 @@ export default{
 				break;
 				case 2:
 				uni.switchTab({
-					url:'/pages/order/order'
+					url:'/pages/order/order?index=' + 2
 				})
 				break;
 				case 3:
 				uni.switchTab({
-					url:'/pages/order/order'
+					url:'/pages/order/order?index=' + 2
+				})
+				break;
+				case 4:
+				uni.switchTab({
+					url:'/pages/order/order?index=' + 2
+				})
+				break;
+				case 5:
+				uni.switchTab({
+					url:'/pages/order/order?index=' + 2
 				})
 				break;
 			}

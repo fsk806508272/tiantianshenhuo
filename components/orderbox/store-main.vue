@@ -1,6 +1,6 @@
 <template name="storeMain">
 	<view class="box">
-		<view class="img"><image :src="pic"></image></view>
+		<image :src="pic"></image>
 		<view class="content">
 			<view class="detail">
 				<view class="title">{{title}}</view>
@@ -54,22 +54,13 @@ export default {
 
 <style lang="scss">
 .box{
+	margin-top: 10rpx;
 	background-color: #fff;
 	display: flex;
-	.img{
+	image{
 		width:140rpx;
 		height:140rpx;
-		background:rgba(255,255,255,1);
-		border:1rpx solid rgba(233, 233, 233, 1);
 		border-radius:10rpx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		image{
-			width:107rpx;
-			height:107rpx;
-			border-radius:10rpx;
-		}
 	}
 	.content{
 		margin-left: 20rpx;

@@ -7,35 +7,35 @@
 		</view>
 		
 		<view v-if="tabbarIndex==0" class="unpaid">
-			<view v-for="(item,index) in unpaidList" class="item" :key="index" @tap="toDetail()">
+			<view v-for="(item,index) in unpaidList" class="item" :key="index" @tap="toDetail(item)">
 				<view class="head">
 					<view class='title'>{{item.title}}</view>
 					<view class='status'>待支付</view>
 				</view>
 				<view class="billdetail">
-					<view>电费：￥{{item.elec}}</view>
-					<view>水费：￥{{item.water}}</view>
-					<view>服务费：￥{{item.service}}</view>
+					<block v-for="(row,number) in item.costList" :key="number">
+						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
+					</block>
 				</view>
 				<view class="billtotal">
-					<view class="total">应缴金额：<text>￥{{item.total}}</text></view>
+					<view class="total">应缴金额：<text>￥{{item.sum}}</text></view>
 					<view class="whiteButton">去付款</view>
 				</view>
 			</view>
 		</view>
 		<view v-if="tabbarIndex==1" class="unpaid">
-			<view v-for="(item,index) in paidList" class="item" :key="index">
+			<view v-for="(item,index) in paidList" class="item" :key="index" @tap="toDetail(item)">
 				<view class="head">
 					<view class='title'>{{item.title}}</view>
 					<view class='paidstatus'>已支付</view>
 				</view>
 				<view class="billdetail">
-					<view>电费：￥{{item.elec}}</view>
-					<view>水费：￥{{item.water}}</view>
-					<view>服务费：￥{{item.service}}</view>
+					<block v-for="(row,number) in item.costList" :key="number">
+						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
+					</block>
 				</view>
 				<view class="billedtotal">
-					<view class="total">实缴金额：<text>￥{{item.total}}</text></view>
+					<view class="total">实缴金额：<text>￥{{item.sum}}</text></view>
 				</view>
 			</view>
 		</view>
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+import {UserModel} from '@/common/models/user.js'
+const usermodel = new UserModel()
 export default{
 	data(){
 		return{
@@ -50,41 +52,20 @@ export default{
 			headerTop:"0px",
 			billType: ['未缴账单','已缴账单'],
 			tabbarIndex:0,
-			unpaidList:[
-				{
-					title:'万科天誉二期8508的2月份账单',
-					elec:'80.00',
-					water:'60：00',
-					service:'60.00',
-					total:'200.00'
-				},
-				{
-					title:'万科天誉二期8508的2月份账单',
-					elec:'80.00',
-					water:'60：00',
-					service:'60.00',
-					total:'200.00'
-				}
-			],
-			paidList:[
-				{
-					title:'万科天誉二期8508的2月份账单',
-					elec:'80.00',
-					water:'60：00',
-					service:'60.00',
-					total:'200.00'
-				},
-				{
-					title:'万科天誉二期8508的2月份账单',
-					elec:'80.00',
-					water:'60：00',
-					service:'60.00',
-					total:'200.00'
-				}
-			]
+			unpaidList:[],
+			paidList:[]
 		}
 	},
 	onLoad:function(){
+		usermodel.queryBill({paymentState:2},data=>{
+			this.unpaidList = data
+		})
+		usermodel.queryBill({paymentState:1},data=>{
+			this.paidList = data
+		})
+		
+		
+		
 		// #ifdef H5
 			//定时器方式循环获取高度为止，这么写的原因是onLoad中head未必已经渲染出来。
 			let Timer = setInterval(()=>{
@@ -97,9 +78,9 @@ export default{
 		// #endif
 	},
 	methods:{
-		toDetail(){
+		toDetail(item){
 			uni.navigateTo({
-				url:'billdetail'
+				url:'billdetail?billcode=' + item.billCode + '&index=' + this.tabbarIndex
 			})
 		},
 		showType(tbIndex){
@@ -110,10 +91,12 @@ export default{
 }
 </script>
 
-<style lang='scss'>
+<style scoped lang='scss'>
 page{
 	background-color: #f2f2f2;
+	padding-bottom: 20rpx;
 }
+
 .topTabBar{
 	position:fixed;
 	z-index: 10;
@@ -147,7 +130,6 @@ page{
 .unpaid{
 	margin-top: 84rpx;
 	.item{
-		height:373rpx;
 		margin-top: 20rpx;
 		background-color: #fff;
 		padding: 39rpx 19rpx 0 19rpx;

@@ -6,89 +6,109 @@
 			</view>
 		</view>
 		
-		<view v-if="tabbarIndex == 0" class="provideList"> 
-			<block v-for="(row,index) in provideList" :key="index">
-				<view class="item">
-					<view class="image">
-						<image :src="row.smallPic|pictureOne"></image>
-					</view>
-					
-					<view class="detail">
-						<view v-if="row.goodsFirsttype!=1" class="title col2">{{row.goodsName}}</view>
-						<view v-if="row.goodsFirsttype==1" class="title col2">{{row.title}}</view>
-						<view class="price">
-							<view class="singlePrice">￥<text>{{row.price}}</text></view>
-							<view v-if="row.goodsFirsttype!=1" class="sales">月售{{row.monthSale}}</view>
-							<view v-if="row.goodsFirsttype!=1" class="deliver">配送费￥{{row.postFee}}</view>
+		<view v-if="tabbarIndex == 0" class="provideList">
+			<block v-if="provideList.length==0">
+				<image class="noCollect" src="/static/cut/nocollect.png"></image>
+				<view class="noCollectContent">暂无收藏记录，快去逛逛吧~</view>
+			</block>
+			
+			<block v-if="provideList.length!=0">
+				<block v-for="(row,index) in provideList" :key="index">
+					<view class="item">
+						<view class="image">
+							<image :src="row.smallPic"></image>
+						</view>
+						
+						<view class="detail">
+							<view class="title col2">{{row.goodsName}}</view>
+							<view class="price">
+								<view class="singlePrice">￥<text>{{row.price}}</text></view>
+								<view class="sales">月售{{row.monthSale}}</view>
+								<view class="deliver">配送费￥{{row.postFee}}</view>
+							</view>
+						</view>
+						
+						<view class="like" @tap="delCollectGoods(row)">
+							<image src="/static/cut/collected.png"></image>
 						</view>
 					</view>
-					
-					<view v-if="row.goodsFirsttype!=1" class="like" @tap="delCollectGoods(row.goodsId,row.goodsFirsttype)">
-						<image src="/static/cut/collected.png"></image>
-					</view>
-					<view v-if="row.goodsFirsttype==1" class="like" @tap="delCollectGoods(row.houseId,row.goodsFirsttype)">
-						<image src="/static/cut/collected.png"></image>
-					</view>
-				</view>
+				</block>
+				<uni-load-more :status="loadingType"></uni-load-more>
 			</block>
+			
 		</view>
 		
 		<view v-if="tabbarIndex == 1" class="storeList">
-			<block v-for="(item,index) in storeList" :key="index">
-				<view class="row">
-					<view class="storeImage">
-						<image :src="item.logoPic"></image>
-					</view>
-					<view class="storeInfo">
-						<view class="title">
-							<view>{{item.nickName}}</view>
-							<image src="/static/cut/company_cer.png"></image>
-						</view>
-						<view class="address">地址：{{item.address}}</view>
-						<view class="stars">
-							<block v-for="(score,idx) in starIndex" :key="idx">
-								<image :src="item.mainScore>idx?starSrc:''"></image>
-							</block>
-							<view>{{item.mainScore}}</view>
-						</view>
-					</view>
-					<view class="like" @tap="delCollectShop(item.sellerId)">
-						<image src="/static/cut/collected.png"></image>
-					</view>
-				</view>
-				
+			<block v-if="storeList.length==0">
+				<image class="noCollect" src="/static/cut/nocollect.png"></image>
+				<view class="noCollectContent">暂无收藏记录，快去逛逛吧~</view>
 			</block>
+			<block v-if="storeList.length!=0">
+				<block v-for="(item,index) in storeList" :key="index">
+					<view class="row">
+						<view class="storeImage">
+							<image :src="item.logoPic"></image>
+						</view>
+						<view class="storeInfo">
+							<view class="title">
+								<view>{{item.nickName}}</view>
+								<image src="/static/cut/company_cer.png"></image>
+							</view>
+							<view class="address">地址：{{item.address}}</view>
+							<view class="stars">
+								<block v-for="(score,idx) in starIndex" :key="idx">
+									<image :src="item.mainScore>idx?starSrc:''"></image>
+								</block>
+								<view>{{item.mainScore}}</view>
+							</view>
+						</view>
+						<view class="like" @tap="delCollectShop(item.sellerId)">
+							<image src="/static/cut/collected.png"></image>
+						</view>
+					</view>
+				</block>
+				<uni-load-more :status="loadingType"></uni-load-more>
+			</block>
+			
 		</view>
 		
 		<view v-if="tabbarIndex == 2" class="vipcardList provideList">
-			<block v-for="(row,index) in vipcardList" :key="index">
-				<view class="item">
-					<view class="image">
-						<image :src="row.firstPictures"></image>
-					</view>
-					
-					<view class="detail">
-						<view class="title col2">{{row.title}}</view>
-						<view class="price">
-							<view class="singlePrice">
-								<block v-if="row.cardType==1">
-									<text>免费办理</text>
-								</block>
-								<block v-else>
-									￥<text>{{row.price}}</text>
-								</block>
+			<block v-if="vipcardList.length==0">
+				<image class="noCollect" src="/static/cut/nocollect.png"></image>
+				<view class="noCollectContent">暂无收藏记录，快去逛逛吧~</view>
+			</block>
+			<block v-if="vipcardList.length!=0">
+				<block v-for="(row,index) in vipcardList" :key="index">
+					<view class="item">
+						<view class="image">
+							<image :src="row.firstPictures"></image>
+						</view>
+						
+						<view class="detail">
+							<view class="title col2">{{row.title}}</view>
+							<view class="price">
+								<view class="singlePrice">
+									<block v-if="row.cardType==1">
+										<text>免费办理</text>
+									</block>
+									<block v-else>
+										￥<text>{{row.price}}</text>
+									</block>
+								</view>
+								<view class="sales">办理人数{{row.totalSale}}</view>
 							</view>
-							<view class="sales">办理人数{{row.totalSale}}</view>
+						</view>
+						
+						<view class="like" @tap="delCollectCard(row.cardId)">
+							<image src="/static/cut/collected.png"></image>
 						</view>
 					</view>
-					
-					<view class="like" @tap="delCollectCard(row.cardId)">
-						<image src="/static/cut/collected.png"></image>
-					</view>
-				</view>
+				</block>
+				<uni-load-more :status="loadingType"></uni-load-more>
 			</block>
 		</view>
-		<uni-load-more :status="loadingType"></uni-load-more>
+		
+		
 	</view>
 </template>
 
@@ -97,11 +117,6 @@
 	let Likemodel=new LikeModel()
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 export default{
-	filters:{
-		pictureOne(value){
-			return value.toString().split(',')[0]
-		}
-	},
 	components:{
 		uniLoadMore
 	},
@@ -141,6 +156,7 @@ export default{
 		this.getCollectcard(this.page)
 	},
 	onReady (){
+		
 	},
 	onReachBottom (){
 		this.page++
@@ -151,6 +167,7 @@ export default{
 			Likemodel.getCollectgood(page,(data)=>{
 				console.log(data)
 				this.provideList=this.provideList.concat(data)
+				console.log(this.provideList);
 			})
 		},
 		getCollectshop(page){
@@ -165,9 +182,8 @@ export default{
 				console.log(this.vipcardList);
 			})
 		},
-		delCollectGoods(id,type){
-			console.log(id)
-			Likemodel.like(id,type,false,(datas)=>{
+		delCollectGoods(item){
+			Likemodel.like(item.goodsFirsttype,item.goodsId,false,(datas)=>{
 				Likemodel.getCollectgood(1,(data)=>{
 					this.provideList=data
 				})
@@ -483,5 +499,16 @@ page{
 	-webkit-box-orient: vertical;
 	word-wrap: break-word;
 	word-break: break-all;
+}
+
+.noCollect{
+	width:402rpx;
+	height:389rpx;
+	margin-top: 202rpx;
+	margin-left: 174rpx;
+}
+.noCollectContent{
+	margin-left: 200rpx;
+	margin-top: 40rpx;
 }
 </style>

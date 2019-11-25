@@ -7,7 +7,7 @@
 				<view class="icon">乙方</view>
 			</view>
 			<view class="topTwo">
-				<view class="title">#{{item.title}}#</view>
+				<view class="title">{{item.partyaName}}</view>
 				<view class="number">合同编号：{{item.contractCode}}</view>
 			</view>
 		</view>
@@ -18,12 +18,20 @@
 				<view class="right">{{item.contractStarttime}}至{{item.contractEndtime}}</view>
 			</view>
 			<view class="item">
+				<view class="left">付款方式</view>
+				<view class="right">{{item.paymentMethod}}</view>
+			</view>
+			<view class="item" @tap="toContract">
 				<view class="left">电子合同</view>
 				<view class="right">查看<image src="/static/cut/grayright.png"></image></view>
 			</view>
 			<view class="item" @tap="toBillDetail">
 				<view class="left">账单详情</view>
 				<image src="/static/cut/grayright.png"></image>
+			</view>
+			<view class="item">
+				<view class="left">物业交割信息</view>
+				<view class="right">已确认<image src="/static/cut/grayright.png"></image></view>
 			</view>
 		</view>
 		
@@ -54,11 +62,14 @@
 export default{
 	data(){
 		return{
-			item:''
+			item:'',
+			typeId:''
 		}
 	},
 	onLoad(options){
 		this.item = JSON.parse(options.data)
+		console.log(this.item)
+		this.typeId = this.item.firsttypeID
 	},
 	methods:{
 		plusXing (str,frontLen,endLen) { 
@@ -72,6 +83,11 @@ export default{
 		toBillDetail(){
 			uni.navigateTo({
 				url:'/pages/user/bill/billdetail?billcode=' + this.item.billCode
+			})
+		},
+		toContract(){
+			uni.navigateTo({
+				url:`/pages/user/agreement/agreementcontract?data=${JSON.stringify(this.item)}`
 			})
 		}
 	}
@@ -118,6 +134,13 @@ page{
 			color:#3C3C3C;
 			margin-left: 19rpx;
 			margin-top: 30rpx;
+			overflow : hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp: 1;
+			-webkit-box-orient: vertical;
+			word-wrap: break-word;
+			word-break: break-all;
 		}
 		.number{
 			margin-left: 20rpx;

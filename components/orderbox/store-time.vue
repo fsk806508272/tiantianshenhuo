@@ -3,15 +3,20 @@
 		<view class="payTime gray">{{time}}</view>
 		<view class="buttons">
 			<block v-if="type=='unpaid'"><view class="default" @tap.stop="cancelOrder">取消订单</view><view class="pay" @tap.stop="toPayment">去付款</view></block>
-			<block v-if="type=='unreceived'"><view class="default" @tap="remindDeliver(row)">退款</view></block>
-			<block v-if="type=='received'"><view class="default" @tap="showLogistics(row)">退款</view></block>
+			<block v-if="type=='unreceived'"><view class="default" @tap.stop="drawback">退款</view></block>
+			<block v-if="type=='received'"><view class="default" @tap.stop="drawback">退款</view></block>
 			<block v-if="type=='deliver'"><view class="pay" @tap.stop="confirmOk">确认完成</view></block>
 			<block v-if="type=='completed'"><view class="default" @tap.stop="applyService">申请售后</view><view class="pay" @tap.stop="goRating">去评价</view></block>
 			<block v-if="type=='refunds'"><view class="pay">取消退款</view></block>
 			<block v-if="type=='cancelled'"><view class="default">删除订单</view></block>
 			<block v-if="type=='serviced'"><view class="default">联系TA</view><view class="pay" @tap.stop="cancelApply">取消申请</view></block>
+			<block v-if="type=='servicrefuse'"><view class="default" @tap.stop="applyService">申请售后</view></block>
+			<block v-if="type=='servicefinish'"><view class="default">联系TA</view></block>
 			<block v-if="type=='waiting'"><view class="default">联系TA</view></block>
+			<block v-if="type=='drawdone'"><view class="default">联系TA</view></block>
+			<block v-if="type=='housefinished'"><view class="default">联系TA</view></block>
 			<block v-if="type=='finished'"><view class="default" @tap.stop="applyService">申请售后</view></block>
+			<block v-if="type=='houseback'"><view class="default">联系TA</view></block>
 		</view>
 	</view>
 </template>
@@ -52,6 +57,9 @@ export default {
 		},
 		cancelApply(){
 			this.$emit('cancelBack')
+		},
+		drawback(){
+			this.$emit('backMoney')
 		}
 	}
 }

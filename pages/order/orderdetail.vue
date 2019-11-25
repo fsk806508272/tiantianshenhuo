@@ -10,9 +10,10 @@
 			<block v-if="orderList.type=='serviced'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
 			<block v-if="orderList.type=='waiting'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
 			<block v-if="orderList.type=='finished'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
+			<block v-if="orderList.type=='housefinished'"><image :src="iconPath[orderList.type]"></image><view class="default">{{typeText[orderList.type]}}</view></block>
 		</view>
 		
-		<view class="location" v-if="orderList.firsttypeId!=1">
+		<view class="location" v-if="orderList.firsttypeId!=1&&orderList.firsttypeId!=5">
 			<image src='../../static/cut/address_on.png'></image>
 			<view class="address">{{orderList.receiverAreaName}}</view>
 			<view class="username">{{orderList.receiver}}</view>
@@ -20,7 +21,7 @@
 		</view>
 		
 		<view class="goodsDetail">
-			<view v-if="orderList.firsttypeId==8" class="type">
+			<view v-if="orderList.firsttypeId==8||orderList.firsttypeId==10||orderList.firsttypeId==3||orderList.firsttypeId==9" class="type">
 				<store-title :title="orderList.sellerNickName"></store-title>
 				<block v-for="(row,number) in orderList.goodsOrderItemList" :key="number">
 					<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
@@ -50,16 +51,37 @@
 				</store-main>
 				<view class="sum">合计:￥{{orderList.sum}}</view>
 			</view>
+			<view v-if="orderList.firsttypeId==5" class="type">
+				<store-title :title="orderList.nickName"></store-title>
+				<store-main :pic="orderList.picture" :title="orderList.title" :specsize="orderList.specsName">
+				</store-main>
+			</view>
 			
 		</view>
 		
 		<view class="titleInfo">订单信息</view>
 		
 		<view class="info">
-			<view v-for="(row,order) in payInfo" :key='order' class="for">
-				<view class="infoTitle">{{payInfoTitle[row.type]}} {{row.number}}</view>
+			<view v-if="typeid!=1&&typeid!=5" class="for">
+				<view class="infoTitle">订单编号 {{orderList.orderId}}</view>
+			</view>
+			<view v-if="typeid!=1&&typeid!=5" class="for">
+				<view class="infoTitle">创建时间 {{orderList.createTime}}</view>
+			</view>
+			<view class="for" v-if='index>2'>
+				<view class="infoTitle">付款时间 {{orderList.paymentTime}}</view>
+			</view>
+			<view class="for" v-if="index==4">
+				<view class="infoTitle">接单时间 {{orderList.receiptTime}}</view>
+			</view>
+<!-- 			<view class="for" v-if="index==4">
+				<view class="infoTitle">服务开始 12145464654142</view>
 				<view v-if="row.type=='orderNumber'" class="copy">复制</view>
 			</view>
+			<view class="for" v-if="index==4">
+				<view class="infoTitle">确认完成 12145464654142</view>
+				<view v-if="row.type=='orderNumber'" class="copy">复制</view>
+			</view> -->
 			<view class='contact'>
 				<view class='showMessage'>
 					<image src="../../static/cut/message.png"></image>
@@ -73,15 +95,17 @@
 		</view>
 		
 		<view class="button">
-			<block v-if="orderList.type=='unpaid'"><view class="default" >取消订单</view><view class="pay" >去付款</view></block>
-			<block v-if="orderList.type=='unreceived'"><view class="default" >退款</view></block>
-			<block v-if="orderList.type=='received'"><view class="default" >退款</view></block>
+			<block v-if="orderList.type=='unpaid'"><view class="default" @tap="cancelUnpaidOrder(item)">取消订单</view><view class="pay" @tap="toPayment(item)">去付款</view></block>
+			<block v-if="orderList.type=='unreceived'"><view class="default" @tap="drawBack(item)">退款</view></block>
+			<block v-if="orderList.type=='received'"><view class="default" @tap="drawBack(item)">退款</view></block>
 			<block v-if="orderList.type=='servicing'"><view class="pay">确认完成</view></block>
-			<block v-if="orderList.type=='uncomment'"><view class="pay">去评价</view></block>
-			<block v-if="orderList.type=='comment'"><view class="default">删除订单</view><view class="pay">申请售后</view></block>
-			<block v-if="orderList.type=='serviced'"><view class="default">删除订单</view><view class="pay">取消申请</view></block>
+			<block v-if="orderList.type=='uncomment'"><view class="default" @tap="applyService(item)">申请售后</view><view @tap="goRating(item)" class="pay">去评价</view></block>
+			<block v-if="orderList.type=='comment'"><view @tap="applyService(item)" class="pay">申请售后</view></block>
+			<block v-if="orderList.type=='serviced'"><view @tap="cancelApply(item)" class="pay">取消申请</view></block>
 			<block v-if="orderList.type=='waiting'"><view class="default">联系TA</view></block>
-			<block v-if="orderList.type=='finished'"><view class="default">删除订单</view><view class="default">申请售后</view></block>
+			<block v-if="orderList.type=='housefinished'"><view class="default">联系TA</view></block>
+			<block v-if="orderList.type=='finished'"><view @tap="applyService(item)" class="default">申请售后</view></block>
+			
 		</view>
 	</view>
 </template>
@@ -100,6 +124,9 @@
 		},
 		data(){
 			return{
+				item:'',
+				index:'',
+				typeid:'',
 				typeText:{
 					unpaid:'等待买家付款...',
 					unreceived:'等待商家接单',
@@ -109,7 +136,8 @@
 					comment:'交易完成',
 					serviced:'退款售后',
 					waiting:'等待商家签约',
-					finished:'交易完成'
+					finished:'交易完成',
+					housefinished:'交易完成'
 				},
 				iconPath:{
 					unpaid:'/static/cut/order_waiting.png',
@@ -120,7 +148,8 @@
 					uncomment:'/static/cut/order_finish.png',
 					comment:'/static/cut/order_finish.png',
 					serviced:'/static/cut/order_finish.png',
-					finished:'/static/cut/order_ok.png'
+					finished:'/static/cut/order_ok.png',
+					housefinished:'/static/cut/order_ok.png'
 				},
 				orderList:{ type:"unpaid",img: '/static/goods/p1.jpg', adress:"广东省深圳市龙岗区龙翔大道9002号志联佳大厦508",username:'唐笑笑',phone:'13751157436',name: '清风原木纯品纸巾三层360抽 买三送一 限时抢购', price: '168.00',payment:168.00,freight:12,spec:'规格:S码',number:2 ,store:'清风纸巾售卖店',deil:"5",message:'要红色的这个'},
 				payInfo:[
@@ -139,7 +168,10 @@
 			}
 		},
 		onLoad(options){
-			if(options.typeid==8){
+			this.typeid = options.typeid
+			if(options.typeid==8||options.typeid==10||options.typeid==3||options.typeid==9){
+				this.index = options.index
+				this.item = JSON.parse(options.item)
 				ordermodel.getOrderDetail({id:options.id,type:1,firstTypeId:8},(data)=>{
 					this.orderList = data
 					if(this.orderList.status==1){
@@ -148,11 +180,18 @@
 						this.orderList.type = "servicing"
 					}else if(this.orderList.status==7){
 						this.orderList.type = "finished"
+					}else if(this.orderList.status==5&&this.orderList.viceStatus==33){
+						this.orderList.type = 'received'
+					}else if(this.orderList.status==5&&this.orderList.viceStatus==210){
+						this.orderList.type = "unreceived"
+					}else if(this.orderList.status==6){
+						this.orderList.type = "uncomment"
 					}
 				})
-			}else if(options.typeid==1){
+			}else if(options.typeid==1||options.typeid==5){
 				let jsondata = JSON.parse(options.data)
 				this.orderList = jsondata
+				this.orderList.picture = this.orderList.picture.split(',')[0]
 				if(this.orderList.userOrderStatus==3){
 					this.orderList.type = "waiting"
 				}
@@ -161,6 +200,38 @@
 		},
 		onShow(){
 			
+		},
+		methods:{
+			cancelUnpaidOrder(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.cancelUnpaidOrder(item)
+			},
+			toPayment(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.toPayment(item)
+			},
+			drawBack(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.drawBack(item)
+			},
+			applyService(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.applyService(item)
+			},
+			goRating(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.goRating(item)
+			},
+			cancelApply(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.cancelApply(item)
+			}
 		}
 	}
 </script>
@@ -249,7 +320,7 @@ page{
 }
 
 .type{
-	padding:0 20rpx;
+	padding:0 20rpx 20rpx 20rpx;
 	background-color: #fff;
 }
 .deliverMoney{

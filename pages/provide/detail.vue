@@ -363,6 +363,7 @@ page{
 
 .popBox{
 	padding:20rpx;
+	padding-bottom:110rpx;
 	.descri{
 		display: flex;
 		height:200rpx;

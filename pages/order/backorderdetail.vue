@@ -2,7 +2,7 @@
 	<view>
 		<view class="types">
 			<block v-if="backData.status==1"><image src="/static/cut/order_back.png"></image><view class="default">等待商家处理</view></block>
-			<block v-if="backData.status==2||backData==4"><image src="/static/cut/order_ok.png"></image><view class="default">售后完成</view></block>
+			<block v-if="backData.status==2||backData.status==4"><image src="/static/cut/order_ok.png"></image><view class="default">售后完成</view></block>
 			<block v-if="backData.status==3"><image src="/static/cut/order_refuse.png"></image><view class="default">商家拒绝售后申请</view></block>
 		</view>
 		
@@ -47,7 +47,7 @@
 				<store-title :title="orderData.sellerNickName"></store-title>
 				<block v-for="(row,number) in orderData.goodsOrderItemList" :key="number">
 					<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
-					:specsize="JSON.parse(row.spec).spec" :spec="'×' + row.num"></store-main>
+					:specsize="row.spec" :spec="'×' + row.num"></store-main>
 				</block>
 				<view class="deliverMoney">
 					<view class="deliverTitle">配送费</view>
@@ -86,8 +86,8 @@
 		</view>
 		
 		<view v-if="backData.status==1||backData.status==3" class="button">
-			<block v-if="backData.status==1"><view class="default" >取消申请</view></block>
-			<block v-if="backData.status==3"><view class="default" >申请售后</view></block>
+			<block v-if="backData.status==1"><view class="default" @tap="cancelApply(item)">取消申请</view></block>
+			<block v-if="backData.status==3"><view class="default" @tap="applyService(item)">申请售后</view></block>
 		</view>
 	</view>
 </template>
@@ -106,6 +106,7 @@
 		},
 		data(){
 			return{
+				item:'',
 				typeText:{
 					unpaid:'等待买家付款...',
 					unreceived:'等待商家接单',
@@ -145,15 +146,17 @@
 			}
 		},
 		onLoad(options){
-			ordermodel.getBackOrderDetail({id:options.id},(data)=>{
-				this.backData = data
-				this.applyPhoto = data.applyPhotoList.split(',')
-			})
-			ordermodel.getOrderDetail({type:1,firstTypeId:8,id:options.orderId},(data)=>{
-				this.orderData = data
-				console.log(this.orderData)
-			})
 			
+			this.item = JSON.parse(options.item)
+			if(this.firsttypeId!=1&&this.firsttypeId!=5){
+				ordermodel.getBackOrderDetail({id:options.id},(data)=>{
+					this.backData = data
+					this.applyPhoto = data.applyPhotoList.split(',')
+				})
+				ordermodel.getOrderDetail({type:1,firstTypeId:8,id:options.orderId},(data)=>{
+					this.orderData = data
+				})
+			}
 		},
 		onShow(){
 			
@@ -170,6 +173,16 @@
 						})
 					}
 				})
+			},
+			cancelApply(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.cancelApply(item.id)
+			},
+			applyService(item){
+				const pages = getCurrentPages()
+				const beforePage = pages[pages.length-2]
+				beforePage.$vm.applyService(item)
 			}
 		}
 	}

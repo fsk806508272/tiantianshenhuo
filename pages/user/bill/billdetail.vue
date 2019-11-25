@@ -4,24 +4,20 @@
 			<view class="title">合计</view>
 			<view class="money">￥{{data.sum}}</view>
 			<view class="image">
-				<image src="/static/cut/pay_finish.png"></image>
-				已支付
+				<image v-if="status==0" src="/static/cut/unpaidbill.png"></image>
+				<image v-if="status==1" src="/static/cut/pay_finish.png"></image>
+				<text v-if="status==0">未支付</text>
+				<text v-if="status==1">已支付</text>
 			</view>
 		</view>
 		
 		<view class="bottom">
-			<view>
-				<view class="title">押金</view>
-				<view class="content">￥{{data.costList[0].costPrice}}</view>
-			</view>
-			<view>
-				<view class="title">租金</view>
-				<view class="content">￥{{data.costList[2].costPrice}}</view>
-			</view>
-			<view>
-				<view class="title">服务费</view>
-				<view class="content">￥{{data.costList[1].costPrice}}</view>
-			</view>
+			<block v-for="(item,index) in costList" :key="index">
+				<view>
+					<view class="title">{{item.costName}}</view>
+					<view class="content">￥{{item.costPrice}}</view>
+				</view>
+			</block>
 			<view>
 				<view class="title">账单周期</view>
 				<view class="content">2019-11-01至2020-10-01</view>
@@ -30,13 +26,25 @@
 				<view class="title">关联合同</view>
 				<view class="content">{{data.contractCode}}</view>
 			</view>
-			<view>
+			<view v-if="data.billType=='房屋账单'">
 				<view class="title">关联房屋</view>
 				<view class="content">{{data.title}}</view>
 			</view>
+			<view v-if="data.billType=='金融账单'">
+				<view class="title">关联公司</view>
+				<view class="content">{{data.companyName}}</view>
+			</view>
 			<view>
-				<view class="title">支付时间</view>
-				<view class="content">2019-11-01 14:19</view>
+				<view class="title">创建时间</view>
+				<view class="content">{{data.createDate}}</view>
+			</view>
+			<view v-if="picture.length>0">
+				<view class="pictureTitle">相关图片</view>
+				<view class="picture">
+					<block v-for="(item,index) in picture" :key="index">
+						<image :src="item"></image>
+					</block>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -48,12 +56,26 @@ const usermodel = new UserModel()
 export default{
 	data(){
 		return{
-			data:''
+			data:'',
+			costList:[],
+			picture:[],
+			status:''
 		}
 	},
 	onLoad(options){
+		this.status = options.index
 		usermodel.queryBillDetails({billCode:options.billcode},(data)=>{
 			this.data = data[0]
+			this.costList = []
+			let that = this
+			for(let i of this.data.costList){
+				if(i.costPrice != 0){
+					that.costList.push(i)
+				}
+			}
+			if(this.data.picture!=null){
+				this.picture = this.data.picture.split(',')
+			}
 		})
 	}
 }
@@ -111,6 +133,18 @@ page{
 		}
 		.content{
 			color:rgba(140,140,140,1);
+		}
+		.picture{
+			display: flex;
+			flex-wrap: wrap;
+			width:500rpx;
+			image{
+				margin-bottom: 20rpx;
+				margin-left: 20rpx;
+				width:200rpx;
+				height:200rpx;
+				border-radius:10rpx;
+			}
 		}
 	}
 }

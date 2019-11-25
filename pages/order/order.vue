@@ -52,7 +52,7 @@
 								<image v-if="good.selected == true" src="../../static/cut/selected.png"></image>
 								
 							</view>
-							<view class="storeImage"><image :src="good.picPath"></image></view>
+							<image class="storeImage" :src="good.picPath"></image>
 							<view class="detail">
 								<view class="title">{{good.title.substring(0,42)}}</view>
 								<view class="spec">{{good.spec}}</view>
@@ -106,7 +106,7 @@
 			
 			<block class="list" v-for="(item,index) in list" :key="index">
 				
-				<view v-if="item.firsttypeId == 8||item.firsttypeId==9" class="type" @tap="toDetail(item)">
+				<view v-if="item.firsttypeId == 8||item.firsttypeId==9||item.firsttypeId==10||item.firsttypeId==3" class="type" @tap="toDetail(item)">
 					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
 					<block v-for="(row,number) in item.goodsOrderItemList" :key="number">
 						<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
@@ -118,9 +118,9 @@
 					</view>
 					<view v-if="tabbarIndex!=5" class="total">合计:￥{{item.payment}}</view>
 					<store-time :time="item.createTime" :type="item.type" 
-					v-on:rating="goRating(item)" v-on:confirmOrder="confirmOrderOk(item)" 
-					v-on:backOrder="applyService(item) " v-on:cancelOrder="cancelUnpaidOrder(item)"
-					v-on:toPay="toPayment(item)" v-on:cancelBack="cancelApply(item.id)"></store-time>
+					@rating="goRating(item)" @confirmOrder="confirmOrderOk(item)" 
+					@backOrder="applyService(item) " @cancelOrder="cancelUnpaidOrder(item)"
+					@toPay="toPayment(item)" @cancelBack="cancelApply(item.id)" @backMoney="drawBack(item)"></store-time>
 				</view>
 				
 				<view v-if="item.firsttypeId==1" class="type" @tap="toDetail(item)">
@@ -143,18 +143,25 @@
 					<store-time :time="item.createDate" :type="item.type" v-on:cancelOrder="cancelUnpaidOrder(item)"
 					v-on:toPay="toPayment(item)"></store-time>
 				</view>
+				
+				<view v-if="item.firsttypeId==5&&item.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'" class="type" @tap="toDetail(item)">
+					<store-title :title="item.nickName" :status="item.type"></store-title>
+					<store-main :pic="item|picOne" :title="item.title" :specsize="item.specsName"
+					:price="'￥'+item.specsPrice"></store-main>
+					<view class="sum">合计:￥{{item.sum}}</view>
+					<store-time :time="item.createDate" :type="item.type" v-on:cancelOrder="cancelUnpaidOrder(item)"
+					v-on:toPay="toPayment(item)"></store-time>
+				</view>
+				
+				<view v-if="item.firsttypeId==5&&item.secondTypeId!='6364df4f0ede49da9063b6cc5d4dfc72'" class="type" @tap="toDetail(item)">
+					<store-title :title="item.nickName" :status="item.type"></store-title>
+					<store-main :pic="item|picOne" :title="item.title" :specsize="item.specsName"></store-main>
+					<store-time :time="item.createDate" :type="item.type" v-on:cancelOrder="cancelUnpaidOrder(item)"
+					v-on:toPay="toPayment(item)"></store-time>
+				</view>
 			</block>
 		</view>
 		
-		<uni-popup type="center" ref="popcenter">
-			<view class="cancelConfirm">
-				<view class="title">确认取消订单吗？</view>
-				<view class="buttons">
-					<view class="cancel button" @tap="cancelUnpaid">取消</view>
-					<view class="confirm button" @tap="confirmUnpaid">确认</view>
-				</view>
-			</view>
-		</uni-popup>
 		
 	</view>
 </template>
@@ -175,6 +182,9 @@
 			uniPopup
 		},
 		filters: {
+			jsonparse: function(value) {
+				return JSON.parse(value).spec;
+			},
 			picOne:function(value){
 				if(value.hasOwnProperty('picture')){
 					return value.picture.split(',')[0]
@@ -220,7 +230,7 @@
 			}
 		},
 		onLoad: function (option) {
-			this.tabbarIndex = option.index || 0
+			this.tabbarIndex = option.index
 			console.log(option.index)
 			//兼容H5下排序栏位置
 			// #ifdef H5
@@ -237,12 +247,15 @@
 
 		},
 		onShow:function(){
-			ordermodel.getCartList((data)=>{
-				this.allSelected = false
-				this.sumPrice = 0
-				this.shopSelected = 0
-				this.shopingCarlist = data
-			})
+			if(this.hasLogin){
+				ordermodel.getCartList((data)=>{
+					this.allSelected = false
+					this.sumPrice = 0
+					this.shopSelected = 0
+					this.shopingCarlist = data
+				})
+				this.showType(this.tabbarIndex)
+			}
 		},
 
 		computed:{
@@ -407,9 +420,9 @@
 			//控制左滑删除效果-end
 			
 			goRating(item){
-				if(item.firsttypeId == 8){
+				if(item.firsttypeId == 8||item.firsttypeId==3||item.firsttypeId==10||item.firsttypeId==9){
 					let data = {}
-					data.spec = JSON.parse(item.goodsOrderItemList[0].spec).spec
+					data.spec = item.goodsOrderItemList[0].spec
 					data.image = item.goodsOrderItemList[0].picPath
 					data.title = item.goodsOrderItemList[0].title
 					data.goodsId = item.goodsOrderItemList[0].goodsId
@@ -420,9 +433,7 @@
 				}
 			},
 			showType(tbIndex){
-				console.log(tbIndex)
 				this.tabbarIndex = tbIndex;
-				console.log(this.tabbarIndex)
 				if(tbIndex==1){
 					ordermodel.queryUnpaidOrder({pageSize:30},(data)=>{
 						this.list = data
@@ -438,13 +449,18 @@
 								item.picture = item.picture.split(',')[0]
 								item.sum = item.sum.toFixed(2)
 								item.type = "waiting"
-							}else if(item.firsttypeId==8){
+							}else if(item.firsttypeId==8||item.firsttypeId==10||item.firsttypeId==3||item.firsttypeId==9){
 								if(item.status==5&&item.viceStatus==210){
 									item.type = "unreceived"
 								}else if(item.status==5&&item.viceStatus==33){
 									item.type = "received"
 								}else if(item.status==5&&item.viceStatus==502){
 									item.type = "deliver"
+								}
+							}else if(item.firsttypeId==5){
+								item.type = "waiting"
+								if(item.secondTypeId!='6364df4f0ede49da9063b6cc5d4dfc72'){
+									item.specsName = '预约时间:' +  item.appointmentDate
 								}
 							}
 						}
@@ -453,7 +469,7 @@
 					ordermodel.queryUnCommentedOrder((data)=>{
 						this.list = data
 						for(let item of this.list){
-							if(item.firsttypeId==8){
+							if(item.firsttypeId==8||item.firsttypeId==10||item.firsttypeId==3||item.firsttypeId==9){
 								if(item.status==6){
 									item.type = "completed"
 								}
@@ -464,7 +480,20 @@
 					ordermodel.queryBackOrder((data)=>{
 						this.list = data
 						for(let item of data){
-							item.type = "serviced"
+							if(item.status==1&&item.type==7){
+								item.type = "serviced"
+							}else if(item.status==3&&item.type==7){
+								item.type = 'servicrefuse'
+							}else if((item.status==2||item.status==4)&&item.type==7){
+								item.type = 'servicefinish'
+							}else if(item.status==4&&item.type==9){
+								item.type = 'drawdone'
+							}else if(item.hasOwnProperty('evacuateReason')){
+								item.type = 'houseback'
+							}else if(item.status==1&&item.type==9){
+								item.type = "serviced"
+							}
+							
 							item.goodsOrderItemList = item.orderItemList
 						}
 					})
@@ -472,7 +501,11 @@
 					ordermodel.queryFinishedOrder((data)=>{
 						this.list = data
 						for(let item of data){
-							item.type = "finished"
+							if(item.firsttypeId!=1&&item.firsttypeId!=5){
+								item.type = "finished"
+							}else if(item.firsttypeId==1||item.firsttypeId==5){
+								item.type = "housefinished"
+							}
 						}
 					})
 				}
@@ -480,41 +513,48 @@
 			},
 			toDetail(item){
 				if(this.tabbarIndex!=5){
-					if(item.firsttypeId == 8||item.firsttypeId == 9){
+					if(item.firsttypeId == 8||item.firsttypeId == 9||item.firsttypeId==10||item.firsttypeId==3){
 						uni.navigateTo({
-							url:'orderdetail?id=' + item.orderId + '&typeid=' + item.firsttypeId
+							url:'orderdetail?id=' + item.orderId + '&typeid=' + item.firsttypeId + '&index=' + this.tabbarIndex + '&item=' + JSON.stringify(item)
 						})
 					}else if(item.firsttypeId == 1){
 						uni.navigateTo({
 							url:'orderdetail?data=' + JSON.stringify(item) + '&typeid=' + item.firsttypeId
 						})
+					}else if(item.firsttypeId == 5){
+						uni.navigateTo({
+							url:'orderdetail?data=' + JSON.stringify(item) + '&typeid=' + item.firsttypeId
+						})
 					}
 				}else{
-					uni.navigateTo({
-						url:'backorderdetail?id=' + item.id + '&orderId=' + item.goodsOrderId
-					})
+					if(item.firsttypeId!=1&&item.firsttypeId!=5){
+						uni.navigateTo({
+							url:'backorderdetail?id=' + item.id + '&orderId=' + item.goodsOrderId + '&item=' + JSON.stringify(item)
+						})
+					}else{
+						
+					}
+					
 				}
 				
 			},
 			toPayment(item){
 				if(item.firsttypeId == 1){
 					uni.navigateTo({
-						url:'/pages/order/houseConfirmation?data=' + JSON.stringify(item)
+						url:`/pages/order/houseConfirmation?data=${JSON.stringify(item)}&typeId=${item.firsttypeId}`
 					})
-				}else if(item.firsttypeId == 8){
+				}else if(item.firsttypeId == 8||item.firsttypeId == 9||item.firsttypeId==10||item.firsttypeId==3){
 					let goodsOrderIdList =  item.orderId
 					ordermodel.settleUnpaidOrder({goodsOrderIdList},(data)=>{
+						console.log(data)
 						uni.navigateTo({
-							url:'/pages/order/confirmation?data=' + JSON.stringify(data) + '&type=' + 0 
+							url:'/pages/order/confirmation?data=' + JSON.stringify(data) + '&type=' + 2 + '&firstType=' + item.firsttypeId + '&appointment=' + item.serviceStartTime
 						})
 					})
-					// let req = {goodsItemId:this.data.itemList[this.labelIndex].goodsItemId,num:this.number}
-					// providemodel.addOneTotal(req,(data)=>{
-					// 	console.log(data)
-					// 	uni.navigateTo({
-					// 		url:'/pages/order/confirmation?data=' + JSON.stringify(data) + '&type=' + 0
-					// 	})
-					// })
+				}else if(item.firsttypeId==5){
+					uni.navigateTo({
+						url:`/pages/order/houseConfirmation?data=${JSON.stringify(item)}&typeId=${item.firsttypeId}`
+					})
 				}
 			},
 			cancelApply(item){
@@ -525,8 +565,47 @@
 						duration:1500
 					})
 					setTimeout(()=>{
-						this.showType(5)
+						uni.switchTab({
+							url:'/pages/order/order?index=5'
+						})
 					},1500)
+				})
+			},
+			drawBack(item){
+				const that = this
+				uni.showModal({
+					title:'是否确认退款',
+					success: (res) => {
+						if(res.confirm){
+							uni.showToast({
+								title:'请选择退款原因',
+								duration:1500,
+								icon:'none'
+							})
+							uni.showActionSheet({
+								itemList: ['信息有误', '不想要了', '我要重拍'],
+								success:res=>{
+									let itemList = ['信息有误', '不想要了', '我要重拍']
+									let req = {}
+									req.applyExplain = itemList[res.tapIndex]
+									req.goodsOrderId = item.orderId
+									ordermodel.userApplyDraw(req,(data)=>{
+										uni.showToast({
+											title:'申请退款成功',
+											icon:'none',
+											duration:2000
+										})
+										setTimeout(()=>{
+											uni.switchTab({
+												url:'/pages/order/order?index=5' 
+											})
+										},2000)
+									})
+								},
+							})
+						}
+					}
+					
 				})
 			},
 			settlement(){
@@ -584,10 +663,13 @@
 							ordermodel.cancelUnpaidOrder({goodsOrderId:item.orderId},(data)=>{
 								uni.showToast({
 									title:'取消订单成功',
-									duration:1500,
+									duration:1000,
 									icon:'none'
 								})
-								that.showType(1)
+								uni.switchTab({
+									url:'/pages/order/order?index=1' 
+								})
+							
 							})
 						}
 					}
@@ -750,14 +832,7 @@ page{
 						margin-left:21rpx;
 						width:140rpx;
 						height:140rpx;
-						background:rgba(255,255,255,1);
-						border:1rpx solid rgba(233, 233, 233, 1);
 						border-radius:10rpx;
-						padding:17rpx 15rpx 16rpx 18rpx;
-						image{
-							width:107rpx;
-							height:107rpx;
-						}
 					}
 					.detail{
 						height:140rpx;

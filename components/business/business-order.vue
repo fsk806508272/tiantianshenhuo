@@ -8,7 +8,7 @@
 			<view class="rt">{{createTime}}</view>
 		</view>
 		
-		<view v-if="id!=1" class="lifeMiddle">
+		<view v-if="id!=1&&id!=5" class="lifeMiddle">
 			<block v-for="(item,index) in goodsItemList" :key="index">
 				<view class="item">
 					<image :src="item.picPath"></image>
@@ -30,14 +30,17 @@
 			</view>
 		</view>
 		
-		<view v-if="id==1" class="houseMiddle">
+		<view v-if="id==1||id==5" class="houseMiddle">
 			<image :src="pic"></image>
 			<view class="list">
 				<view class="title">
 					<view class="name">{{title}}</view>
 					<view class="content">{{price}}</view>
 				</view>
-				<view class="title">
+				<view v-if="id==1" class="title">
+					<view class="spec">{{spec}}</view>
+				</view>
+				<view v-if="id==5" class="title">
 					<view class="spec">{{spec}}</view>
 				</view>
 				<view v-if="id==1&&status=='houseFinished'" class="title">
@@ -57,17 +60,18 @@
 		
 		<view class="bottom">
 			<view class="content">
-				<text v-if="id==8||id==9">共计{{length}}件商品，实收￥{{sum}}</text>
+				<text v-if="id==8||id==9||id==10">共计{{length}}件商品，实收￥{{sum}}</text>
 				<text v-if="id==1&&status=='houseWaitingDeal'" class="gray">签约后，租户才可以付款哦~</text>
+				<text v-if="id==5&&status=='financeWaitingDeal'" class="gray">签约后，租户才可以付款哦~</text>
 				<text v-if="id==1&&status=='houseDealed'" class="gray">已签约，等待租户付款吧~</text>
-				<text v-if="id==1&&status=='houseFinished'" class="gray">实收:{{houseSum}}</text>
+				<text v-if="id==1&&(status=='houseFinished'||status=='houseBack')" class="gray">实收:{{houseSum}}</text>
 			</view>
 			<view class="status">{{statusObj[status]}}</view>
 		</view>
 		
 		<view class="other">
 			<!-- 地址 -->
-			<view class="item" v-if="(id==8&&type==1)||id==9">
+			<view class="item" v-if="(id==8||id==9)&&type==1">
 				<image src="/static/cut/user/address_on.png"></image>
 				<view class="content">
 					<view class="address">广东深圳市龙岗区龙翔大道9002号志联佳大厦508</view>
@@ -75,7 +79,7 @@
 				</view>
 			</view>
 			<!-- 留言 -->
-			<view class="item" v-if="id==8&&type==1">
+			<view class="item" v-if="(id==8||id==10)&&type==1">
 				<image src="/static/cut/user/message.png"></image>
 				<view class="content">急需要穿！！帮忙快点发货好吗，拜托了</view>
 			</view>
@@ -88,22 +92,28 @@
 			</view>
 			<view class="item" v-if="id==1">
 				<image src="/static/cut/user/signtime.png"></image>
-				<view class="content">租期时长：{{duration}}</view>
+				<view v-if="status!='houseBack'" class="content">租期时长：{{duration}}</view>
+				<view v-if="status=='houseBack'" class="content">搬离时间：{{duration}}</view>
 			</view>
-			<view class="item" v-if="id==8&&type==7">
+			<view class="item" v-if="id==1&&status=='houseBack'">
+				<image src="/static/cut/user/reason.png"></image>
+				<view class="content">{{moveReason}}</view>
+			</view>
+			<view class="item" v-if="(id==8||id==10)&&type==7">
 				<image src="/static/cut/user/reason.png"></image>
 				<view class="content">申请原因:{{applyReason}}</view>
 			</view>
-			<view class="item" v-if="id==8&&type==7">
+			<view class="item" v-if="(id==8||id==10)&&type==7">
 				<image src="/static/cut/user/backtype.png"></image>
 				<view class="content">售后方式:{{applyMode}}</view>
 			</view>
-			<view class="item" v-if="id==8&&type!=1">
+			<view class="item" v-if="(id==8||id==10)&&type!=1">
 				<image src="/static/cut/user/message.png"></image>
 				<view class="content">申请备注:{{applyExplain}}</view>
 			</view>
 		</view>
 		<view class="buttons">
+			<block v-if="status=='financeWaitingDeal'"><view class="gray default">拒绝签约</view><view class="yellow">查看合同并签约</view></block>
 			<block v-if="status=='houseWaitingDeal'"><view class="gray default">取消订单</view><view class="white">联系TA</view><view @tap.stop="toContract" class="yellow">查看合同并签约</view></block>
 			<block v-if="status=='houseDealed'"><view class="gray default">联系TA</view></block>
 			<block v-if="status=='houseFinished'"><view class="gray default">联系TA</view></block>
@@ -115,6 +125,7 @@
 			<block v-if="status=='serviced'"><view class="default">联系TA</view><view class="pay" @tap.stop="cancelApply">取消申请</view></block>
 			<block v-if="status=='waiting'"><view class="default">联系TA</view></block>
 			<block v-if="status=='finished'"><view @tap.stop="checkComment" class="yellow">查看评价</view></block>
+			<block v-if="status=='houseBack'"><view @tap.stop="agreeMove" class="yellow">同意退租</view></block>
 		</view>
 	</view>
 </template>
@@ -165,15 +176,9 @@ export default{
 		phone:{
 			type:String
 		},
-		houseSum:{
-			type:String
-		},
-		houseService:{
-			type:String
-		},
-		deposit:{
-			type:String
-		},
+		houseSum:[String,Number],
+		houseService:[String,Number],
+		deposit:[String,Number],
 		goodsItemList:{
 			type:Array
 		},
@@ -192,7 +197,8 @@ export default{
 		applyMode:{
 			type:String
 		},
-		applyReason:''
+		applyReason:'',
+		moveReason:''
 	},
 	data(){
 		return{
@@ -204,7 +210,10 @@ export default{
 				dealed:'已处理',
 				finished:'交易完成',
 				applyBack:'申请售后',
-				applyMoney:'申请退款'
+				applyMoney:'申请退款',
+				houseFinished:'已完成',
+				houseBack:'申请退租',
+				financeWaitingDeal:'待处理'
 			}
 		}
 	},
@@ -217,6 +226,9 @@ export default{
 		},
 		confirmService(){
 			this.$emit('confirm')
+		},
+		agreeMove(){
+			this.$emit('agree')
 		}
 	}
 }

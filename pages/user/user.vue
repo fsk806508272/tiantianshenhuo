@@ -47,7 +47,7 @@
 						<text>45</text>
 						<view>信用积分</view>
 					</view>
-					<view class="item">
+					<view class="item" @tap="toMyRecord">
 						<text>0</text>
 						<view>访问记录</view>
 					</view>
@@ -423,6 +423,11 @@ export default{
 		toShare(){
 			uni.navigateTo({
 				url:'share/share'
+			})
+		},
+		toMyRecord(){
+			uni.navigateTo({
+				url:'/pages/user/record/visitrecord'
 			})
 		},
 		toSellerOrder(index){

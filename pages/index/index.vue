@@ -24,7 +24,6 @@
 			</view>
 		</view>
 		<view class="place"></view>
-		
 		<!-- 授权登录按钮 -->
 		<view class="getuser_box" v-if="!hasLogin">
 			<text>登录后可领取海量权益哦</text>
@@ -90,20 +89,7 @@
 			</view>	
 		</view>
 		<view class="bg"></view>
-		<!-- #ifdef APP-PLUS || H5 -->
-		<!-- <view class="tabs" v-if="isActive"></view>
-		<view :class="!isActive ? '':'activeClass'" class="tabs">
-			<view class="item" @tap="provide">
-				<text :class="chenck ? 'checkclass' : ''">TA的提供</text>
-				<view :class="chenck ? 'checkclassbg' : ''"></view>
-			</view>
-			<view class="item" @tap="provided">
-				<text :class="!chenck ? 'checkclass' : ''">TA的需求</text>
-				<view :class="!chenck ? 'checkclassbg' : ''"></view>
-			</view>
-		</view> -->
-		<!-- #endif -->
-		
+
 		<view class="content">
 			
 			<view class="list">
@@ -192,21 +178,24 @@
 			    success: function (res) {
 			        console.log('当前位置的经度：' + res.longitude);
 			        console.log('当前位置的纬度：' + res.latitude);
+					console.log(res)
 					that.getLat(res.latitude)
 					that.getLon(res.longitude)
 			    }
 			});
-			//#ifdef MP
+
 			this.BMap = new bmap.BMapWX({
-				ak: 'nsFKMwl7mT7b6Actb465GqRu65v7LBSX' 
+				ak: 'q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey' 
 			});
-			this.BMap.regeocoding({ 
+			console.log(this.BMap)
+			this.BMap.regeocoding({
+				
 				success: data => {
 			        console.log(data)
 			        this.pickerText = data.originalData.result.addressComponent.city.replace(/市/g, ''); //把"市"去掉
 						}
 			});
-			//#endif
+
 	
 		},
 		onShow(){
@@ -270,33 +259,6 @@
 				})
 			},
 			Jump (num) {
-				// if(num==1){
-				// 	uni.navigateTo({
-				// 		url: '/pages/provide/index?type=' + 3
-				// 	})
-				// }else if(num==2){
-				// 	if(!this.hasLogin){
-				// 		uni.navigateTo({
-				// 			url:'/pages/login/getUserinfo'
-				// 		})
-				// 	}else{
-				// 		uni.navigateTo({
-				// 			url:'/pages/user/attendance/attendance'
-				// 		})
-				// 	}
-				// }else if(num==3){
-				// 	uni.navigateTo({
-				// 		url: '/pages/VIPCard/VIPCard'
-				// 	})
-				// }else if(num==4){
-				// 	uni.navigateTo({
-				// 		url: '/pages/user/collection/collection'
-				// 	})
-				// }else if(num==5){
-				// 	uni.navigateTo({
-				// 		url: '/pages/wallet/coupon'
-				// 	})
-				// }
 				
 				if(num==1){
 					uni.navigateTo({

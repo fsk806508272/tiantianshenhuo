@@ -270,6 +270,17 @@ class OrderModel extends HTTP {
 		}
 		this.request(params)
 	}
+	
+	//商家同意退租
+	sellerAgreeHouseBack(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/payment/refundRequest',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {OrderModel}

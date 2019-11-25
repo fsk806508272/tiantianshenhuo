@@ -40,13 +40,18 @@ export default {
 				unpaid:'等待买家付款',
 				unreceived:'等待商家接单',
 				received:'商家已接单',
-				deliver:'发货中',
+				deliver:'服务中',
 				completed:'交易完成',
 				refunds:'退款中',
 				cancelled:'退款成功',
 				serviced:'商家处理中',
+				servicefinish:'售后完成',
+				servicrefuse:'商家拒绝申请',
+				drawdone:'售后完成',
 				finished:'已完成',
-				waiting:'等待商家签约'
+				waiting:'等待商家签约',
+				housefinished:'交易完成',
+				houseback:'退租中'
 			},
 		};
 	}

@@ -271,7 +271,7 @@
 				req.personalHandCardImg = this.handImg
 				usermodel.personalCer(req,(data)=>{
 					uni.navigateTo({
-						url:'/pages/success/success?type=' + 4
+						url:'/pages/success/success?type=' + 6
 					})
 				})
 			}

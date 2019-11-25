@@ -628,15 +628,8 @@
 				"navigationBarTitleText": "商品评价",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
-		}
-        ,{
-            "path" : "pages/test/test",
-            "style" : {
-				"navigationBarTitleText": "续租",
-				"navigationBarBackgroundColor":"#FFFFFF"
-			}
-        }
-        ,{
+		},
+        {
             "path" : "pages/index/coupon/coupon",
             "style" : {
 				"navigationBarTitleText": "领取优惠券",
@@ -781,6 +774,13 @@
 		    "path" : "pages/HM-search/searchpage",
 		    "style" : {
 				"navigationBarTitleText": "商品搜索",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/user/sellerorder/backmoney",
+		    "style" : {
+				"navigationBarTitleText": "设置退款金额",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
