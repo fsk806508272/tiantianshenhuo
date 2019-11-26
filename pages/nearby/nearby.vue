@@ -69,8 +69,8 @@ export default{
 			isMap: true,
 			show_icon: '/static/cut/near_list.png',
 			
-			latitude: 39.909,
-			longitude: 116.39742,
+			latitude: 22.728393,
+			longitude: 114.258532,
 			// controls:[{
 			// 	id: 1,
 			// 	position: {

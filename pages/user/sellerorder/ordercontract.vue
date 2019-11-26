@@ -19,7 +19,8 @@ export default{
 		return{
 			data:'',
 			html:'',
-			isRead:false
+			isRead:false,
+			id:''
 		}
 	},
 	methods:{
@@ -32,44 +33,87 @@ export default{
 				})
 				return
 			}
-			let req = {}
-			req.orderCode = this.data.orderCode
-			req.auditStatus = this.data.auditStatus
-			req.id = this.data.id
-			ordermodel.sellerConfirmHouseSign(req,(data)=>{
-				uni.showToast({
-					title:'签约成功',
-					icon:'none',
-					duration:1500
-				})
-				setTimeout(()=>{
-					uni.switchTab({
-						url:'/pages/user/user'
+			if(this.id==1){
+				let req = {}
+				req.orderCode = this.data.orderCode
+				req.auditStatus = this.data.auditStatus
+				req.id = this.data.id
+				ordermodel.sellerConfirmHouseSign(req,(data)=>{
+					uni.showToast({
+						title:'签约成功',
+						icon:'none',
+						duration:1500
 					})
-				},1500)
-			})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/user/user'
+						})
+					},1500)
+				})
+			}else{
+				let req = {}
+				req.orderCode = this.data.orderCode
+				req.financeCode = this.data.financeCode
+				req.storeOrderStatus = 2
+				ordermodel.modifyFinancialOrders(req,(data)=>{
+					uni.showToast({
+						title:'签约成功',
+						icon:'none',
+						duration:1500
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/user/user'
+						})
+					},1500)
+				})
+			}
+			
 		}
 	},
 	onLoad(option){
-		this.data = JSON.parse(option.data)
-		let req = {}
-		req.releaseId = this.data.releaseId
-		req.contractCode = this.data.contractCode
-		req.orderCode = this.data.orderCode
-		req.type = 2
-		let that = this
-		uni.request({
-			url:'https://sgz.wdttsh.com/app/signing/queryContract',
-			data:req,
-			method:'POST',
-			header: {
-				'content-type':'application/x-www-form-urlencoded',
-				'token':store.state.uerInfo.token||null			 
-			},
-			success(res){
-				that.html = res.data
-			}
-		})
+		this.id = option.id
+		if(this.id==1){
+			this.data = JSON.parse(option.data)
+			let req = {}
+			req.releaseId = this.data.releaseId
+			req.contractCode = this.data.contractCode
+			req.orderCode = this.data.orderCode
+			req.type = 2
+			let that = this
+			uni.request({
+				url:'https://sgz.wdttsh.com/app/signing/queryContract',
+				data:req,
+				method:'POST',
+				header: {
+					'content-type':'application/x-www-form-urlencoded',
+					'token':store.state.uerInfo.token||null			 
+				},
+				success(res){
+					that.html = res.data
+				}
+			})
+		}else{
+			this.data = JSON.parse(option.data)
+			let req = {}
+			req.financeCode = this.data.financeCode
+			req.type = 2
+			req.orderCode = this.data.orderCode
+			let that = this
+			uni.request({
+				url:'https://sgz.wdttsh.com/app/financialContracts/queryFinancialContract',
+				data:req,
+				method:'POST',
+				header: {
+					'content-type':'application/x-www-form-urlencoded',
+					'token':store.state.uerInfo.token||null			 
+				},
+				success(res){
+					that.html = res.data
+				}
+			})
+		}
+		
 	},
 	onReachBottom(){
 		this.isRead = true

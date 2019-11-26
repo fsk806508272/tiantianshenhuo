@@ -35,9 +35,12 @@
 					</block>
 					
 					<block v-if="id==5">
-						<business-order :id="id" :status="status" :orderNum="item.orderCode"
+						<business-order :id="id" :status="item.myStatus" :orderNum="item.orderCode"
 						:createTime="item.createDate" :pic="item.picture.split(',')[0]"
-						:title="item.title"></business-order>
+						:title="item.title" :spec="item.specsName" :identityCard="item.identityCard"
+						:phone="item.linkmanMobile" :username="item.linkmanName" :appointment="item.appointmentDate"
+						:duration="item.signingStartTime+'至'+item.signingEndTime" :sum="item.sum"
+						@checkCont="toContract(item)" @accept="acceptAppointment(item)"></business-order>
 					</block>
 				</block>
 			</view>
@@ -62,6 +65,14 @@
 					:duration="item.evacuateDate" :username="item.name" :identityCard="item.identityCard"
 					:phone="item.telephone" :spec="item.paymentMethod"
 					 @agree="agreeMove(item)" :houseSum="item.sum" :deposit="item.deposit"></business-order>
+				</block>
+				
+				<block v-if="id==5">
+					<business-order :id="id" :status="item.myStatus" :orderNum="item.orderCode"
+					:createTime="item.createDate" :pic="item.picture.split(',')[0]"
+					:title="item.title" :spec="item.specsName" :identityCard="item.identityCard"
+					:phone="item.linkmanMobile" :username="item.linkmanName" :appointment="item.appointmentDate"
+					:duration="item.signingStartTime+'至'+item.signingEndTime" :sum="item.sum"></business-order>
 				</block>
 				
 			</block>
@@ -120,17 +131,18 @@
 						this.status = 'houseWaitingDeal'
 					}else if(this.id==8||this.id==3||this.id==9||this.id==10){
 						this.status = 'waitingDeal'
-					}else if(this.id==5){
-						for(let i of this.orderList){
-							if(i.secondtypeinfoId=="6364df4f0ede49da9063b6cc5d4dfc72"){
-								i.myStatus = 'agentWaitingDeal'
-							}else{
-								i.myStatus = 'financeWaitingDeal'
-							}
-						}
 					}
 					ordermodel.checkSellerOrder({type:2},(data)=>{
 						this.orderList = data
+						if(this.id==5){
+							for(let i of this.orderList){
+								if(i.secondTypeId=="6364df4f0ede49da9063b6cc5d4dfc72"){
+									i.myStatus = 'agentWaitingDeal'
+								}else{
+									i.myStatus = 'financeWaitingDeal'
+								}
+							}
+						}
 					})
 				}else if(tbIndex==2){
 					if(this.id==1){
@@ -140,6 +152,15 @@
 					}
 					ordermodel.checkSellerOrder({type:3},(data)=>{
 						this.orderList = data
+						if(this.id==5){
+							for(let i of this.orderList){
+								if(i.secondTypeId=="6364df4f0ede49da9063b6cc5d4dfc72"){
+									i.myStatus = 'agentWaitingDealed'
+								}else{
+									i.myStatus = 'financeWaitingDealed'
+								}
+							}
+						}
 					})
 				}else if(tbIndex==3){
 					if(this.id==1){
@@ -147,8 +168,15 @@
 					}else if(this.id==8||this.id==9){
 						this.status = 'finished'
 					}
-					ordermodel.checkSellerOrder({type:4},(data)=>{
+					ordermodel.checkSellerOrder({type:4,pageSize:20},(data)=>{
 						this.orderList = data
+						for(let i of this.orderList){
+							if(i.secondTypeId=="6364df4f0ede49da9063b6cc5d4dfc72"){
+								i.myStatus = 'agentWaitingFinish'
+							}else{
+								i.myStatus = 'financeWaitingFinish'
+							}
+						}
 					})
 				}else if(tbIndex==4){
 					ordermodel.sellerCheckBackOrder({},data=>{
@@ -162,6 +190,8 @@
 								}
 							}else if(i.firsttypeId==1){
 								i.myStatus = 'houseBack'
+							}else if(i.firsttypeId==5&&i.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'){
+								i.myStatus = 'agentBack'
 							}
 							
 						}
@@ -171,11 +201,28 @@
 			toContract(item){
 				item = JSON.stringify(item)
 				uni.navigateTo({
-					url:`/pages/user/sellerorder/ordercontract?data=${item}`
+					url:`/pages/user/sellerorder/ordercontract?data=${item}&id=${this.id}`
 				})
 			},
 			accept(item){
 				ordermodel.sellerAcceptOrder({goodsOrderId:item.orderId},(data)=>{
+					uni.showToast({
+						title:'操作成功',
+						icon:'none',
+						duration:1500
+					})
+					setTimeout(()=>{
+						this.showType(1)
+					},1500)
+				})
+			},
+			acceptAppointment(item){
+				let req = {}
+				req.orderCode = item.orderCode
+				req.financeCode = item.financeCode
+				req.storeOrderStatus = 2
+				req.appointmentDate = item.appointmentDate
+				ordermodel.modifyFinancialOrders(req,data=>{
 					uni.showToast({
 						title:'操作成功',
 						icon:'none',

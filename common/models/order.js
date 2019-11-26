@@ -281,6 +281,21 @@ class OrderModel extends HTTP {
 		}
 		this.request(params)
 	}
+	
+	//金融订单处理
+	modifyFinancialOrders(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/FinancialContracts/modifyFinancialOrders',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	
+
+
 }
 
 export {OrderModel}

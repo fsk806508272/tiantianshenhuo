@@ -77,7 +77,7 @@
 		</view>
 		
 		<!-- 设置规格 -->
-		<view v-if="firstTypeId!=1" class="size">
+		<view v-if="firstTypeId==8||firstTypeId==10||firstTypeId==3||firstTypeId==9||(firstTypeId==5&&item=='财务代理')" class="size">
 			<view class="top"><view class="title">设置规格</view></view>
 			<setting-spec ref="specData"></setting-spec>
 		</view>
@@ -543,6 +543,9 @@ export default{
 		
 	},
 	onReady(){
+		
+	},
+	onHide(){
 		
 	},
 	methods:{
@@ -1095,6 +1098,131 @@ export default{
 						icon:'none'
 					})
 					
+				})
+			}else if(this.firstTypeId==5&&this.item=='保险'){
+				if(this.serviceName==''){
+					uni.showToast({
+						title:'请输入服务名称',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.servicePrice==''){
+					uni.showToast({
+						title:'请设置服务价格',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.releaseFinance = {}
+				req.releaseFinance.latitude = "22.728393"
+				req.releaseFinance.longitude = "114.258532"
+				req.releaseFinance.firstTypeId = 5
+				req.releaseFinance.picture = this.goods_photos.join(',')
+				req.releaseFinance.price = this.servicePrice
+				req.releaseFinance.title = this.serviceName
+				req.releaseFinance.insuranceAmount = this.servicePrice
+				req.releaseFinance.details = this.detail
+				req.releaseFinance.secondTypeId = this.secondtypeinfoId
+				req.releaseFinance.sellerId = this.sellerId
+				req.releaseFinance.userId = this.userId
+				req.releaseFinance.sellerGroupId = this.cateIdList[this.cate_idx]
+				let financeJSON = JSON.stringify(req)
+				providemodel.addFinance({financeJSON },data=>{
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					},1500)
+				})
+			}else if(this.firstTypeId==5&&this.item=='小额贷款'){
+				if(this.serviceName==''){
+					uni.showToast({
+						title:'请输入服务名称',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.servicePrice==''){
+					uni.showToast({
+						title:'请设置服务价格',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.releaseFinance = {}
+				req.releaseFinance.latitude = "22.728393"
+				req.releaseFinance.longitude = "114.258532"
+				req.releaseFinance.applyCondition = this.applyCondition
+				req.releaseFinance.applyMainpoints = this.applyMain
+				req.releaseFinance.applyMaterial = this.applyMaterial
+				req.releaseFinance.loanQuota = this.quota
+				req.releaseFinance.loanRates = this.rate
+				req.releaseFinance.loanTimelimit =this.limit
+				req.releaseFinance.firstTypeId = 5
+				req.releaseFinance.picture = this.goods_photos.join(',')
+				req.releaseFinance.price = this.servicePrice
+				req.releaseFinance.title = this.serviceName
+				req.releaseFinance.details = this.detail
+				req.releaseFinance.secondTypeId = this.secondtypeinfoId
+				req.releaseFinance.sellerId = this.sellerId
+				req.releaseFinance.userId = this.userId
+				req.releaseFinance.sellerGroupId = this.cateIdList[this.cate_idx]
+				let financeJSON = JSON.stringify(req)
+				providemodel.addFinance({financeJSON },data=>{
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.reLaunch({
+							url:'/pages/index/index'
+						})
+					},1500)
 				})
 			}
 		}
