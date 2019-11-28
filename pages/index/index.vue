@@ -53,9 +53,40 @@
 				</view>
 				<text>{{item.title}}</text>
 			</view>
-			
-			
 		</view>
+		<view class="bg"></view>
+		
+		<view class="lifeCircle">
+			<view class="title">
+				<view class="lf">
+					<view class="block"></view>
+					<view class="word">生活圈</view>
+				</view>
+				<view class="rt" @tap="toLifecircle">
+					<view class="block">查看更多</view>
+					<image src="/static/cut/right_orange.png"></image>
+				</view>
+			</view>
+			<view class="content">
+				<view class="user">
+					<image src="/static/cut/alipay.png"></image>
+					<view class="info">
+						<view class="nickName">小唐二号</view>
+						<view class="time">今天15：42</view>
+					</view>
+				</view>
+				<view class="text">
+					非常好用非常喜欢简直太好了太棒了太妙了下次还要光顾这家。服务态度一级棒!!
+				</view>
+				<view class="imageGroup">
+					<image src="/static/cut/alipay.png"></image>
+					<image src="/static/cut/alipay.png"></image>
+					<image src="/static/cut/alipay.png"></image>
+				</view>
+			</view>
+		</view>
+		
+		
 		<view class="bg" @click="Jump(1)"></view>
 		<!-- 生活服务 -->
 		<view class="life-box">
@@ -258,6 +289,11 @@
 					// }
 				})
 			},
+			toLifecircle(){
+				uni.navigateTo({
+					url:'/pages/lifecircle/lifecircle'
+				})
+			},
 			Jump (num) {
 				
 				if(num==1){
@@ -394,6 +430,91 @@
 			background:#fff;	
 		}		
 		.bg{height: 20rpx;background:rgba(246,246,246,1);}
+		
+		
+		.lifeCircle{
+			width:750rpx;
+			height:547rpx;
+			background-color: #fff;
+			.title{
+				height:90rpx;
+				padding:0 20rpx;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				.lf{
+					display: flex;
+					align-items: center;
+					
+					.block{
+						width:8rpx;
+						height:30rpx;
+						background:rgba(255,102,0,1);
+					}
+					.word{
+						margin-left: 10rpx;
+					}
+				}
+				.rt{
+					display: flex;
+					align-items: center;
+					.block{
+						font-family:Source Han Sans CN;
+						font-weight:400;
+						color:rgba(255,102,0,1);
+					}
+					image{
+						margin-left: 10rpx;
+						width:10rpx;
+						height:20rpx;
+					}
+				}
+			}
+			.content{
+				height:457rpx;
+				padding:0 20rpx;
+				.user{
+					height:74rpx;
+					display: flex;
+					
+					.info{
+						margin-left: 10rpx;
+						.nickName{
+							font-size:30rpx;
+							color:rgba(30,30,30,1);
+						}
+						.time{
+							font-size:20prx;
+							color:rgba(160,160,160,1);
+						}
+					}
+					image{
+						width:74rpx;
+						height:74rpx;
+						border-radius:50%;
+					}
+				}
+			}
+			.text{
+				margin-top: 32rpx;
+				overflow : hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
+			.imageGroup{
+				margin-top: 30rpx;
+				display: flex;
+				image{
+					margin-right: 8rpx;
+					width:225rpx;
+					height:225rpx;
+				}
+			}
+		}
 		
 		.getuser_box{
 			position: fixed;

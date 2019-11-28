@@ -22,7 +22,7 @@
 						<view class="detail">
 							<view class="title col2">{{row.goodsName}}</view>
 							<view class="price">
-								<view class="singlePrice">￥<text>{{row.price}}</text></view>
+								<view  class="singlePrice">￥<text>{{row.price}}</text></view>
 								<view class="sales">月售{{row.monthSale}}</view>
 								<view class="deliver">配送费￥{{row.postFee}}</view>
 							</view>
@@ -183,7 +183,7 @@ export default{
 			})
 		},
 		delCollectGoods(item){
-			Likemodel.like(item.goodsFirsttype,item.goodsId,false,(datas)=>{
+			Likemodel.like(item.goodsId,item.goodsFirsttype,false,(datas)=>{
 				Likemodel.getCollectgood(1,(data)=>{
 					this.provideList=data
 				})
