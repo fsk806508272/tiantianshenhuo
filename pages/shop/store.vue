@@ -24,8 +24,7 @@
 		
 		<view :style="'height:'+height+'px'" class="storeDetail">
 			<scroll-view class="nav-left" scroll-y :style="'height:'+height+'px'" :scroll-top="scrollLeftTop" scroll-with-animation>
-				<view class="nav-left-item" @click="categoryClickMain(index)" :key="index" :class="index==categoryActive?'active':''"
-					v-for="(item,index) in list">
+				<view class="nav-left-item" v-for="(item,index) in list" @click="categoryClickMain(index)" :key="index" :class="index==categoryActive?'active':''">
 					{{item.name}}
 				</view>
 			</scroll-view>
@@ -88,7 +87,7 @@
 		methods: {
 			categoryClickMain(index){
 				this.categoryActive = index
-				this.itemScrollId = index
+				this.itemScrollId = index.toString()
 			}
 		},
 	}

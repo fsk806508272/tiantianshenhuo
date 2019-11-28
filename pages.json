@@ -783,6 +783,13 @@
 				"navigationBarTitleText": "设置退款金额",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		},
+		{
+		    "path" : "pages/shop/shopindex",
+		    "style" : {
+				"navigationBarTitleText": "店铺主页",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		}
     ],
 	"globalStyle": {
