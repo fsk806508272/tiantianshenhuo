@@ -12,37 +12,39 @@
 		</view>
 		
 		<block v-for="(item,index) in data" :key="index">
-			<view class="list">
+			<view class="list" @tap="toDetail(item.id)">
 				<view class="user">
 					<image :src='item.logoImg'></image>
 					<view class="info">
-						<view>{{item.nickname}}</view>
+						<view class='nickName'>{{item.nickname}}</view>
 						<view class="gray">{{item.createTime}}</view>
 					</view>
 				</view>
 				<view class="content">{{item.dynamicContent}}</view>
 				
 				<view class="one" v-if="item.pictureList.length==1">
-					<image :src="item.dynamicPicture"></image>
+					<block v-for="(img,number) in item.pictureList" :key="number">
+						<image mode="aspectFit" @tap.stop="preview(item.pictureList,number)" :src="img"></image>
+					</block>
 				</view>
 				<view class="two" v-if="item.pictureList.length==2">
 					<block v-for="(img,number) in item.pictureList" :key="number">
-						<image :src="img"></image>
+						<image @tap.stop="preview(item.pictureList,number)" :src="img"></image>
 					</block>
 				</view>
 				<view class="three" v-if="item.pictureList.length==3">
 					<block v-for="(img,number) in item.pictureList" :key="number">
-						<image :src="img"></image>
+						<image @tap.stop="preview(item.pictureList,number)" :src="img"></image>
 					</block>
 				</view>
 				<view class="two" v-if="item.pictureList.length==4">
 					<block v-for="(img,number) in item.pictureList" :key="number">
-						<image :src="img"></image>
+						<image @tap.stop="preview(item.pictureList,number)" :src="img"></image>
 					</block>
 				</view>
 				<view class="three" v-if="item.pictureList.length>=5">
 					<block v-for="(img,number) in item.pictureList" :key="number">
-						<image :src="img"></image>
+						<image @tap.stop="preview(item.pictureList,number)" :src="img"></image>
 					</block>
 				</view>
 				
@@ -67,24 +69,46 @@
 			return {
 				data:'',
 				tabIndex:0,
-				pageNo:1
+				pageNo:1,
+				token:''
 			}
 		},
-		onLoad(){
+		onLoad(options){
+			this.token = options.token
 			this.requestData()
 		},
 		methods: {
+			add(){
+				console.log(111)
+			},
 			toPublish(){
 				uni.navigateTo({
-					url:'/pages/lifecircle/publish'
+					url:`/pages/lifecircle/publish?token=${this.token}`
 				})
 			},
 			clickTab(index){
 				this.tabIndex = index
 			},
 			toIndex(){
-				uni.navigateBack({
-					delta:1
+				const android = window.android
+				if (window.android) {
+					window.android.finish();
+				} else {
+					uni.navigateBack({
+						delta:1
+					})
+				}
+				
+			},
+			toDetail(item){
+				uni.navigateTo({
+					url:`/pages/lifecircle/detail?id=${item}&token=${this.token}`
+				})
+			},
+			preview(list,number){
+				uni.previewImage({
+					urls:list,
+					current:number,
 				})
 			},
 			requestData(){
@@ -93,14 +117,15 @@
 					req.type = 2
 				}
 				req.pageNo = this.pageNo
+				req.pageSize = 20
+				req.isMeOrAll = 2
 				let that = this
 				uni.request({
 					url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
 					data:req,
 					method:'POST',
 					header: {
-						'content-type':'application/x-www-form-urlencoded',
-						'token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzU1NDY0OTMsInVzZXJuYW1lIjoiYjkzYTQ5M2Q2YzExNDg5MjkwNDY0MmQ0M2RlMmQxMzUifQ.-n-jJ03mj9iMJxSjl2NNzZI9JwZtNPKxEzZ5hYvR4kg'	 
+						'content-type':'application/x-www-form-urlencoded', 
 					},
 					success(res){
 						that.data = res.data.data.userDynamicList
@@ -114,14 +139,19 @@
 <style lang="scss">
 	page{
 		background-color: #f2f2f2;
+		padding-top:88rpx;
 	}
 	.navbar{
+		position: fixed;
+		top:0;
 		height:88rpx;
+		width: 750rpx;
 		background-color: #fff;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 20rpx;
+		z-index: 99;
 		.back{
 			width:21rpx;
 			height:36rpx;
@@ -154,12 +184,21 @@
 	}
 	
 	.list{
-		margin-top: 10rpx;
+		margin-top: 20rpx;
 		background-color: #fff;
-		padding:20rpx;
+		padding:30rpx;
 		.user{
 			height:74rpx;
 			display: flex;
+			.info{
+				.nickName{
+					font-size: 30rpx;
+					color:#1E1E1E;
+				}
+				.gray{
+					color:#A0A0A0;
+				}
+			}
 			image{
 				margin-right: 10rpx;
 				height:74rpx;
@@ -168,12 +207,13 @@
 			}
 		}
 		.content{
-			margin: 30rpx 0;
+			margin: 20rpx 0;
+			font-size: 28rpx;
+			color:#1E1E1E;
 		}
 		.one{
 			image{
-				width:360rpx;
-				height:360rpx;
+				width:400rpx;
 			}
 		}
 		.two{
@@ -190,14 +230,14 @@
 			display: flex;
 			flex-wrap: wrap;
 			image{
-				margin-right: 10rpx;
+				margin-right: 7rpx;
 				width:225rpx;
 				height:225rpx;
-				margin-bottom: 10rpx;
+				margin-bottom: 7rpx;
 			}
 		}
 		.bottom{
-			margin-top: 10rpx;
+			margin-top: 20rpx;
 			display: flex;
 			justify-content: space-between;
 			.lf{
@@ -209,7 +249,7 @@
 					margin-left: 10rpx;
 				}
 				image{
-					margin-left: 20rpx;
+					margin-left: 50rpx;
 					width:36rpx;
 					height:36rpx;
 				}

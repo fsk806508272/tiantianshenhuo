@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<textarea placeholder="快快分享你的" v-model="content" placeholder-style="color:#A0A0A0"></textarea>
+		<textarea placeholder="快快分享你的心情吧~" v-model="content" placeholder-style="color:#A0A0A0"></textarea>
 		<publish-image :photos="goods_photos" @changes="goodsPhoto"></publish-image>
 		<view class="submit-button" @tap="submit">确认发布</view>
 	</view>
@@ -13,11 +13,14 @@
 			return{
 				content:'',
 				goods_photos: [],
-				
+				token:''
 			}
 		},
 		components: {
 			publishImage
+		},
+		onLoad(options){
+			this.token = options.token
 		},
 		methods: {
 			goodsPhoto(e){
@@ -38,13 +41,14 @@
 					let image = this.goods_photos.join(',')
 					req.dynamicPicture = image
 				}
+				let that = this
 				uni.request({
 					url:'https://sgz.wdttsh.com/app/tbUserDynamic/addUserDynamic',
 					data:req,
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NzU1NDY0OTMsInVzZXJuYW1lIjoiYjkzYTQ5M2Q2YzExNDg5MjkwNDY0MmQ0M2RlMmQxMzUifQ.-n-jJ03mj9iMJxSjl2NNzZI9JwZtNPKxEzZ5hYvR4kg'	 
+						'token':that.token	 
 					},
 					success(res){
 						uni.showToast({

@@ -803,6 +803,13 @@
 				"navigationBarTitleText": "发布动态",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		},
+		{
+		    "path" : "pages/lifecircle/detail",
+		    "style" : {
+				"navigationBarTitleText": "动态详情",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		}
     ],
 	"globalStyle": {

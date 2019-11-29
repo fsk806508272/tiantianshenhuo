@@ -200,7 +200,7 @@
 			}
 		},
 		computed:{
-			...mapState(['hasLogin','lat','lon'])
+			...mapState(['hasLogin','lat','lon','uerInfo'])
 		},
 		onLoad() {
 			let that = this
@@ -290,8 +290,9 @@
 				})
 			},
 			toLifecircle(){
+				console.log(this.uerInfo)
 				uni.navigateTo({
-					url:'/pages/lifecircle/lifecircle'
+					url:'/pages/lifecircle/lifecircle?token=' + this.uerInfo.token
 				})
 			},
 			Jump (num) {
