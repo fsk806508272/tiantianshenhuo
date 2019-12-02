@@ -55,14 +55,24 @@
 							<view class="time">{{data.createTime}}</view>
 						</view>
 					</view>
-					<view class="rt">回复</view>
+					<view @tap="reply(data)" class="rt">回复</view>
 				</view>
 				<view class="middle">{{data.replyContent}}</view>
+				<view class="bottom"  v-if="data.userCommentReplyList.length>0">
+					<block v-for="(item,digit) in data.userCommentReplyList" :key="digit">
+						<view v-if="digit==0" @tap="replyUser(item)">
+							<text class="blue">{{item.replyNickname}}：</text>{{item.replyContent}}
+						</view>
+						<view v-else @tap="replyUser(item)">
+							<text class="blue">{{item.replyNickname}}</text>回复<text class="blue">{{item.passiveNickname}}</text>:{{item.replyContent}}
+						</view>
+					</block>
+				</view>
 			</block>
 		</view>
 		
 		<view class="toComment" v-if="showInput">
-			<input v-model="comment" placeholder="点击输入评论" @blur="blur" :focus="focus" />
+			<input v-model="comment" :placeholder="placeholder" :focus="focus" />
 			<view @tap="send">发送</view>
 		</view>
 	</view>
@@ -76,10 +86,13 @@
 				token:'',
 				item:'',
 				focusInput: false,
-				isInput: false,
 				comment:'',
 				showInput:false,
-				focus:false
+				focus:false,
+				placeholder:'',
+				type:'',
+				replyData:'',
+				replyItemData:''
 			}
 		},
 		methods: {
@@ -104,13 +117,36 @@
 				this.showInput = false
 				this.focus = false
 			},
+			reply(data){
+				this.replyData = data
+				this.showInput = true
+				this.focus = true
+				this.placeholder = `回复:${data.nickname}`
+				this.type = '回复'
+				console.log(data)
+			},
+			replyUser(item){
+				this.replyItemData = item
+				this.showInput = true
+				this.focus = true
+				this.placeholder = `回复:${item.replyNickname}`
+				this.type = '用户回复'
+			},
 			send(){
 				this.showInput = false
 				let that = this
 				let req = {}
 				req.userDynamicId = this.item.id
-				req.fid = 0
 				req.replyContent = this.comment
+				if(this.type=='回复'){
+					req.fid = this.replyData.id
+					req.passiveUserId = this.replyData.userId
+				}else if(this.type=='评论'){
+					req.fid = 0
+				}else if(this.type='用户回复'){
+					req.fid = '39'
+					req.passiveUserId = this.replyItemData.replyUserId
+				}
 				uni.request({
 					url:'https://sgz.wdttsh.com/app/tbUserDynamicReply/addCommentDynamic',
 					data:req,
@@ -121,12 +157,17 @@
 					},
 					success(res){
 						that.queryDetail()
+						that.showInput = false
+						that.focus = false
+						that.comment = ''
 					}
 				})
 			},
 			focusButn(){
+				this.placeholder = '点击输入评论'
 				this.showInput = true
 				this.focus = true
+				this.type = '评论'
 			},
 		},
 		
@@ -141,6 +182,7 @@
 <style lang="scss">
 	page{
 		background-color: #f2f2f2;
+		padding-bottom: 110rpx;
 	}
 	.box{
 		margin-top: 20rpx;
@@ -228,7 +270,7 @@
 		position: fixed;
 		bottom: 0;
 		input{
-			width:600rpx;
+			width:580rpx;
 			background-color:#fff;
 			height:70rpx;
 			padding-left:20rpx;
@@ -236,9 +278,17 @@
 			
 		}
 		view{
+			width:110rpx;
+			height:70rpx;
 			margin-left: 20rpx;
 			color: #ff6600;
 			font-size:30rpx;
+			background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+			border-radius:0px 8rpx 8rpx 0px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color:#fff;
 		}
 	}
 	
@@ -276,6 +326,15 @@
 		.middle{
 			width:580rpx;
 			margin: 30rpx 0 30rpx 90rpx;
+		}
+		.bottom{
+			width:580rpx;
+			margin: 30rpx 0 30rpx 90rpx;
+			background-color: #F6F6F6;
+			padding:20rpx 30rpx 30rpx 20rpx;
+			.blue{
+				color:#006CFF;
+			}
 		}
 	}
 </style>

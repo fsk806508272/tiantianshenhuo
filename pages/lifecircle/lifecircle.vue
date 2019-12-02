@@ -60,21 +60,32 @@
 				
 			</view>
 		</block>
+		
+		<uni-load-more :status="status"></uni-load-more>
 	</view>
 </template>
 
 <script>
+	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	export default {
+		components:{
+			uniLoadMore
+		},
 		data() {
 			return {
-				data:'',
+				data:[],
 				tabIndex:0,
 				pageNo:1,
-				token:''
+				token:'',
+				status:'loading'
 			}
 		},
 		onLoad(options){
 			this.token = options.token
+			this.requestData()
+		},
+		onReachBottom(){
+			this.pageNo += 1
 			this.requestData()
 		},
 		methods: {
@@ -117,7 +128,7 @@
 					req.type = 2
 				}
 				req.pageNo = this.pageNo
-				req.pageSize = 20
+				req.pageSize = 10
 				req.isMeOrAll = 2
 				let that = this
 				uni.request({
@@ -128,7 +139,11 @@
 						'content-type':'application/x-www-form-urlencoded', 
 					},
 					success(res){
-						that.data = res.data.data.userDynamicList
+						if(res.data.data.userDynamicList.length>0){
+							that.data = that.data.concat(res.data.data.userDynamicList)
+						}else{
+							that.status = "nomore"
+						}
 					}
 				})
 			}

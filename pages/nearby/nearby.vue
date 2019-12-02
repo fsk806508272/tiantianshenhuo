@@ -185,6 +185,11 @@ export default{
 	.place{
 		height: 28px;
 	}
+	// ::-webkit-scrollbar{
+	// 	height:0;
+	// 	width:0;
+	// 	color:transparent;
+	// }
 	.near_header{
 		padding: 20rpx;
 		box-sizing: border-box;

@@ -51,16 +51,25 @@
 						'token':that.token	 
 					},
 					success(res){
-						uni.showToast({
-							title:'发布成功',
-							duration:1500,
-							icon:'none'
-						})
-						setTimeout(()=>{
-							uni.navigateBack({
-								delta:1
+						console.log(res)
+						if(res.data.resultCode==1){
+							uni.showToast({
+								title:'发布成功',
+								duration:1500,
+								icon:'none'
 							})
-						},1500)
+							setTimeout(()=>{
+								uni.navigateBack({
+									delta:1
+								})
+							},1500)
+						}else{
+							uni.showToast({
+								title:'请先登录',
+								duration:1500,
+								icon:'none'
+							})
+						}
 					}
 				})
 			}
