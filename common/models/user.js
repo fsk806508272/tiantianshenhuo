@@ -277,6 +277,16 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	//查询费用名称
+	getCostName(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryCostName',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}
