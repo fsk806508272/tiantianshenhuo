@@ -144,7 +144,7 @@
 							<view class='icon'>
 								<image src="/static/cut/user/sendbill.png" mode="widthFix"></image>
 							</view>
-							<text>发送账单</text>
+							<text @tap="sendBill()">发送账单</text>
 						</view>
 						<view class="item" @tap="toAgreement()">
 							<view class='icon'>
@@ -403,6 +403,11 @@ export default{
 		toAgreement(){
 			uni.navigateTo({
 				url:'agreement/agreement'
+			})
+		},
+		sendBill() {
+			uni.navigateTo({
+				url:'sendBill/sendBill'
 			})
 		},
 		toBill(){
