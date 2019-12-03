@@ -200,9 +200,8 @@ export default{
 			// })
 		},
 		toStore(){
-			let _self = this
 			uni.navigateTo({
-				url:'../shop/shop?sellerId=' + _self.sellerdata.sellerId
+				url:`/pages/shop/theStore?sellerId=${this.sellerdata.sellerId}&type=${this.type}`
 			})
 		},	
 		sub(){

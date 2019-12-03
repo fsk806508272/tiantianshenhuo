@@ -134,9 +134,8 @@
 				})
 			},
 			toStore(){
-				let _self = this
 				uni.navigateTo({
-					url:'../shop/storeindex?sellerId=' + _self.data.sellerId
+					url:`/pages/shop/theStore?sellerId=${this.data.sellerId}&type=1`
 				})
 			},
 			toSign(){

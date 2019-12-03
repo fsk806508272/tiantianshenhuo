@@ -39,21 +39,63 @@
 				</view>
 			</view>
 		</view>
+		
+		<view v-if="tabbarIndex==2" class="unpaid">
+			<view v-for="(item,index) in unrecieveList" class="item" :key="index" @tap="toDetail(item)">
+				<view class="head">
+					<view class='title'>{{item.title}}</view>
+					<view class='status'>代收款</view>
+				</view>
+				<view class="billdetail">
+					<block v-for="(row,number) in item.costList" :key="number">
+						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
+					</block>
+				</view>
+				<view class="billtotal">
+					<view class="total">应收金额：<text>￥{{item.sum}}</text></view>
+					<view class="darkGrayButton">撤销账单</view>
+				</view>
+			</view>
+		</view>
+		<view v-if="tabbarIndex==3" class="unpaid">
+			<view v-for="(item,index) in recieveList" class="item" :key="index" @tap="toDetail(item)">
+				<view class="head">
+					<view class='title'>{{item.title}}</view>
+					<view class='paidstatus'>已支付</view>
+				</view>
+				<view class="billdetail">
+					<block v-for="(row,number) in item.costList" :key="number">
+						<view v-if="row.costPrice!=0">{{row.costName}}：￥{{row.costPrice}}</view>
+					</block>
+				</view>
+				<view class="billtotal">
+					<view class="total">{{item.createDate}}</view>
+					<view class="total">实缴金额：<text>￥{{item.sum}}</text></view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 import {UserModel} from '@/common/models/user.js'
 const usermodel = new UserModel()
+import {mapState} from 'vuex'
 export default{
+	computed:{
+		...mapState(['uerInfo'])
+	},
 	data(){
 		return{
 			headerPosition:"fixed",
 			headerTop:"0px",
-			billType: ['未缴账单','已缴账单'],
+			billType: ['未缴账单','已缴账单','待收账单','已收账单'],
 			tabbarIndex:0,
 			unpaidList:[],
-			paidList:[]
+			paidList:[],
+			unrecieveList:[],
+			recieveList:[],
+			sellerId:''
 		}
 	},
 	onLoad:function(){
@@ -62,6 +104,12 @@ export default{
 		})
 		usermodel.queryBill({paymentState:1},data=>{
 			this.paidList = data
+		})
+		usermodel.queryBill({receivablesState:2,sellerId:this.uerInfo.storeId},data=>{
+			this.unrecieveList = data
+		})
+		usermodel.queryBill({receivablesState:1,sellerId:this.uerInfo.storeId},data=>{
+			this.recieveList = data
 		})
 		
 		
@@ -195,5 +243,19 @@ page{
 	font-weight:400;
 	color:rgba(160,160,160,1);
 	line-height:40rpx;
+}
+
+.darkGrayButton{
+	width:160rpx;
+	height:60rpx;
+	background:rgba(255,255,255,1);
+	border:1px solid rgba(200,200,200,1);
+	border-radius:10rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size:26rpx;
+	font-weight:400;
+	color:#8C8C8C;
 }
 </style>

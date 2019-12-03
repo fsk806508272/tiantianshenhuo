@@ -4,7 +4,8 @@
 			<view class="topOne">
 				<view class="status" v-if="item.contractState==1">履行中</view>
 				<view class="status" v-if="item.contractState!=1">已解约</view>
-				<view class="icon">乙方</view>
+				<view v-if="uerInfo.storeId!=item.sellerId" class="icon">乙方</view>
+				<view v-if="uerInfo.storeId==item.sellerId"  class="icon partya">甲方</view>
 			</view>
 			<view class="topTwo">
 				<view class="title">{{item.partyaName}}</view>
@@ -17,7 +18,7 @@
 				<view class="left">合同时长</view>
 				<view class="right">{{item.contractStarttime}}至{{item.contractEndtime}}</view>
 			</view>
-			<view class="item">
+			<view class="item" v-if="item.firsttypeId==1">
 				<view class="left">付款方式</view>
 				<view class="right">{{item.paymentMethod}}</view>
 			</view>
@@ -29,7 +30,7 @@
 				<view class="left">账单详情</view>
 				<image src="/static/cut/grayright.png"></image>
 			</view>
-			<view class="item">
+			<view class="item" v-if="item.firsttypeId==1">
 				<view class="left">物业交割信息</view>
 				<view class="right">已确认<image src="/static/cut/grayright.png"></image></view>
 			</view>
@@ -38,28 +39,40 @@
 		<view class="content">签约主体信息</view>
 		
 		<view class="bottom">
-			<view class="item">
+			<view class="item" v-if="item.firsttypeId==1">
 				<view class="left">身份证</view>
 				<view class="right">{{plusXing(item.partybId,3,4)}}</view>
 			</view>
-			<view class="item">
+			<view class="item" v-if="item.firsttypeId==1">
 				<view class="left">联系电话</view>
 				<view class="right">{{plusXing(item.partybPhone,3,4)}}</view>
 			</view>
-<!-- 			<view class="item">
-				<view class="left">公司名称</view>
-				<view class="right">天河科技有限公司</view>
+			<view class="item" v-if="item.firsttypeId==5">
+				<view class="left">身份证</view>
+				<view class="right">{{plusXing(item.identityCard,3,4)}}</view>
 			</view>
-			<view class="address">
+			<view class="item" v-if="item.firsttypeId==5">
+				<view class="left">联系电话</view>
+				<view class="right">{{plusXing(item.telephone,3,4)}}</view>
+			</view>
+			<view class="item" v-if="item.firsttypeId==5">
+				<view class="left">公司名称</view>
+				<view class="right">{{item.companyName}}</view>
+			</view>
+			<view class="address" v-if="item.firsttypeId==5">
 				<view class="title">公司地址</view>
-				<view class="detail">广东省深圳市龙岗区龙翔大道9002号志联佳大厦 508号</view>
-			</view> -->
+				<view class="detail">{{item.companyAddress}}</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default{
+	computed:{
+		...mapState(['uerInfo'])
+	},
 	data(){
 		return{
 			item:'',
@@ -73,6 +86,7 @@ export default{
 	},
 	methods:{
 		plusXing (str,frontLen,endLen) { 
+			console.log(typeof(str))
 			var len = str.length-frontLen-endLen;
 			var xing = '';
 			for (var i=0;i<len;i++) {
@@ -127,6 +141,9 @@ page{
 			font-weight:400;
 			color:rgba(255,255,255,1);
 			line-height:36rpx;
+			&.partya{
+				background-color: #65B77E;
+			}
 		}
 	}
 	.topTwo{

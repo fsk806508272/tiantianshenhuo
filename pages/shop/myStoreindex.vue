@@ -68,7 +68,7 @@
 			<view class="list">
 				<view class="title">{{apartmentType[typebarIndex]}}</view>
 				<view class="detail" v-for="(row,number) in data" @tap="toStoreDetail(number)" :key="number">
-					<image class="picture" :src="row.picture"></image>
+					<image class="picture" :src="row.picture.split(',')[0]"></image>
 					<view class="descri">
 						<view class="servey">{{row.title}}</view>
 						<view class="issue">
@@ -186,7 +186,8 @@ export default{
 		housemodel.getHouseList(this.request,(data)=>{
 			this.data = data.houseList
 			for(let i=0;i<data.houseTypeList.length;i++){
-				this.apartmentType.push(data.houseTypeList[i])	
+				console.log(data.houseTypeList[i])
+				this.apartmentType.push(data.houseTypeList[i].name)	
 			}
 		})
 	},
@@ -391,7 +392,13 @@ page{
 				flex-direction: column;
 				justify-content: space-between;
 				.servey{
-					
+					overflow : hidden;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
+					word-wrap: break-word;
+					word-break: break-all;
 				}
 				.issue{
 					display: flex;

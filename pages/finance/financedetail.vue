@@ -144,7 +144,7 @@ export default{
 		},
 		toStore(){
 			uni.navigateTo({
-				url:'/pages/shop/storeindex?sellerId=' + this.sellerId
+				url:`/pages/shop/theStore?sellerId=${this.sellerId}&type=5`
 			})
 		},
 		toSign(){

@@ -83,12 +83,6 @@
 			}
 		},
 		{
-		    "path" : "pages/shop/shop",
-		    "style" : {
-				"navigationBarTitleText": "店铺主页"
-			}
-		},
-		{
 		    "path" : "pages/shop/myShop",
 		    "style" : {
 				"navigationBarTitleText": "我的店铺",
@@ -493,13 +487,6 @@
 			}
 		},
 		{
-		    "path" : "pages/shop/storeindex",
-		    "style" : {
-		    	"navigationBarTitleText": "店铺主页",
-		    	"navigationBarBackgroundColor":"#FFFFFF"
-		    }
-		},
-		{
 		    "path" : "pages/shop/myStoreindex",
 		    "style" : {
 		    	"navigationBarTitleText": "我的店铺",
@@ -757,13 +744,6 @@
 			}
 		},
 		{
-		    "path" : "pages/shop/store",
-		    "style" : {
-				"navigationBarTitleText": "店铺",
-				"navigationBarBackgroundColor":"#FFFFFF"
-			}
-		},
-		{
 		    "path" : "pages/finance/appointment",
 		    "style" : {
 				"navigationBarTitleText": "预约",
@@ -816,7 +796,21 @@
             "style" : {
 				"navigationBarTitleText" :"发送账单"
 			}
-        }
+        },
+		{
+			"path":"pages/user/agreement/agreementcontract",
+			"style":{
+				"navigationBarTitleText": "账单合同",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path":"pages/shop/theStore",
+			"style":{
+				"navigationBarTitleText": "我的店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
 		
     ],
 	"globalStyle": {

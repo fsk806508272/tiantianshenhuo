@@ -478,6 +478,10 @@ export default{
 								uni.navigateTo({
 									url:'/pages/shop/myStoreindex?sellerId=' + data.storeId
 								})
+							}else if(res.firstTypeId == 5){
+								uni.navigateTo({
+									url:'/pages/shop/myStoreindex?sellerId=' + data.storeId
+								})
 							}else{
 								uni.navigateTo({
 									url:'/pages/shop/myShop?storeId=' + data.storeId

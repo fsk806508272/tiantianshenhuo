@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view :class="isShowDC?'paddingView':''" @tap="isShowDC=false">
 		<view class="box">
 			<view class="user">
 				<image :src='item.logoImg'></image>
@@ -45,7 +45,7 @@
 			</view>
 		</view>
 		
-		<view class="commentList">
+		<view class="commentList" v-if="item.userDynamicCommentViewList.length>0">
 			<block v-for="(data,index) in item.userDynamicCommentViewList" :key="index">
 				<view class="top">
 					<view class="lf">
@@ -57,13 +57,13 @@
 					</view>
 					<view @tap="reply(data)" class="rt">回复</view>
 				</view>
-				<view class="middle">{{data.replyContent}}</view>
+				<view @tap.stop="replyOrDelete(data)" class="middle">{{data.replyContent}}</view>
 				<view class="bottom"  v-if="data.userCommentReplyList.length>0">
 					<block v-for="(item,digit) in data.userCommentReplyList" :key="digit">
-						<view v-if="digit==0" @tap="replyUser(item)">
+						<view v-if="digit==0" @tap="replyUser(item,data.id)" class="item">
 							<text class="blue">{{item.replyNickname}}：</text>{{item.replyContent}}
 						</view>
-						<view v-else @tap="replyUser(item)">
+						<view v-else @tap="replyUser(item,data.id)" class="item">
 							<text class="blue">{{item.replyNickname}}</text>回复<text class="blue">{{item.passiveNickname}}</text>:{{item.replyContent}}
 						</view>
 					</block>
@@ -74,6 +74,11 @@
 		<view class="toComment" v-if="showInput">
 			<input v-model="comment" :placeholder="placeholder" :focus="focus" />
 			<view @tap="send">发送</view>
+		</view>
+		
+		<view class="deleteOrCancel" v-if="isShowDC">
+			<view class="delete" @tap="deleteComment">删除</view>
+			<view class="cancel">取消</view>
 		</view>
 	</view>
 </template>
@@ -92,7 +97,9 @@
 				placeholder:'',
 				type:'',
 				replyData:'',
-				replyItemData:''
+				replyItemData:'',
+				itemId:'',
+				isShowDC:false
 			}
 		},
 		methods: {
@@ -125,12 +132,20 @@
 				this.type = '回复'
 				console.log(data)
 			},
-			replyUser(item){
+			replyUser(item,id){
+				console.log(item,id)
 				this.replyItemData = item
 				this.showInput = true
 				this.focus = true
+				this.itemId = id
 				this.placeholder = `回复:${item.replyNickname}`
 				this.type = '用户回复'
+			},
+			replyOrDelete(data){
+				console.log(this.item.userId,data.userId)
+				if(this.item.userId==data.userId){
+					this.isShowDC = true
+				}
 			},
 			send(){
 				this.showInput = false
@@ -144,7 +159,7 @@
 				}else if(this.type=='评论'){
 					req.fid = 0
 				}else if(this.type='用户回复'){
-					req.fid = '39'
+					req.fid = this.itemId
 					req.passiveUserId = this.replyItemData.replyUserId
 				}
 				uni.request({
@@ -182,7 +197,7 @@
 <style lang="scss">
 	page{
 		background-color: #f2f2f2;
-		padding-bottom: 110rpx;
+		// padding-bottom: 110rpx;
 	}
 	.box{
 		margin-top: 20rpx;
@@ -284,7 +299,7 @@
 			color: #ff6600;
 			font-size:30rpx;
 			background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
-			border-radius:0px 8rpx 8rpx 0px;
+			border-radius:8rpx 8rpx 8rpx 8rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -332,9 +347,40 @@
 			margin: 30rpx 0 30rpx 90rpx;
 			background-color: #F6F6F6;
 			padding:20rpx 30rpx 30rpx 20rpx;
-			.blue{
-				color:#006CFF;
+			.item{
+				margin-bottom: 20rpx;
+				&.item:last-child{
+					margin: 0;
+				}
+				.blue{
+					color:#006CFF;
+				}
 			}
 		}
 	}
+	
+	.deleteOrCancel{
+		position: fixed;
+		width:750rpx;
+		bottom: 0;
+		height:180rpx;
+		background-color: #f2f2f2;
+		view{
+			background-color: #fff;
+			height:80rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.delete{
+			color:#ff6600;
+			border-bottom: 1rpx solid #f2f2f2;
+			border-top: 1rpx solid #f2f2f2;
+			border-radius: 8rpx 8rpx 0 0;
+			margin-bottom: 20rpx;
+		}
+	}
+	// .paddingView{
+	// 	padding-bottom: 180rpx;
+	// }
 </style>

@@ -7,7 +7,8 @@
 				<view class="status" v-if="item.contractState==3">解约中</view>
 				<view class="status" v-if="item.contractState==4&&item.firsttypeId==1">续租中</view>
 				<view class="status" v-if="item.contractState==4&&item.firsttypeId==5">续约中</view>
-				<view class="icon">乙方</view>
+				<view v-if="uerInfo.storeId!=item.sellerId" class="icon">乙方</view>
+				<view v-if="uerInfo.storeId==item.sellerId" class="icon partya">甲方</view>
 			</view>
 			<view class="middle" @tap="toDetail(item)">
 				<view class="title">{{item.partyaName}}</view>
@@ -19,23 +20,38 @@
 			<view class="bottom">
 				<view class="time">{{item.createDate}}</view>
 				<view class="buttons" v-if="item.contractState==1">
-					<view class="button">联系TA</view>
-					<view class="button" @tap="toChange(item)">合同变更</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">联系TA</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" class="button">联系TA</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" class="button" @tap="toChange(item)">合同变更</view>
 				</view>
 				<view v-if="item.contractState==2" class="buttons">
 					<view class="button">删除合同</view>
 					<view class="button">账单详情</view>
 				</view>
 				<view v-if="item.contractState==3&&item.firsttypeId==1" class="buttons">
-					<view class="button">联系TA</view>
-					<view @tap="cancelBack(item)" class="button">取消退租</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" class="button">联系TA</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" @tap="cancelBack(item)" class="button">取消退租</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">拒绝退租</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">同意退租</view>
 				</view>
 				<view v-if="item.contractState==4&&item.firsttypeId==1" class="buttons">
-					<view class="button">联系TA</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" class="button">联系TA</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">拒绝续租</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">同意续租</view>
+					
+				</view>
+				<view v-if="item.contractState==4&&item.firsttypeId==5" class="buttons">
+					<view v-if="uerInfo.storeId!=item.sellerId" class="button">联系TA</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">拒绝续约</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">同意续约</view>
+					
 				</view>
 				<view v-if="item.contractState==3&&item.firsttypeId==5" class="buttons">
-					<view class="button">联系TA</view>
-					<view @tap="financeBreak(item)" class="button">取消解约</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" class="button">联系TA</view>
+					<view v-if="uerInfo.storeId!=item.sellerId" @tap="financeBreak(item)" class="button">取消解约</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">拒绝解约</view>
+					<view v-if="uerInfo.storeId==item.sellerId" class="button">同意解约</view>
+
 				</view>
 			</view>
 		</view>
@@ -45,15 +61,21 @@
 <script>
 import {UserModel} from '@/common/models/user.js'
 const usermodel = new UserModel()
+import {mapState} from 'vuex'
 export default{
+	computed:{
+		...mapState(['uerInfo'])
+	},
 	data(){
 		return{
 			agreementList:[]
 		}
 	},
 	onLoad() {
+		console.log(this.uerInfo)
 		usermodel.queryContractDetails((data)=>{
 			this.agreementList = data
+			
 		})
 	},
 	methods:{
@@ -145,6 +167,9 @@ page{
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		line-height:36rpx;
+		&.partya{
+			background-color: #65B77E;
+		}
 	}
 }
 .middle{

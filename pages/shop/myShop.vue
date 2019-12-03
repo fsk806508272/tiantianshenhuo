@@ -292,7 +292,6 @@ export default {
 			storemodel.getShopGoods({sellerId:this.sellerId},(data)=>{
 				this.list = data;
 				this.currentId = this.list[0].id;
-				console.log(data)
 			})
 			// this.list.forEach(item=>{
 			// 	if(!item.pid){

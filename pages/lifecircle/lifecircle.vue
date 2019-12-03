@@ -51,8 +51,9 @@
 				<view class="bottom">
 					<view class="lf">已浏览{{item.browseNumber}}次</view>
 					<view class="rt">
-						<image src="/static/cut/lifecircle/good.png"></image>
-						<view>{{item.numberOfPoints}}</view>
+						<image @tap.stop="like(0,item)" v-if="item.isGiveTheThumbsUp==0" src="/static/cut/lifecircle/good.png"></image>
+						<image @tap.stop="like(1,item)" v-if="item.isGiveTheThumbsUp==1" src="/static/cut/lifecircle/goodon.png"></image>
+						<view :class="item.isGiveTheThumbsUp==0?'':'on'">{{item.numberOfPoints}}</view>
 						<image src="/static/cut/lifecircle/comment.png"></image>
 						<view>{{item.commentNumber}}</view>
 					</view>
@@ -89,6 +90,43 @@
 			this.requestData()
 		},
 		methods: {
+			like(index,item){
+				console.log(this.token)
+				let that = this
+				if(index==0){
+					item.isGiveTheThumbsUp = 1
+					item.numberOfPoints += 1
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
+						data:{
+							userDynamicId:item.id
+						},
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded', 
+							'token':that.token
+						},
+						success(res){
+						}
+					})
+				}else if(index==1){
+					item.isGiveTheThumbsUp = 0
+					item.numberOfPoints -= 1
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
+						data:{
+							userDynamicId:item.id
+						},
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded',
+							'token':that.token
+						},
+						success(res){
+						}
+					})
+				}
+			},
 			add(){
 				console.log(111)
 			},
@@ -137,6 +175,7 @@
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded', 
+						token:that.token||''
 					},
 					success(res){
 						if(res.data.data.userDynamicList.length>0){
@@ -262,6 +301,9 @@
 				display: flex;
 				view{
 					margin-left: 10rpx;
+					&.on{
+						color:#FF6600;
+					}
 				}
 				image{
 					margin-left: 50rpx;
