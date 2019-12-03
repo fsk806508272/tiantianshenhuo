@@ -811,6 +811,13 @@
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
+        ,{
+            "path" : "pages/user/sendBill/sendBill",
+            "style" : {
+				"navigationBarTitleText" :"发送账单"
+			}
+        }
+		
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
