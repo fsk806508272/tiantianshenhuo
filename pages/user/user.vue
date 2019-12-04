@@ -9,7 +9,7 @@
 			</view>
 			<view class="theme-button" @tap="navToLogin"><text>立即登录</text></view>
 		</view>
-		
+
 		<view v-else>
 			<view class="use-top">
 				<view class="sweep-code">
@@ -140,11 +140,11 @@
 							</view>
 							<text>我的账单</text>
 						</view>
-						<view class="item">
+						<view class="item"  @tap="sendBill()">
 							<view class='icon'>
 								<image src="/static/cut/user/sendbill.png" mode="widthFix"></image>
 							</view>
-							<text @tap="sendBill()">发送账单</text>
+							<text>发送账单</text>
 						</view>
 						<view class="item" @tap="toAgreement()">
 							<view class='icon'>
@@ -152,7 +152,7 @@
 							</view>
 							<text>我的合同</text>
 						</view>
-						<view class="item">
+						<view class="item" @tap="toColleague()">
 							<view class='icon'>
 								<image src="/static/cut/user/mymate.png" mode="widthFix"></image>
 							</view>
@@ -405,6 +405,11 @@ export default{
 				url:'agreement/agreement'
 			})
 		},
+		toColleague(){
+			uni.navigateTo({
+				url:'colleague/colleague'
+			})
+		},
 		sendBill() {
 			uni.navigateTo({
 				url:'sendBill/sendBill'
@@ -474,19 +479,9 @@ export default{
 					}else{
 						console.log(data);
 						storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
-							if(res.firstTypeId == 1){
-								uni.navigateTo({
-									url:'/pages/shop/myStoreindex?sellerId=' + data.storeId
-								})
-							}else if(res.firstTypeId == 5){
-								uni.navigateTo({
-									url:'/pages/shop/myStoreindex?sellerId=' + data.storeId
-								})
-							}else{
-								uni.navigateTo({
-									url:'/pages/shop/myShop?storeId=' + data.storeId
-								})
-							}
+							uni.navigateTo({
+								url:`/pages/shop/myStore?sellerId=${data.storeId}&type=${res.firstTypeId}`
+							})
 						})
 					}
 				}else{

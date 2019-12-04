@@ -230,7 +230,11 @@
 			}
 		},
 		onLoad: function (option) {
-			this.tabbarIndex = option.index
+			if(option.hasOwnProperty('index')){
+				this.tabbarIndex = option.index
+			}else{
+				this.tabbarIndex = 0
+			}
 			console.log(option.index)
 			//兼容H5下排序栏位置
 			// #ifdef H5

@@ -37,8 +37,9 @@
 			<view class="bottom">
 				<view class="lf">已浏览{{item.browseNumber}}次</view>
 				<view class="rt">
-					<image src="/static/cut/lifecircle/good.png"></image>
-					<view>{{item.numberOfPoints}}</view>
+					<image @tap.stop="like(0,item)" v-if="item.isGiveTheThumbsUp==0" src="/static/cut/lifecircle/good.png"></image>
+					<image @tap.stop="like(1,item)" v-if="item.isGiveTheThumbsUp==1" src="/static/cut/lifecircle/goodon.png"></image>
+					<view :class="item.isGiveTheThumbsUp==0?'':'on'">{{item.numberOfPoints}}</view>
 					<image @tap="focusButn" src="/static/cut/lifecircle/comment.png"></image>
 					<view>{{item.commentNumber}}</view>
 				</view>
@@ -113,10 +114,12 @@
 					},
 					method:'POST',
 					header: {
-						'content-type':'application/x-www-form-urlencoded',	 
+						'content-type':'application/x-www-form-urlencoded',	
+						 'token':that.token||''
 					},
 					success(res){
 						that.item = res.data.data
+						console.log(that.item)
 					}
 				})
 			},
@@ -183,6 +186,52 @@
 				this.showInput = true
 				this.focus = true
 				this.type = '评论'
+			},
+			like(index,item){
+				if(this.token == ''){
+					uni.showToast({
+						title:'请先登录',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				
+				console.log(this.token)
+				let that = this
+				if(index==0){
+					item.isGiveTheThumbsUp = 1
+					item.numberOfPoints += 1
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
+						data:{
+							userDynamicId:item.id
+						},
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded', 
+							'token':that.token
+						},
+						success(res){
+						}
+					})
+				}else if(index==1){
+					item.isGiveTheThumbsUp = 0
+					item.numberOfPoints -= 1
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
+						data:{
+							userDynamicId:item.id
+						},
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded',
+							'token':that.token
+						},
+						success(res){
+						}
+					})
+				}
 			},
 		},
 		
@@ -264,6 +313,9 @@
 				display: flex;
 				view{
 					margin-left: 10rpx;
+					&.on{
+						color:#ff6600;
+					}
 				}
 				image{
 					margin-left: 50rpx;

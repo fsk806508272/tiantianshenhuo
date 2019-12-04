@@ -290,9 +290,12 @@
 				})
 			},
 			toLifecircle(){
-				console.log(this.uerInfo)
+				let token = ''
+				if(this.hasLogin){
+					token = this.uerInfo.token
+				}
 				uni.navigateTo({
-					url:'/pages/lifecircle/lifecircle?token=' + this.uerInfo.token
+					url:'/pages/lifecircle/lifecircle?token=' + token
 				})
 			},
 			Jump (num) {

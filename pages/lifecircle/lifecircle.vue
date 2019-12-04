@@ -7,8 +7,8 @@
 		</view>
 		
 		<view class="tabbar">
-			<view @tap="clickTab(0)" class="tab" :class="tabIndex==0?'light':''">热门动态</view>
-			<view @tap="clickTab(1)" class="tab" :class="tabIndex==1?'light':''">最新动态</view>
+			<view @tap="clickTab(0)" class="tab" :class="tabIndex==0?'light':''">最新动态</view>
+			<view @tap="clickTab(1)" class="tab" :class="tabIndex==1?'light':''">热门动态</view>
 		</view>
 		
 		<block v-for="(item,index) in data" :key="index">
@@ -90,7 +90,19 @@
 			this.requestData()
 		},
 		methods: {
+			
+			
 			like(index,item){
+				
+				if(this.token == ''){
+					uni.showToast({
+						title:'请先登录',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				
 				console.log(this.token)
 				let that = this
 				if(index==0){
@@ -131,15 +143,25 @@
 				console.log(111)
 			},
 			toPublish(){
-				uni.navigateTo({
-					url:`/pages/lifecircle/publish?token=${this.token}`
-				})
+				if(this.token==''){
+					const android = window.android
+					if (window.android) {
+						window.android.toLogin();
+					}
+				}else{
+					uni.navigateTo({
+						url:`/pages/lifecircle/publish?token=${this.token}`
+					})
+				}
+				
 			},
 			clickTab(index){
 				this.tabIndex = index
+				this.data = []
+				this.pageNo = 1
+				this.requestData()
 			},
 			toIndex(){
-				const android = window.android
 				if (window.android) {
 					window.android.finish();
 				} else {
@@ -193,7 +215,7 @@
 <style lang="scss">
 	page{
 		background-color: #f2f2f2;
-		padding-top:88rpx;
+		padding-top:178rpx;
 	}
 	.navbar{
 		position: fixed;
@@ -222,11 +244,15 @@
 	}
 	
 	.tabbar{
+		position: fixed;
+		top:88rpx;
+		width:750rpx;
 		background-color: #fff;
 		height:90rpx;
 		display: flex;
 		align-items: center;
 		justify-content: space-around;
+		z-index:99;
 		.tab{
 			font-size:32rpx;
 			font-weight:500;

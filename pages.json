@@ -807,11 +807,30 @@
 		{
 			"path":"pages/shop/theStore",
 			"style":{
-				"navigationBarTitleText": "我的店铺",
+				"navigationBarTitleText": "店铺详情",
 				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path":"pages/shop/myStore",
+			"style":{
+				"navigationStyle":"custom"
 			}
 		}
 		
+        ,{
+            "path" : "pages/user/colleague/colleague",
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        },
+		{
+		    "path" : "pages/user/store/editStore",
+		    "style" : {
+				"navigationBarTitleText": "修改店铺资料",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

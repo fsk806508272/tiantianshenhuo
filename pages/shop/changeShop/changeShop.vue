@@ -36,8 +36,8 @@
 						已有分类
 					</view>
 					<view class="all-class-cont-right">
-						<view @click="changeClass(index)" :class="item.onoff?'select-view':''" v-for="(item,index) in classList" :key="index">
-							{{ item.title }}
+						<view @click="changeClass(index)" :class="cate_idx==index?'select-view':''" v-for="(item,index) in cateList" :key="index">
+							{{item}}
 						</view>
 					</view>
 				</view>
@@ -158,6 +158,9 @@
 					inventoryPlace:'例:20',
 					type:0,
 				}],
+				cateList:[],
+				cateIdList:[],
+				cate_idx:null,
 				addData:{
 					src:'../../../static/cut/upload_photo.png',
 					name:'',
@@ -171,33 +174,39 @@
 				imgList:[],
 				id:null,
 				news:{},
+				data:'',
+				firstTypeId:'',
+				firstType:''
 			};
 		},
 		onLoad(options) {
 			this.id = options.id;
-		},
-		created(){
-			this.inits();
-			this.init();
+			this.firstTypeId = options.type
+			console.log(options)
+			if(options.type==1){
+				this.firstType = '房屋'
+			}else if(options.type==3){
+				this.firstType = '家政'
+			}else if(options.type==5){
+				this.firstType = '金融'
+			}else if(options.type==8){
+				this.firstType = '生活'
+			}else if(options.type==9){
+				this.firstType = '维修'
+			}else if(options.type==10){
+				this.firstType = '代购'
+			}
+			console.log(this.firstType)
+			this.getCateList()
 		},
 		methods:{
-			inits(){
-				this.news = JSON.parse(sessionStorage.getItem('z_news'));
-				console.log(this.news);
-				this.newsList[0].val = this.news.goodsName;
-				this.newsList[1].val = this.news.price;
-				this.newsList[2].val = this.news.city;
-				this.newsList[3].val = this.news.bookingMoney;
-				this.addNormList[0].src = this.news.smallPic;
-				storeModel.getShopGoods({sellerId:this.news.sellerId },(res) =>{
-					console.log(res);
-				})
-			},
-			init(){
-				provideModel.checkSellerGroup(res =>{
-					res.forEach(item =>{
+			getCateList(){
+				provideModel.getSecondType({type:2,firstType:this.firstType},data=>{
+					console.log(data)
+					console.log(this.data.goods)
+					data.forEach(item =>{
 						let onoff = false;
-						if( item.name === this.news.sellerGroupName ){
+						if( item.secondtypeinfoId === this.data.goods.goodsSecondtype ){
 							onoff = true;
 						}
 						let obj = {
@@ -207,7 +216,72 @@
 						this.childClassList.push(obj);
 					})
 				})
+				
+				provideModel.getItemDetail({goodsId:this.id},data=>{
+					console.log(data)
+					this.data = data
+					this.newsList[0].val = data.goods.goodsName;
+					this.newsList[1].val = data.goods.price;
+					this.newsList[2].val = data.goods.city;
+					this.newsList[3].val = data.goods.bookingMoney;
+					this.addNormList[0].src = this.news.smallPic;
+					provideModel.checkSellerGroup((data)=>{
+						this.cateList = []
+						this.cateIdList = []
+						for(let i in data){
+							this.cateList.push(data[i].name)
+							this.cateIdList.push(data[i].id)
+							if(this.data.goods.sellerGroupId==data[i].id){
+								this.cate_idx = i
+							}
+						}
+					})
+					// provideModel.checkSellerGroup(res =>{
+					// 	res.forEach(item =>{
+					// 		let onoff = false;
+					// 		if( item.id === this.data.goods.sellerGroupId ){
+					// 			onoff = true;
+					// 		}
+					// 		let obj = {
+					// 			title:item.name,
+					// 			onoff,
+					// 		};
+					// 		this.childClassList.push(obj);
+					// 	})
+					// })
+				})
+				
+				
+				
+				
 			},
+			// inits(){
+			// 	provideModel.getItemDetail({goodsId:this.id},data=>{
+			// 		this.data = data
+			// 		this.newsList[0].val = data.goods.goodsName;
+			// 		this.newsList[1].val = data.goods.price;
+			// 		this.newsList[2].val = data.goods.city;
+			// 		this.newsList[3].val = data.goods.bookingMoney;
+			// 		this.addNormList[0].src = this.news.smallPic;
+					// provideModel.checkSellerGroup(res =>{
+					// 	res.forEach(item =>{
+					// 		let onoff = false;
+					// 		if( item.id === this.data.goods.sellerGroupId ){
+					// 			onoff = true;
+					// 		}
+					// 		let obj = {
+					// 			title:item.name,
+					// 			onoff,
+					// 		};
+					// 		this.childClassList.push(obj);
+					// 	})
+					// })
+				// })
+				
+				// storeModel.getShopGoods({sellerId:this.news.sellerId },(res) =>{
+				// 	console.log(res);
+				// })
+			// },
 			changeChild(index){
 				this.childClassList.forEach(item =>{
 					item.onoff = false;
@@ -215,7 +289,7 @@
 				this.childClassList[index].onoff = true;
 			},
 			changeClass(index){
-				this.classList[index].onoff = !this.classList[index].onoff;
+				this.cate_idx = index;
 			},
 			addSet(){
 				this.addNormList.push(this.addData);
@@ -241,7 +315,7 @@
 		flex-direction: column;
 		&-head{
 			flex: 1;
-			background-color: #dddddd;
+			background-color: #f2f2f2;
 			overflow: scroll;
 		}
 		&-btn{
