@@ -3,7 +3,7 @@
 		<view class="goodsInfo">
 			<image :src="data.specsList[index].specsPicture"></image>
 			<view class="container">
-				<view class="title">{{data.releaseFinance.title}}</view>
+				<view class="title">{{data.title}}</view>
 				<view class="spec gray">{{data.specsList[index].specsName}}</view>
 				<view class="price gray">{{data.specsList[index].specsPrice}}</view>
 			</view>

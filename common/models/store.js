@@ -54,6 +54,28 @@ class StoreModel extends HTTP {
 		}
 		this.request(params)
 	}
+	
+	//修改商品信息
+	editGoods(data,success){
+		let params = {
+			method:"POST",
+			url:'/app/goodss/updateGoods',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//修改金融商品信息
+	editFinanceGoods(data,success){
+		let params = {
+			method:"POST",
+			url:'/app/finance/updateFinance',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {StoreModel}

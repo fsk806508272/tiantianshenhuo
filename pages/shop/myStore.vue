@@ -202,16 +202,20 @@
 						this.$refs.popup.close()
 			},
 			toEdit(item){
-					   console.log(item);
-					   // let news = JSON.stringify(item);
-					   // sessionStorage.setItem('z_news',news);
-					  //  let url = `changeShop/changeShop`;
-					  //  uni.navigateTo({
-							// url
-					  //  })
-					  uni.navigateTo({
-					  	url:`changeShop/changeShop?id=${item.id}&type=${this.typeId}` 
-					  })
+				if(this.typeId==5){
+					uni.navigateTo({
+						url:`changeShop/changeFinanceShop?id=${item.financeId}&code=${item.financeCode}&type=${this.typeId}`
+					})
+				}else if(this.typeId==1){
+					uni.navigateTo({
+						url:`changeShop/changeHouseShop?id=${item.id}&type=${this.typeId}`
+					})
+				}else{
+					uni.navigateTo({
+						url:`changeShop/changeShop?id=${item.id}&type=${this.typeId}` 
+					})
+				}
+				
 			},
 			okStartPopup(e){
 					   let now = new Date();

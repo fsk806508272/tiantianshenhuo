@@ -1,6 +1,17 @@
 <template>
 	<view class="all">
 		<!-- 服务商子类 -->
+		
+		<view class="nav">
+			<view @tap="backToLast" class="backto">
+				<image src="/static/cut/lifecircle/backto.png"></image>
+			</view>
+			<view class="title">编辑商品</view>
+			<image class="one" src="/static/cut/deletegoods.png"></image>
+			<image v-if="data.goods.isMarketable==0" @tap="editStoreInfo" class="two" src="/static/cut/takeon.png"></image>
+			<image v-if="data.goods.isMarketable==1" @tap="editStoreInfo" class="two" src="/static/cut/takeoff.png"></image>
+		</view>
+		
 		<view class="all-head">
 			
 			<!-- 服务商子类 -->
@@ -20,7 +31,7 @@
 					<view class="all-news-content" v-for="(item,index) in newsList" :key="index">
 						<text :class="item.must?'must-input':''">{{ item.title }}</text>
 						<view class="all-news-content-right">
-							<em v-if="index === 1 || index === 3">￥</em> <input :value="item.val" :type="item.type" :placeholder="item.place">
+							<em v-if="index === 1 || index === 3">￥</em> <input @blur="changeContent($event,index)" :value="item.val" :type="item.type" :placeholder="item.place">
 						</view>
 					</view>
 				</view>
@@ -50,13 +61,13 @@
 				<view class="all-set-cont">
 					<view class="all-set-content" v-for="(item,index) in addNormList" :key="index">
 						<view class="all-set-content-left">
-							<image :src="item.src"></image>
+							<image @tap="addSpecImage(index)" :src="item.image"></image>
 						</view>
 						<view class="all-set-content-center">
-							<view class="center1">规格名：<input type="text" :placeholder="item.namePlace"></input></view>
+							<view class="center1">规格名：<input type="text" v-model="item.spec" placeholder="请输入规格名"></input></view>
 							<view class="center2">
-								<view>单价：<input type="number" :placeholder="item.pricePlace"></input></view>
-								<view>库存：<input type="number" :placeholder="item.inventoryPlace"></input></view>
+								<view>单价：<input type="number" v-model="item.price" placeholder="请输入单价"></input></view>
+								<view>库存：<input type="number" v-model="item.stockCount" placeholder="请输入库存"></input></view>
 							</view>
 						</view>
 						<view @click="addSet" class="all-set-content-right" v-if="index === 0">
@@ -82,9 +93,9 @@
 				<scroll-view class="scroll-view" scroll-x="true">
 					
 					<view class="scroll-view-all" v-for="(item,index) in imgList" :key="index">
-						<image src="../../../static/cut/upload_photo.png"></image>
+						<image :src="item"></image>
 						<view class="scroll-view-bottom">
-							<image src="../../../static/cut/cancel.png"></image>
+							<image @tap="delteImage(index)" src="../../../static/cut/cancel.png"></image>
 						</view>
 					</view>
 					
@@ -95,7 +106,7 @@
 				</scroll-view>
 			</view>
 		</view>
-		<view class="all-btn">
+		<view @tap="submitChange" class="all-btn">
 			保存
 		</view>
 	</view>
@@ -148,35 +159,24 @@
 					title:"汽水饮料123",
 					onoff:false,
 				}],
-				addNormList:[{
-					src:'',
-					name:'',
-					namePlace:'请输入规格名',
-					price:'',
-					pricePlace:'例:20',
-					inventory:'',
-					inventoryPlace:'例:20',
-					type:0,
-				}],
+				addNormList:[],
 				cateList:[],
 				cateIdList:[],
 				cate_idx:null,
 				addData:{
-					src:'../../../static/cut/upload_photo.png',
-					name:'',
-					namePlace:'请输入规格名',
+					image:'../../../static/cut/upload_photo.png',
+					spec:'',
 					price:'',
-					pricePlace:'例:20',
-					inventory:'',
-					inventoryPlace:'例:20',
-					type:1,
+					stockCount:'',
 				},
 				imgList:[],
 				id:null,
 				news:{},
 				data:'',
 				firstTypeId:'',
-				firstType:''
+				firstType:'',
+				goodsId:'',
+				secondType:'',
 			};
 		},
 		onLoad(options) {
@@ -201,30 +201,43 @@
 		},
 		methods:{
 			getCateList(){
-				provideModel.getSecondType({type:2,firstType:this.firstType},data=>{
-					console.log(data)
-					console.log(this.data.goods)
-					data.forEach(item =>{
-						let onoff = false;
-						if( item.secondtypeinfoId === this.data.goods.goodsSecondtype ){
-							onoff = true;
-						}
-						let obj = {
-							title:item.name,
-							onoff,
-						};
-						this.childClassList.push(obj);
-					})
-				})
-				
 				provideModel.getItemDetail({goodsId:this.id},data=>{
 					console.log(data)
 					this.data = data
+					provideModel.getSecondType({type:2,firstType:this.firstType},data=>{
+						console.log(data)
+						console.log(this.data.goods)
+						data.forEach(item =>{
+							console.log(item)
+							let onoff = false;
+							if( item.secondtypeinfoId === this.data.goods.goodsSecondtype){
+								onoff = true;
+								this.secondType = item.secondtypeinfoId
+							}
+							let obj = {
+								title:item.title,
+								id:item.secondtypeinfoId,
+								onoff,
+							};
+							this.childClassList.push(obj);
+						})
+					})
 					this.newsList[0].val = data.goods.goodsName;
 					this.newsList[1].val = data.goods.price;
-					this.newsList[2].val = data.goods.city;
-					this.newsList[3].val = data.goods.bookingMoney;
-					this.addNormList[0].src = this.news.smallPic;
+					this.newsList[2].val = data.goods.serviceScope;
+					this.newsList[3].val = data.goods.postFee;
+					this.goodsId = data.goods.id
+					for(let i of data.itemList){
+						console.log(i)
+						let obj = {}
+						// obj.goodsItemId = i.goodsItemId
+						obj.image = i.image
+						obj.spec = i.spec
+						obj.stockCount = i.stockCount
+						obj.price = i.price
+						this.addNormList.push(obj)
+					}
+					this.imgList = data.goodsDesc.itemImages.split(',')
 					provideModel.checkSellerGroup((data)=>{
 						this.cateList = []
 						this.cateIdList = []
@@ -236,57 +249,14 @@
 							}
 						}
 					})
-					// provideModel.checkSellerGroup(res =>{
-					// 	res.forEach(item =>{
-					// 		let onoff = false;
-					// 		if( item.id === this.data.goods.sellerGroupId ){
-					// 			onoff = true;
-					// 		}
-					// 		let obj = {
-					// 			title:item.name,
-					// 			onoff,
-					// 		};
-					// 		this.childClassList.push(obj);
-					// 	})
-					// })
-				})
-				
-				
-				
-				
+				})	
 			},
-			// inits(){
-			// 	provideModel.getItemDetail({goodsId:this.id},data=>{
-			// 		this.data = data
-			// 		this.newsList[0].val = data.goods.goodsName;
-			// 		this.newsList[1].val = data.goods.price;
-			// 		this.newsList[2].val = data.goods.city;
-			// 		this.newsList[3].val = data.goods.bookingMoney;
-			// 		this.addNormList[0].src = this.news.smallPic;
-					// provideModel.checkSellerGroup(res =>{
-					// 	res.forEach(item =>{
-					// 		let onoff = false;
-					// 		if( item.id === this.data.goods.sellerGroupId ){
-					// 			onoff = true;
-					// 		}
-					// 		let obj = {
-					// 			title:item.name,
-					// 			onoff,
-					// 		};
-					// 		this.childClassList.push(obj);
-					// 	})
-					// })
-				// })
-				
-				// storeModel.getShopGoods({sellerId:this.news.sellerId },(res) =>{
-				// 	console.log(res);
-				// })
-			// },
 			changeChild(index){
 				this.childClassList.forEach(item =>{
 					item.onoff = false;
 				});
 				this.childClassList[index].onoff = true;
+				this.secondType = this.childClassList[index].id
 			},
 			changeClass(index){
 				this.cate_idx = index;
@@ -297,8 +267,83 @@
 			delSet(index){
 				this.addNormList.splice(index,1);
 			},
+			backToLast(){
+				uni.navigateBack({
+					delta:1
+				})
+			},
+			submitChange(){
+				let req = {}
+				req.itemList = this.addNormList
+				req.goodsDesc = {}
+				req.goodsDesc.goodsId = this.goodsId
+				req.goodsDesc.itemImages = this.imgList.join(',')
+				req.goods = {}
+				req.goods.goodsSecondtype = this.secondType
+				req.goods.goodsName = this.newsList[0].val
+				req.goods.price = this.newsList[1].val
+				req.goods.serviceScope = this.newsList[2].val
+				req.goods.postFee = this.newsList[3].val
+				req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.goods.sellerId = this.data.goods.sellerId
+				req.goods.id = this.goodsId
+				// req.goods.goodsId = this.goodsId
+				req.goods.goodsFirsttype = this.firstTypeId
+				let goodsJSON = JSON.stringify(req)
+				console.log(req)
+				storeModel.editGoods({goodsJSON},data=>{
+					uni.showToast({
+						title:'修改商品信息成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.navigateBack({
+							delta:1
+						})
+					},1500)
+				})
+			},
+			changeContent(event,index){
+				this.newsList[index].val = event.detail.value
+			},
+			delteImage(index){
+				this.imgList.splice(index,1)
+			},
 			addImg(){
-				
+				uni.chooseImage({
+					count:1,
+					success:(res)=>{
+						uni.uploadFile({
+							url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+							filePath: res.tempFilePaths[0],
+							name: 'img',
+							success: (uploadFileRes) => {
+								let img = uploadFileRes.data;
+								img = JSON.parse(img)
+								this.imgList.push(img.data)
+								
+							}
+						})
+					}
+				})
+			},
+			addSpecImage(index){
+				uni.chooseImage({
+					count:1,
+					success:(res)=>{
+						uni.uploadFile({
+							url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+							filePath: res.tempFilePaths[0],
+							name: 'img',
+							success: (uploadFileRes) => {
+								let img = uploadFileRes.data;
+								img = JSON.parse(img)
+								this.addNormList[index].image = img.data
+							}
+						})
+					}
+				})
 			}
 		}
 	}
@@ -598,5 +643,48 @@
 				}
 			}
 		}
+	}
+	
+	.nav{
+		background-color: #fff;
+		height:88rpx;
+		position: relative;
+		.backto{
+			position: absolute;
+			top:0;
+			left:0;
+			width:60rpx;
+			height:100%;
+			display: flex;
+			align-items: center;
+			image{
+				margin-left: 20rpx;
+				width:20rpx;
+				height:34rpx;
+			}
+		}
+		.title{
+			position: absolute;
+			top:27rpx;
+			left:300rpx;
+			font-size: 34rpx;
+		}
+		
+			.one{
+				position: absolute;
+				left:610rpx;
+				top:28rpx;
+				width:34rpx;
+				height:38rpx;
+			}
+			.two{
+				position: absolute;
+				left:692rpx;
+				top:26rpx;
+				width:41rpx;
+				height:40rpx;
+			}
+		
+		
 	}
 </style>

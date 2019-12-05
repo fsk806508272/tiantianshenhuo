@@ -669,9 +669,6 @@ export default{
 			}
 			
 		},
-		pushDepositList(){
-			
-		},
 		getCateList(){
 			providemodel.checkSellerGroup((data)=>{
 				this.cateList = []

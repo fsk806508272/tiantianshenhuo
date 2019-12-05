@@ -728,8 +728,7 @@
         ,{
             "path" : "pages/shop/changeShop/changeShop",
             "style" : {
-				"navigationBarTitleText": "编辑商品",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationStyle":"custom"
 			}
         }
         ,{
@@ -829,6 +828,18 @@
 		    "style" : {
 				"navigationBarTitleText": "修改店铺资料",
 				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+		    "path" : "pages/shop/changeShop/changeFinanceShop",
+		    "style" : {
+				"navigationStyle":"custom"
+			}
+		},
+		{
+		    "path" : "pages/shop/changeShop/changeHouseShop",
+		    "style" : {
+				"navigationStyle":"custom"
 			}
 		}
     ],
