@@ -287,6 +287,28 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//查询账单接收人
+	getBillReceive(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/queryTenant',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//发送账单
+	sendBill(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/signing/addPayment',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

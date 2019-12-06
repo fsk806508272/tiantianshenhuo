@@ -68,6 +68,17 @@ class HouseModel extends HTTP {
 		}
 		this.request(params)
 	}
+	
+	
+	updateHouseGoods(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/house/updateHouse',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {HouseModel}

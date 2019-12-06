@@ -81,6 +81,7 @@
     },
     "h5" : {
         "title" : "天天生活",
+		"template":"index.html",
         "domain" : "https://sgz.wdttsh.com"
     }
 }

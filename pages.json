@@ -736,13 +736,6 @@
             "style" : {}
         },
 		{
-		    "path" : "pages/classify/classify",
-		    "style" : {
-				"navigationBarTitleText": "编辑商品",
-				"navigationBarBackgroundColor":"#FFFFFF"
-			}
-		},
-		{
 		    "path" : "pages/finance/appointment",
 		    "style" : {
 				"navigationBarTitleText": "预约",
@@ -840,6 +833,13 @@
 		    "path" : "pages/shop/changeShop/changeHouseShop",
 		    "style" : {
 				"navigationStyle":"custom"
+			}
+		},
+		{
+			"path":"pages/user/sendBill/receiver",
+			"style":{
+				"navigationBarTitleText": "账单接收人",
+				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
     ],

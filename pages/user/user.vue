@@ -231,7 +231,7 @@
 	let checkModel = new CheckModel();
 	import {StoreModel} from '../../common/models/store.js';
 	let storemodel = new StoreModel();
-	import {mapState,mapMutations} from 'vuex';  
+	import {mapState,mapMutations} from 'vuex';
 export default{
 	data () {
 		return{

@@ -37,13 +37,32 @@
 								console.log('压缩前', res)
 								let canvasWidth = res.width //图片原始长宽
 								let canvasHeight = res.height
+								let actualWidth = ''
+								let actualHeight =''
+								if(canvasWidth>0&&canvasWidth<500){
+									actualHeight = canvasHeight
+									actualWidth = canvasWidth
+								}else if(canvasWidth>500&&canvasWidth<1000){
+									actualHeight = canvasHeight / 2 
+									actualWidth = canvasWidth / 2 
+								}else if(canvasWidth>1000&&canvasWidth<2000){
+									actualHeight = canvasHeight / 4
+									actualWidth = canvasWidth / 4
+								}else if(canvasWidth>2000&&canvasWidth<3000){
+									actualHeight = canvasHeight / 6
+									actualWidth = canvasWidth / 6
+								}else{
+									actualHeight = canvasHeight / 10
+									actualWidth = canvasWidth / 10
+								}
 								let img = new Image()
 								img.src = res.path
 								let canvas = document.createElement('canvas');
 								let ctx = canvas.getContext('2d')
-								canvas.width = canvasWidth / 10
-								canvas.height = canvasHeight / 10
-								ctx.drawImage(img, 0, 0, canvasWidth / 10, canvasHeight / 10)
+								canvas.width = actualWidth
+								canvas.height = actualHeight
+								ctx.drawImage(img, 0, 0, actualWidth, actualHeight)
+								console.log('画布大小：',actualHeight,actualWidth)
 								canvas.toBlob(function(fileSrc) {
 									let imgSrc = window.URL.createObjectURL(fileSrc)
 									console.log('压缩后', imgSrc)
