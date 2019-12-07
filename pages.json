@@ -841,6 +841,12 @@
 				"navigationBarTitleText": "账单接收人",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		},
+		{
+			"path":"pages/lifecircle/personalIndex",
+			"style":{
+				"navigationStyle":"custom"
+			}
 		}
     ],
 	"globalStyle": {

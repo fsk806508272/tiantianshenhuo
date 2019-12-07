@@ -7,26 +7,37 @@
 				<image @tap="toPublish" class="camera" src="/static/cut/lifecircle/camera-white.png"></image>
 			</view>
 			
-			<view class="bottom" @tap="toMyPage">
-				<image :src="userIcon"></image>
-				<view>{{userName}}</view>
+			<view v-if="this.type==0" class="down">
+				<image :src="data[0].logoImg"></image>
+				<view>{{data[0].nickname}}</view>
 			</view>
-			
+			<view v-if="this.type==1" class="down">
+				<image :src="item.logoImg"></image>
+				<view>{{item.nickname}}</view>
+			</view>
 		</view>
 		
-		<view :class="scrollTop>200?'fix':''" class="tabbar">
-			<view @tap="clickTab(0)" class="tab" :class="tabIndex==0?'light':''">最新动态</view>
-			<view @tap="clickTab(1)" class="tab" :class="tabIndex==1?'light':''">热门动态</view>
+		<view class="myStore">
+			<image class="icon" :src="storeInfo.logoPic"></image>
+			<view class="storeInfo">
+				<view class="title">{{storeInfo.nickName}}</view>
+				<view class="score">
+					<image  src="/static/cut/star_on.png"></image>
+					评分{{storeInfo.mainScore}}
+				</view>
+			</view>
+			<view class="button">进店看看</view>
 		</view>
 		
 		<block v-for="(item,index) in data" :key="index">
 			<view class="list" @tap="toDetail(item.id)">
 				<view class="user">
-					<image @tap.stop="toOtherPage(item)" :src='item.logoImg'></image>
+					<image :src='item.logoImg'></image>
 					<view class="info">
 						<view class='nickName'>{{item.nickname}}</view>
 						<view class="gray">{{item.createTime}}</view>
 					</view>
+					<view v-if="type==0" @tap.stop="deleteDynamic(item)" class="delete">x</view>
 				</view>
 				<view class="content">{{item.dynamicContent}}</view>
 				
@@ -70,212 +81,141 @@
 			</view>
 		</block>
 		
-		<uni-load-more :status="status"></uni-load-more>
 	</view>
 </template>
 
 <script>
-	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
-	export default {
-		components:{
-			uniLoadMore
-		},
-		data() {
-			return {
-				data:[],
-				tabIndex:0,
-				pageNo:1,
-				token:'',
-				status:'loading',
-				scrollTop:'',
-				userIcon:'',
-				userName:'',
-				userId:''
+	export default{
+		data(){
+			return{
+				data:'',
+				type:'',
+				storeInfo:'',
+				item:'',
+				token:''
 			}
 		},
 		onLoad(options){
-			this.token = options.token
-			this.getUserInfo()
-			this.requestData()
+			this.type = options.type
+			if(this.type==0){
+				this.token = options.token
+			}else{
+				this.item = JSON.parse(options.item)
+				console.log(this.item)
+			}
+			this.getList()
 		},
-		onReachBottom(){
-			this.pageNo += 1
-			this.requestData()
-		},
-		onPageScroll(event){
-			console.log(event)
-			this.scrollTop = event.scrollTop
-		},
-		methods: {
-			like(index,item){
-				
-				if(this.token == ''){
-					uni.showToast({
-						title:'请先登录',
-						duration:1500,
-						icon:'none'
-					})
-					return
-				}
-				
-				console.log(this.token)
-				let that = this
-				if(index==0){
-					item.isGiveTheThumbsUp = 1
-					item.numberOfPoints += 1
+		methods:{
+			getList(){
+				if(this.type==0){
+					let req = {}
+					req.isMeOrAll = 1
+					let that = this
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
-						data:{
-							userDynamicId:item.id
-						},
+						url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+						data:req,
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded', 
-							'token':that.token
+							token:that.token
 						},
 						success(res){
+							console.log(res)
+							that.data = res.data.data.userDynamicList
+							let sellerId = that.data[0].sellerId
+							uni.request({
+								url:'https://sgz.wdttsh.com/app/seller/findOne',
+								data:{
+									sellerId
+								},
+								method:'POST',
+								header: {
+									'content-type':'application/x-www-form-urlencoded', 
+									token:that.token
+								},
+								success(res){
+									console.log(res)
+									that.storeInfo = res.data.data
+								}
+							})
+							// if(res.data.data.userDynamicList.length>0){
+							// 	that.data = that.data.concat(res.data.data.userDynamicList)
+							// }else{
+							// 	that.status = "nomore"
+							// }
 						}
 					})
-				}else if(index==1){
-					item.isGiveTheThumbsUp = 0
-					item.numberOfPoints -= 1
+				}else{
+					let req = {}
+					req.isMeOrAll = 3
+					req.userId = this.item.userId
+					let that = this
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
-						data:{
-							userDynamicId:item.id
-						},
+						url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+						data:req,
 						method:'POST',
 						header: {
-							'content-type':'application/x-www-form-urlencoded',
-							'token':that.token
+							'content-type':'application/x-www-form-urlencoded', 
 						},
 						success(res){
+							console.log(res)
+							that.data = res.data.data.userDynamicList
+							let sellerId = that.data[0].sellerId
+							uni.request({
+								url:'https://sgz.wdttsh.com/app/seller/findSellerOneDetailed',
+								data:{
+									sellerId
+								},
+								method:'POST',
+								header: {
+									'content-type':'application/x-www-form-urlencoded', 
+								},
+								success(res){
+									console.log(res)
+									that.storeInfo = res.data.data
+								}
+							})
 						}
 					})
 				}
-			},
-			add(){
-				console.log(111)
-			},
-			toPublish(){
-				if(this.token==''){
-					const android = window.android
-					if (window.android) {
-						window.android.toLogin();
-					}
-				}else{
-					uni.navigateTo({
-						url:`/pages/lifecircle/publish?token=${this.token}`
-					})
-				}
-				
-			},
-			clickTab(index){
-				this.tabIndex = index
-				this.data = []
-				this.pageNo = 1
-				this.requestData()
 			},
 			toIndex(){
-				if (window.android) {
-					window.android.finish();
-				} else {
-					uni.navigateBack({
-						delta:1
-					})
-				}
-				
-			},
-			toDetail(item){
-				uni.navigateTo({
-					url:`/pages/lifecircle/detail?id=${item}&token=${this.token}`
+				uni.navigateBack({
+					delta: 1
 				})
 			},
-			preview(list,number){
-				uni.previewImage({
-					urls:list,
-					current:number,
-				})
-			},
-			getUserInfo(){
-				let that = this
-				if(this.token!=''){
-					uni.request({
-						url:'https://sgz.wdttsh.com/app/appuser/getAppUser',
-						method:'POST',
-						header: {
-							'content-type':'application/x-www-form-urlencoded', 
-							token:that.token||''
-						},
-						success(res){
-							that.userId = res.data.data.appuserId
-							that.userIcon = res.data.data.logoImg
-							that.userName = res.data.data.nickname
-						}
-					})
-				}else{
-					that.userIcon = '/static/cut/lifecircle/nologin.png'
-					that.userName = '未登录'
-				}
-			},
-			requestData(){
-				let req = {}
-				if(this.tabIndex==1){
-					req.type = 2
-				}
-				req.pageNo = this.pageNo
-				req.pageSize = 10
-				req.isMeOrAll = 2
-				let that = this
+			deleteDynamic(item){
+				let that = this 
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
-					data:req,
+					url:'https://sgz.wdttsh.com/app/tbUserDynamicReply/deleteUserDynamic',
+					data:{
+						id:item.id
+					},
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded', 
-						token:that.token||''
+						token:that.token
 					},
 					success(res){
-						if(res.data.data.userDynamicList.length>0){
-							that.data = that.data.concat(res.data.data.userDynamicList)
-						}else{
-							that.status = "nomore"
-						}
+						uni.showToast({
+							title:'删除成功',
+							icon:'none',
+							duration:1500
+						})
+						setTimeout(()=>{
+							that.getList()
+						},1500)
 					}
 				})
-			},
-			toMyPage(){
-				if(this.token!=''){
-					uni.navigateTo({
-						url:'personalIndex?type=0&token=' + this.token
-					})
-				}else{
-					uni.showToast({
-						title:'请先登录',
-						icon:'none',
-						duration:1500
-					})
-				}
-			},
-			toOtherPage(item){
-				if(item.userId==this.userId){
-					uni.navigateTo({
-						url:'personalIndex?type=0&token=' + this.token
-					})
-				}else{
-					uni.navigateTo({
-						url:'personalIndex?type=1&item=' + JSON.stringify(item)
-					})
-				}
 			}
 		}
 	}
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 	page{
 		background-color: #f2f2f2;
-		padding-top:490rpx;
+		padding-top: 400rpx;
 	}
 	.navbar{
 		position: absolute;
@@ -305,7 +245,7 @@
 				height:37rpx;
 			}
 		}
-		.bottom{
+		.down{
 			height:312rpx;
 			display: flex;
 			align-items: center;
@@ -322,34 +262,49 @@
 				color:rgba(255,255,255,1);
 			}
 		}
-		
 	}
 	
-	.tabbar{
-		position: absolute;
-		top:400rpx;
-		width:750rpx;
+	.myStore{
+		height:140rpx;
 		background-color: #fff;
-		height:90rpx;
 		display: flex;
 		align-items: center;
-		justify-content: space-around;
-		z-index:99;
-		&.fix{
-			position: fixed;
-			top:0;
+		.icon{
+			width:100rpx;
+			height:100rpx;
+			border-radius:10rpx;
+			margin-left: 20rpx;
 		}
-		.tab{
-			font-size:32rpx;
-			font-weight:500;
-			color:rgba(60,60,60,1);
-			&.light{
-				color:rgba(255,102,0,1);
+		.storeInfo{
+			width:440rpx;
+			margin-left: 20rpx;
+			.title{
+				font-size:28rpx;
+				color:#1E1E1E;
 			}
+			.score{
+				font-size:24rpx;
+				color:#646464;
+				image{
+					width:25rpx;
+					height:23rpx;
+				}
+			}
+		}
+		.button{
+			width:136rpx;
+			height:50rpx;
+			border:1rpx solid rgba(255,102,0,1);
+			border-radius:25rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color:#FF6600;
 		}
 	}
 	
 	.list{
+		margin: 0;
 		margin-top: 20rpx;
 		background-color: #fff;
 		padding:30rpx;
@@ -357,6 +312,7 @@
 			height:74rpx;
 			display: flex;
 			.info{
+				width:580rpx;
 				.nickName{
 					font-size: 30rpx;
 					color:#1E1E1E;
@@ -371,6 +327,7 @@
 				width:74rpx;
 				border-radius:50%;
 			}
+			
 		}
 		.content{
 			margin: 20rpx 0;
