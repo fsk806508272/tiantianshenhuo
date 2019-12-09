@@ -246,8 +246,11 @@
 			},
 			toMyPage(){
 				if(this.token!=''){
+					let data = {}
+					data.logoImg = this.userIcon
+					data.nickname=this.userName
 					uni.navigateTo({
-						url:'personalIndex?type=0&token=' + this.token
+						url:'personalIndex?type=0&token=' + this.token + '&item=' + JSON.stringify(data)
 					})
 				}else{
 					uni.showToast({
@@ -259,8 +262,11 @@
 			},
 			toOtherPage(item){
 				if(item.userId==this.userId){
+					let data = {}
+					data.logoImg = this.userIcon
+					data.nickname=this.userName
 					uni.navigateTo({
-						url:'personalIndex?type=0&token=' + this.token
+						url:'personalIndex?type=0&token=' + this.token + '&item=' + JSON.stringify(data)
 					})
 				}else{
 					uni.navigateTo({

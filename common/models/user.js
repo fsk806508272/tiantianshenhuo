@@ -309,6 +309,39 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//搜索同事
+	searchColleague(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/colleague/searchList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//添加好友
+	addColleague(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/addcolleaguemessage/add',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//查询同事列表
+	queryColleagueList(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/addcolleaguemessage/getList',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

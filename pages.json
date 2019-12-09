@@ -847,6 +847,13 @@
 			"style":{
 				"navigationStyle":"custom"
 			}
+		},
+		{
+			"path":"pages/user/colleague/addcolleague",
+			"style":{
+				"navigationBarTitleText": "添加好友",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		}
     ],
 	"globalStyle": {

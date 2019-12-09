@@ -1,357 +1,357 @@
 <template>
-	<view class="send-box">
-		<view class="send-type">
-			<view class="type">*选择账单类型</view>
-			<view class="bill-box">
-				<view class="house">房屋账单</view>
-				<view class="inance">金融账单</view>
+	<view>
+		<view class="timepicker">
+			<view class="star title">租期时长</view>
+			<view class="choose">
+				<view class="startDate">
+					<picker mode="date" @change="startdateChange">
+						<view>{{startDate}}</view>
+					</picker>
+				</view>
+				<view>至</view>
+				<view class="endDate">
+					<picker mode="date"  @change="enddateChange">
+						<view>{{endDate}}</view>
+					</picker>
+				</view>
 			</view>
 		</view>
-		<view class="cost-details">
-			<view class="cost">*费用明细</view>
-			<input class="bill-name" type="text" value="" placeholder="请输入账单名称" placeholder-style="font-size:13px; margin-left:20rpx" />
-			<view class="agency-box" v-for="(item, index) in moduleAmount" :key="index">
-				<view>
-					<view class="uni-list">
-						<view class="uni-list-cell">
-							<view class="uni-list-cell-db agency">
-								<picker @change="bindPickerChange(index, $event)" :value="index" :range="array">
-									<view class="uni-input">{{array[item.type]}}</view>
-								</picker>
+		
+		<view class="detail">
+			<view class="star">费用明细</view>
+			<view class="list">
+				<input v-model="title" class="feename" placeholder="请输入账单名称" />
+				<block v-for="(item,index) in listArry" :key="index">
+					<view class="feeList">
+						<picker mode='selector' :range='range' @change="feeselect($event,item)">
+							<view class="lf">
+								<view class="choosefee">{{item.name}}</view>
+								<image src="/static/cut/grayright.png"></image>
 							</view>
-						</view>
+						</picker>
+						<input type="number" @blur="totalSum" v-model="item.num" placeholder="请输入价格" />
+						<image @tap="addOrDelete(item,index)" :src="item.isAdd?addSrc:delSrc"></image>
 					</view>
-				</view>
-				<input class="agency" type="text" value="" placeholder="请输入价格" placeholder-style="font-size:13px; " />
-				<view class="jia" @click="add" v-if="index === 0">+</view>
-				<view class="jian" @click="expurgate(index)" v-else>-</view>
+				</block>
 			</view>
-			<!-- <view class="agency-box" v-for="(item,index) in moduleAmount" :key="index">
-				<view>
-					<view class="uni-list">
-						<view class="uni-list-cell">
-							<view class="uni-list-cell-db agency">
-								<picker @change="bindPickerChange" :value="index" :range="array">
-									<view class="uni-input">{{moduleAmount[index][index]}}</view>
-								</picker>
-							</view>
-						</view>
-					</view>
-				</view>
-				<input class="agency" type="text" value="" placeholder="请输入价格" placeholder-style="font-size:13px; " />
-				<view class="jian" @click="expurgate(index)">-</view>
-			</view> -->
 			<view class="total">
-				<view class="text">合计：</view>
-				<view class="money">￥130.00</view>
+				合计：<text class="yellow">￥{{total}}</text>
 			</view>
 		</view>
-		<view class="remarks">费用备注</view>
-		<view class="describe">
-			<textarea style="width:100%;height:80px" placeholder="请输入费用明细描述" placeholder-style="font-size:13px; margin-left:20rpx; margin-top:10rpx; color:#B4B4B4"></textarea>
-		</view>
-		<view class="remarks">相关图片</view>
-		<view class="uploading">
-			<image class="img" src="/static/cut/upload_photo.png" mode="widthFix"></image>
-		</view>
-		<view class="null"></view>
-		<view class="order">
-			<view class="order-person">选择接单收件人</view>
-			<view class="site">
-				<image src="/static/cut/bigcode.png" mode="widthFix"></image>
+		
+		<view class="graytitle">费用备注</view>
+		<textarea v-model="remark" placeholder="请输入费用备注"></textarea>
+		
+		<view class="graytitle">相关图片</view>
+		<upload-imgs :photos="goods_photos" @changes="goodsPhoto"></upload-imgs>
+		
+		<view class="receive">
+			<view class="title">选择账单接收人</view>
+			<view class="info" @tap="toChooseReceiver">
+				<image :src="receiverInfo.logoImg"></image>
 				<view>
-					<view class="name">王勇</view>
-					<view class="name-site">深圳市龙岗区龙翔大道智联大厦8508</view>
+					<view>{{receiverInfo.name}}</view>
+					<view class="gray">{{receiverInfo.address}}</view>
 				</view>
-				<view class="clear">x</view>
 			</view>
-			<image class="site-img" src="/static/cut/site.png" mode="widthFix"></image>
 		</view>
-		<button type="warn">确认发送</button>
-	</view>
+		
+		<view @tap="sendBill" class="submit-button">确认发送</view>
 	</view>
 </template>
 
 <script>
-	import {
-		UserModel
-	} from '@/common/models/user.js'
+	import {UserModel} from '@/common/models/user.js'
+	import {StoreModel} from '@/common/models/store.js'
+	import {mapState} from 'vuex'
+	import uploadImgs from '@/components/uploadImgs.vue'
 	const usermodel = new UserModel()
-	export default {
-		data() {
-			const currentDate = this.getDate({
-				format: true
+	const storemodel = new StoreModel()
+	export default{
+		components:{
+			uploadImgs
+		},
+		data(){
+			return{
+				title:'',
+				startDate:'请选择开始日期',
+				endDate:'请选择结束日期',
+				range:[],
+				listArry:[
+					{
+						name:'请选择',
+						isAdd:true,
+						num:0
+					}
+				],
+				goods_photos:[],
+				addSrc:'/static/cut/ionc-a.png',
+				delSrc:'/static/cut/icon-n.png',
+				total:0,
+				imageList:['/static/cut/upload_photo.png'],
+				firstTypeId:'',
+				receiverInfo:{
+					logoImg:'/static/cut/site.png'
+				},
+				sellerData:'',
+				remark:''
+			}
+		},
+		onLoad(){
+			storemodel.getSellerInfo({sellerId:this.uerInfo.storeId},data=>{
+				this.firstTypeId = data.firstTypeId
+				this.sellerData = data
+				usermodel.getCostName({firsttypeId:this.firstTypeId},data=>{
+					this.range = data
+				})
 			})
-			return {
-				title: 'picker',
-				array: [],
-				defaultArray: ["请选择"],
-				index: 0,
-				moduleAmount: [], //组件数量
-				isOK: false //判断是否选择了项目
-			}
+			
 		},
-		computed: {
-			startDate() {
-				return this.getDate('start');
-			},
-			endDate() {
-				return this.getDate('end');
-			}
+		onShow(){
+			console.log(this.receiverInfo)
 		},
-		methods: {
-			bindPickerChange: function(index, e) {
-				console.log(index, 'picker发送选择改变，携带值为', e.target.value)
-				this.index = e.target.value
-				this.isOK = true
-				
-				this.moduleAmount[index].type = e.target.value
-				console.log(this.index)
+		computed:{
+			...mapState(['uerInfo'])
+		},
+		methods:{
+			goodsPhoto(e){
+				this.goods_photos = e;
+				console.log(this.goods_photos);
 			},
-			getDate(type) {
-				const date = new Date();
-				let year = date.getFullYear();
-				let month = date.getMonth() + 1;
-				let day = date.getDate();
-
-				if (type === 'start') {
-					year = year - 60;
-				} else if (type === 'end') {
-					year = year + 2;
+			startdateChange(e){
+				this.startDate = e.target.value
+			},
+			enddateChange(e){
+				this.endDate = e.target.value
+			},
+			addOrDelete(item,index){
+				if(item.isAdd){
+					let obj = {}
+					obj.name = '请选择'
+					obj.num = 0
+					obj.isAdd = false
+					this.listArry.push(obj)
+				}else{
+					this.total -= item.num
+					this.listArry.splice(index,1)
 				}
-				month = month > 9 ? month : '0' + month;;
-				day = day > 9 ? day : '0' + day;
-				return `${year}-${month}-${day}`;
 			},
-			add() {
-				if (this.array.length == this.moduleAmount.length) {
+			feeselect(e,item){
+				item.name =  this.range[e.target.value]
+			},
+			totalSum(){
+				let s = 0
+				for(let i of this.listArry){
+					s += parseFloat(i.num)
+				}
+				this.total = s
+			},
+			toChooseReceiver(){
+				uni.navigateTo({
+					url:`/pages/user/sendBill/receiver?id=${this.firstTypeId}`
+				})
+			},
+			sendBill(){
+				if(!this.receiverInfo.logoImg.startsWith('http')){
+					uni.showToast({
+						title:'请选择账单接收人',
+						duration:1500,
+						icon:'none'
+					})
 					return
-				} else {
-					this.moduleAmount.push({type: 0, price: 0})
-					// let copyArray = this.array
-					// console.log(this.moduleAmount)
-
-
 				}
-				//console.log(this.)
-			},
-			expurgate(index1) {
-				console.log(index1)
-				this.moduleAmount.splice(index1, 1)
+				if(this.startDate=='请选择开始日期'){
+					uni.showToast({
+						title:'请选择账单开始日期',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.endDate=='请选择结束日期'){
+					uni.showToast({
+						title:'请选择账单结束日期',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				if(this.firstTypeId ==1){
+					req.billType = '房屋账单'
+				}else{
+					req.billType = '金融账单'
+				}
+				req.releaseId = this.receiverInfo.releaseId
+				req.sellerId = this.sellerData.sellerId
+				req.signingId = this.receiverInfo.signingId
+				req.userId = this.receiverInfo.userId
+				req.orderCode = this.receiverInfo.orderCode
+				req.contractCode = this.receiverInfo.contractCode
+				req.billStartTime = this.startDate
+				req.billEndTime = this.endDate
+				req.paymentMethod = this.receiverInfo.paymentMethod
+				req.title = this.title
+				req.remarks = this.remark
+				req.address = this.receiverInfo.address
+				if(this.goods_photos.length!=0){
+					req.picture = this.goods_photos.join(',')
+				}
+				req.secondTypeId = this.receiverInfo.secondTypeId
+				let arr = []
+				for(let i of this.listArry){
+					let obj = {}
+					obj.costName = i.name
+					obj.costPrice = i.num
+					arr.push(obj)
+				}
+				req.costList = JSON.stringify(arr)
+				usermodel.sendBill(req,data=>{
+					uni.showToast({
+						title:'发送成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.navigateTo({
+							url:'/pages/user/bill/bill'
+						})
+					},1500)
+				})
 			}
-		},
-
-		onLoad() {
-			//费用查询名称
-			usermodel.getCostName({}, data => {
-				data = JSON.parse(JSON.stringify(data))
-				this.array = this.defaultArray.concat(data)
-				this.moduleAmount = [{type: 0, price: 0}]
-	
-			})
 		}
 	}
 </script>
 
-<style lang="scss">
-	.send-box {
-		background: #E6E6E6;
-		height: 100%;
-
-		.send-type {
-			height: 154rpx;
-			background: #FFFFFF;
-
-			.type {
-				margin: 20rpx 20rpx;
+<style scoped lang="scss">
+	page{
+		background-color: #f2f2f2;
+		padding-bottom: 110rpx;
+	}
+	.timepicker{
+		margin-top: 20rpx;
+		background-color: #fff;
+		padding:0 20rpx;
+		height:84rpx;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		.choose{
+			display: flex;
+			.startDate{
+				margin-right: 10rpx;
 			}
-
-			.bill-box {
-				display: flex;
-
-				.house {
-					font-size: 24rpx;
-					margin-left: 20rpx;
-					margin-right: 20rpx;
-					border: 1px solid #C8C8C8;
-					padding: 6rpx 20rpx;
-					border-radius: 10rpx;
-				}
-
-				.inance {
-					border: 1px solid #C8C8C8;
-					padding: 6rpx 20rpx;
-					border-radius: 10rpx;
-				}
+			.endDate{
+				margin-left: 10rpx;
 			}
+		}	
+	}
+	
+	.detail{
+		margin-top: 20rpx;
+		background-color: #fff;
+		padding:0 20rpx;
+		.star{
+			height:84rpx;
+			display: flex;
+			align-items: center;
+			border-bottom: 1rpx solid #E6E6E6;
 		}
-
-		.cost-details {
-			background: #FFFFFF;
-			margin-top: 20rpx;
-			overflow: hidden;
-
-			.cost {
-				margin-left: 20rpx;
+		.list{
+			border-bottom: 1rpx solid #f2f2f2;
+			padding: 30rpx 0;
+			.feename{
+				border:1rpx solid #A0A0A0;
+				width:640rpx;
+				height:64rpx;
+				padding-left: 20rpx;
+				font-size:26rpx;
+				border-radius:8rpx;
+			}
+			.feeList{
 				margin-top: 20rpx;
-				width: 700rpx;
-				height: 70rpx;
-				border-bottom: 1px solid #E6E6E6;
-			}
-
-			.bill-name {
-				margin-left: 20rpx;
-				height: 64rpx;
-				width: 640rpx;
-				border: 1rpx solid #A0A0A0;
-				margin-top: 40rpx;
-				border-radius: 10rpx;
-			}
-
-			.agency-box {
 				display: flex;
-
-				.agency {
+				align-items: center;
+				.lf{
+					display: flex;
+					width:310rpx;
+					height:64rpx;
+					border:1rpx solid rgba(160,160,160,1);
+					border-radius:8rpx;
+					align-items: center;
+					justify-content: space-between;
+					padding:0 20rpx;
+					image{
+						width:10rpx;
+						height:20rpx;
+					}
+				}
+				input{
 					margin-left: 20rpx;
-					margin-top: 20rpx;
-					border: 1px solid #A0A0A0;
-					width: 310rpx;
-					height: 64rpx;
-					border-radius: 10rpx;
+					width:310rpx;
+					height:64rpx;
+					border:1rpx solid rgba(160,160,160,1);
+					border-radius:8rpx;
 					padding-left: 20rpx;
-					line-height: 64rpx;
+					font-size:26rpx;
 				}
-
-				.jia {
-					width: 40rpx;
-					height: 40rpx;
-					background: #FF6600;
-					border-radius: 50%;
-					color: #FFFFFF;
-					text-align: center;
-					line-height: 40rpx;
-					margin: 30rpx 0 0 20rpx;
-				}
-
-				.jian {
-					width: 40rpx;
-					height: 40rpx;
-					background: #FFFFFF;
-					border: 1px solid #FF6600;
-					border-radius: 50%;
-					color: #FF6600;
-					text-align: center;
-					margin: 30rpx 0 0 20rpx;
+				image{
+					width:40rpx;
+					height:40rpx;
+					margin-left: 20rpx;
 				}
 			}
-
-			.total {
-				height: 84rpx;
-				margin-top: 41rpx;
-				display: flex;
-
-				.text {
-					margin-top: 20rpx;
-					margin-left: 520rpx;
-					color: #A0A0A0;
-				}
-
-				.money {
-					margin-top: 20rpx;
-					color: #FF6600;
-					font-size: 30rpx;
-					font-weight: 600;
-				}
-			}
-
 		}
-
-		.remarks {
-			height: 60rpx;
-			line-height: 60rpx;
-			color: #787878;
-			margin-left: 20rpx;
-			font-size: 22rpx;
-		}
-
-		.describe {
-			background: #FFFFFF;
-		}
-
-		.uploading {
-			height: 280rpx;
-			background: #FFFFFF;
-
-			.img {
-				width: 200rpx;
-				height: 200rpx;
-				margin: 30rpx 0 0rpx 20rpx;
-			}
-		}
-
-		.null {
-			height: 20rpx;
-		}
-
-		.order {
-			height: 388rpx;
-			background: #FFFFFF;
-			overflow: hidden;
-
-			.order-person {
-				color: #3C3C3C;
-				font-size: 26rpx;
-				margin-left: 20rpx;
-				margin-top: 30rpx;
-				height: 70rpx;
-				width: 700rpx;
-				border-bottom: 1px solid #E6E6E6;
-			}
-
-			.site {
-				display: flex;
-				margin: 20rpx 0 0 20rpx;
-
-				image {
-					height: 80rpx;
-					width: 80rpx;
-					border: 1px solid #E6E6E6;
-					border-radius: 10rpx;
-				}
-
-				view {
-					margin-left: 15rpx;
-					width: 560rpx;
-
-					.name {
-						color: #3C3C3C;
-						font-size: 30rpx;
-						margin-top: 5rpx;
-					}
-
-					.name-site {
-						color: #A0A0A0;
-						font-size: 20rpx;
-					}
-				}
-
-				.clear {
-					height: 35rpx;
-					width: 35rpx;
-					border-radius: 50%;
-					border: 1px solid #C0C0C0;
-					text-align: center;
-					line-height: 25rpx;
-					color: #C0C0C0;
-					margin-top: 20rpx;
-				}
-			}
-
-			.site-img {
-				height: 80rpx;
-				width: 80rpx;
-				margin: 30rpx 0 0 20rpx;
+		.total{
+			height:84rpx;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			text{
+				color:#ff6600;
+				font-weight: bolder;
+				font-size:28rpx;
 			}
 		}
 	}
+	
+	textarea{
+		background-color: #fff;
+		width:750rpx;
+		padding:20rpx;
+		font-size: 26rpx;
+		height:180rpx;
+	}
+	
+	.pictureBox{
+		background-color: #fff;
+		padding:30rpx 20rpx;
+		display: flex;
+		
+		image{
+			width:200rpx;
+			height:200rpx;
+			margin-right: 20rpx;
+			
+		}
+	}
+	
+	.receive{
+		padding: 0 20rpx 20rpx 20rpx;
+		background-color: #fff;
+		.title{
+			height:84rpx;
+			display: flex;
+			align-items: center;
+		}
+		.info{
+			display: flex;
+		}
+		image{
+			margin-right: 20rpx;
+			width:80rpx;
+			height:80rpx;
+		}
+	}
+
 </style>

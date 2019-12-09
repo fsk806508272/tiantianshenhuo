@@ -8,8 +8,8 @@
 			</view>
 			
 			<view v-if="this.type==0" class="down">
-				<image :src="data[0].logoImg"></image>
-				<view>{{data[0].nickname}}</view>
+				<image :src="item.logoImg"></image>
+				<view>{{item.nickname}}</view>
 			</view>
 			<view v-if="this.type==1" class="down">
 				<image :src="item.logoImg"></image>
@@ -17,7 +17,7 @@
 			</view>
 		</view>
 		
-		<view class="myStore">
+		<view v-if="sellerId!=null&&sellerId!=''" class="myStore">
 			<image class="icon" :src="storeInfo.logoPic"></image>
 			<view class="storeInfo">
 				<view class="title">{{storeInfo.nickName}}</view>
@@ -26,7 +26,7 @@
 					评分{{storeInfo.mainScore}}
 				</view>
 			</view>
-			<view class="button">进店看看</view>
+			<view @tap="toStore" class="button">进店看看</view>
 		</view>
 		
 		<block v-for="(item,index) in data" :key="index">
@@ -92,17 +92,19 @@
 				type:'',
 				storeInfo:'',
 				item:'',
-				token:''
+				token:'',
+				sellerId:''
 			}
 		},
 		onLoad(options){
+			console.log(options)
 			this.type = options.type
 			if(this.type==0){
 				this.token = options.token
-			}else{
+			}
 				this.item = JSON.parse(options.item)
 				console.log(this.item)
-			}
+			
 			this.getList()
 		},
 		methods:{
@@ -122,6 +124,8 @@
 						success(res){
 							console.log(res)
 							that.data = res.data.data.userDynamicList
+							that.sellerId = that.data[0].sellerId
+							console.log(that.sellerId)
 							let sellerId = that.data[0].sellerId
 							uni.request({
 								url:'https://sgz.wdttsh.com/app/seller/findOne',
@@ -160,6 +164,8 @@
 						success(res){
 							console.log(res)
 							that.data = res.data.data.userDynamicList
+							that.sellerId = that.data[0].sellerId
+							console.log(that.sellerId)
 							let sellerId = that.data[0].sellerId
 							uni.request({
 								url:'https://sgz.wdttsh.com/app/seller/findSellerOneDetailed',
@@ -207,6 +213,17 @@
 						},1500)
 					}
 				})
+			},
+			toStore(){
+				// console.log(this.storeInfo.sellerId,(parseInt(this.type)+1).toString(),this.storeInfo.firstTypeId)
+				// console.log(typeof(parseInt(this.type)  + 1).toString())
+				// console.log(let num = this.type==0?'1':'2')
+				if (window.android) {
+					let num = this.type==0?'1':'2'
+					
+					
+					window.android.toShop(this.storeInfo.sellerId,num,this.storeInfo.firstTypeId);
+				}
 			}
 		}
 	}
