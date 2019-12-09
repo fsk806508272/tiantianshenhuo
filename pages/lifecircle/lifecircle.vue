@@ -270,7 +270,7 @@
 					})
 				}else{
 					uni.navigateTo({
-						url:'personalIndex?type=1&item=' + JSON.stringify(item)
+						url:'personalIndex?type=1&item=' + JSON.stringify(item) + '&token=' + this.token
 					})
 				}
 			}

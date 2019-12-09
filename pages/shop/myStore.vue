@@ -5,7 +5,7 @@
 				<image src="/static/cut/lifecircle/backto.png"></image>
 			</view>
 			<view class="title">我的店铺</view>
-			<image class="one" src="/static/cut/storevip.png"></image>
+			<image @tap="toManage" class="one" src="/static/cut/storevip.png"></image>
 			<image @tap="editStoreInfo" class="two" src="/static/cut/storesetting.png"></image>
 		</view>
 		<view class="open_close_box">

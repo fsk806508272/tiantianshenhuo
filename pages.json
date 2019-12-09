@@ -487,17 +487,6 @@
 			}
 		},
 		{
-		    "path" : "pages/shop/myStoreindex",
-		    "style" : {
-		    	"navigationBarTitleText": "我的店铺",
-		    	"navigationBarBackgroundColor":"#FFFFFF",
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-				}
-		    }
-		},
-		{
 		    "path" : "pages/house/paytype",
 		    "style" : {
 		    	"navigationBarTitleText": "付款方式",

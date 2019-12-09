@@ -99,11 +99,9 @@
 		onLoad(options){
 			console.log(options)
 			this.type = options.type
-			if(this.type==0){
-				this.token = options.token
-			}
-				this.item = JSON.parse(options.item)
-				console.log(this.item)
+			this.token = options.token
+			this.item = JSON.parse(options.item)
+			console.log(this.item)
 			
 			this.getList()
 		},
@@ -159,7 +157,8 @@
 						data:req,
 						method:'POST',
 						header: {
-							'content-type':'application/x-www-form-urlencoded', 
+							'content-type':'application/x-www-form-urlencoded',
+							'token':that.token
 						},
 						success(res){
 							console.log(res)
@@ -190,6 +189,59 @@
 					delta: 1
 				})
 			},
+			preview(list,number){
+				uni.previewImage({
+					urls:list,
+					current:number,
+				})
+			},
+			like(index,item){
+				
+				if(this.token == ''){
+					uni.showToast({
+						title:'请先登录',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				
+				console.log(this.token)
+				let that = this
+				if(index==0){
+					item.isGiveTheThumbsUp = 1
+					item.numberOfPoints += 1
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
+						data:{
+							userDynamicId:item.id
+						},
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded', 
+							'token':that.token
+						},
+						success(res){
+						}
+					})
+				}else if(index==1){
+					item.isGiveTheThumbsUp = 0
+					item.numberOfPoints -= 1
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
+						data:{
+							userDynamicId:item.id
+						},
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded',
+							'token':that.token
+						},
+						success(res){
+						}
+					})
+				}
+			},
 			deleteDynamic(item){
 				let that = this 
 				uni.request({
@@ -214,6 +266,11 @@
 					}
 				})
 			},
+			toDetail(item){
+				uni.navigateTo({
+					url:`/pages/lifecircle/detail?id=${item}&token=${this.token}`
+				})
+			},
 			toStore(){
 				// console.log(this.storeInfo.sellerId,(parseInt(this.type)+1).toString(),this.storeInfo.firstTypeId)
 				// console.log(typeof(parseInt(this.type)  + 1).toString())
@@ -223,6 +280,17 @@
 					
 					
 					window.android.toShop(this.storeInfo.sellerId,num,this.storeInfo.firstTypeId);
+				}else{
+					console.log(this.storeInfo)
+					if(this.type==0){
+						uni.navigateTo({
+							url:`/pages/shop/myStore?sellerId=${this.sellerId}&type=${this.storeInfo.firstTypeId}`
+						})
+					}else{
+						uni.navigateTo({
+							url:`/pages/shop/theStore?sellerId=${this.sellerId}&type=${this.storeInfo.firstTypeId}`
+						})
+					}
 				}
 			}
 		}
