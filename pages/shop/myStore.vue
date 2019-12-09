@@ -465,6 +465,11 @@
 				uni.navigateTo({
 					url:'/pages/user/store/editStore?id=' + this.sellerId
 				})
+			},
+			toManage(){
+				uni.navigateTo({
+					url:'/pages/VIPCard/vipmanage'
+				})
 			}
 		}
 	}

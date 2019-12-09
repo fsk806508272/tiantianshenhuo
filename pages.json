@@ -83,16 +83,6 @@
 			}
 		},
 		{
-		    "path" : "pages/shop/myShop",
-		    "style" : {
-				"navigationBarTitleText": "我的店铺",
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-				}
-			}
-		},
-		{
 		    "path" : "pages/login/login",
 		    "style" : {
 				"navigationBarTitleText": "登录"
@@ -746,13 +736,6 @@
 			}
 		},
 		{
-		    "path" : "pages/shop/shopindex",
-		    "style" : {
-				"navigationBarTitleText": "店铺主页",
-				"navigationBarBackgroundColor":"#FFFFFF"
-			}
-		}
-        ,{
 			"path" : "pages/lifecircle/lifecircle",
 			"style" : {
 				"navigationStyle":"custom"
@@ -841,6 +824,27 @@
 			"path":"pages/user/colleague/addcolleague",
 			"style":{
 				"navigationBarTitleText": "添加好友",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path":"pages/VIPCard/vipmanage",
+			"style":{
+				"navigationBarTitleText": "会员卡管理",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
+        ,{
+            "path" : "pages/VIPCard/list",
+            "style" : {
+				"navigationBarTitleText": "已办卡名单",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+        },
+		{
+		    "path" : "pages/VIPCard/setting",
+		    "style" : {
+				"navigationBarTitleText": "会员卡设置",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
