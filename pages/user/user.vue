@@ -85,7 +85,6 @@
 						</view>
 					</view>
 				</view>
-				
 			</view>
 			<view class="use-main">
 				<view class="advertisement"></view>

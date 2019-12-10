@@ -10,8 +10,8 @@
 			</view>
 			<view class="bottom">
 				<view class="money">
-					<view class="icon">￥</view>
-					<view class="number">{{money}}</view>
+					<view class="icon"></view>
+					<view class="number">￥{{money}}</view>
 				</view>
 				<view class="sales">月售{{sales}}</view>
 				<view v-if="deliver!=0" class="deliver">配送费￥{{deliver}}</view>

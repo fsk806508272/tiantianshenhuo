@@ -320,7 +320,7 @@
 				height:36rpx;
 			}
 			.title{
-				font-size:36rpx;
+				font-size:32rpx;
 				font-weight:500;
 				color:#fff;
 			}
@@ -364,11 +364,14 @@
 			top:0;
 		}
 		.tab{
+			height:90rpx;
+			line-height: 90rpx;
 			font-size:32rpx;
 			font-weight:500;
 			color:rgba(60,60,60,1);
 			&.light{
 				color:rgba(255,102,0,1);
+				border-bottom: 6rpx solid #FF6600;
 			}
 		}
 	}

@@ -59,7 +59,7 @@
 								<block v-for="(score,idx) in starIndex" :key="idx">
 									<image :src="item.mainScore>idx?starSrc:''"></image>
 								</block>
-								<view>{{item.mainScore}}</view>
+								<view>评分: {{item.mainScore}}</view>
 							</view>
 						</view>
 						<view class="like" @tap="delCollectShop(item.sellerId)">
@@ -178,7 +178,7 @@ export default{
 		},
 		getCollectcard(page){
 			Likemodel.getCollectcard(page,(data)=>{
-				this.vipcardList=this.storeList.concat(data)
+				this.vipcardList=this.vipcardList.concat(data)
 				console.log(this.vipcardList);
 			})
 		},
@@ -468,6 +468,7 @@ page{
 				display: flex;
 				align-items: center;
 				image{
+					margin-right: 10rpx;
 					width:25rpx;
 					height:23rpx;
 				}

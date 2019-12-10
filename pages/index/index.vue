@@ -69,19 +69,19 @@
 			</view>
 			<view class="content">
 				<view class="user">
-					<image src="/static/cut/alipay.png"></image>
+					<image :src="DynamicData.logoImg"></image>
 					<view class="info">
-						<view class="nickName">小唐二号</view>
-						<view class="time">今天15：42</view>
+						<view class="nickName">{{DynamicData.nickname}}</view>
+						<view class="time">{{DynamicData.createTime}}</view>
 					</view>
 				</view>
 				<view class="text">
 					非常好用非常喜欢简直太好了太棒了太妙了下次还要光顾这家。服务态度一级棒!!
 				</view>
 				<view class="imageGroup">
-					<image src="/static/cut/alipay.png"></image>
-					<image src="/static/cut/alipay.png"></image>
-					<image src="/static/cut/alipay.png"></image>
+					<image :src="DynamicData.pictureList[0]"></image>
+					<image :src="DynamicData.pictureList[1]"></image>
+					<image :src="DynamicData.pictureList[2]"></image>
 				</view>
 			</view>
 		</view>
@@ -135,8 +135,7 @@
 							</view>
 							<view class="main-parameter">
 								<view>
-									<text class="fh">￥</text>
-									<text class="price">{{item.price}}</text>
+									<text class="price">￥{{item.price}}</text>
 								</view>
 								<text class="volume">月销{{item.monthSale}}</text>
 								<text class="volume">免费配送</text>
@@ -196,7 +195,8 @@
 				Swiperlist:[],
 				Otherlistone:'',
 				Otherlisttwo:[{coverImg:""},{coverImg:""},{coverImg:""}],
-				Otherlistthree:[]
+				Otherlistthree:[],
+				DynamicData:''
 			}
 		},
 		computed:{
@@ -204,6 +204,22 @@
 		},
 		onLoad() {
 			let that = this
+			uni.request({
+				data:{
+					type:1,
+					isMeOrAll:2
+				},
+				url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+				method:'POST',
+				header: {
+					'content-type':'application/x-www-form-urlencoded', 
+				},
+				success: (res) => {
+					this.DynamicData = res.data.data.userDynamicList[0]
+					console.log(this.DynamicData)
+				}
+			})
+			
 			uni.getLocation({
 			    type: 'wgs84',
 			    success: function (res) {
@@ -456,6 +472,7 @@
 						background:rgba(255,102,0,1);
 					}
 					.word{
+						font-size:32rpx;
 						margin-left: 10rpx;
 					}
 				}
@@ -554,9 +571,9 @@
 			height: 90rpx;		
 			.mark{
 				width: 8rpx;
-				height: 30rpx;
+				height: 32rpx;
 				background-color: #FF6600;
-				margin-right: 30rpx;
+				margin-right: 10rpx;
 			}
 			text{
 				font-size:32rpx;

@@ -84,6 +84,16 @@ class IndexModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	getDynamicData(data,success){
+		let params = {
+			method:"POST",
+			url:"/app/tbUserDynamic/findUserDynamicList",
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 
 
 }
