@@ -5,29 +5,29 @@
 	  </view>
 	  <view class="login">
 		 	<view class="item">
-				<view class="iconfont icon-shouji"></view>
+				<image class="phoneImage" src="/static/cut/p.png"></image>
 				<input placeholder="请输入手机号" v-model="phoneNumber"/>
 			</view>	
 			<view class="item" v-if="switchShow">
-				<view class="iconfont icon-yanzhengma"></view>
-				<input placeholder="请输入验证码" v-model="verificationCode"/>
+				<image class="verImage" src="/static/cut/confirm.png"></image>
+				<input class="verInput" placeholder="请输入验证码" v-model="verificationCode"/>
 				<view v-if="sendAuthCode" class="verification-code"  @tap="getAuthCode">获取验证码</view>
 				<view v-if="!sendAuthCode">{{auth_time}}s</view>
 			</view>	
 			<view class="item" v-if="!switchShow">
-				<view class="iconfont icon-mima"></view>
+				<image src="/static/cut/lock.png" class="lockImage"></image>
 				<input placeholder="请输入密码" v-model="password"/>				
 			</view>
 			<view class="item">
-				<view class="iconfont icon-yaoqingma"></view>
+				<image class="codeImage" src="/static/cut/shorttext.png"></image>
 				<input placeholder="请输入邀请码(选填)" v-model="Invitation"/>
 			</view>	
 			<view class="agreement"> 新用户登录即注册，并代表已阅读并同意<text @click="screen('center')">《天天生活用户协议》</text></view>
 			<view class="theme-button" @tap="doLogin">登录</view>
 			<view class="problem"><view @tap="switchLogin">{{switchText}}</view><view @tap="Goproblems">遇到问题</view></view>
 			<view class="logontype">
-				<image src="../../static/cut/wx.png" mode=""></image>
-				<image src="../../static/temp/share_qq.png" mode=""></image>
+				<image src="/static/cut/qqcircle.png" mode=""></image>
+				<image src="/static/cut/wxcircle.png" mode=""></image>
 			</view>
 	  </view>
 	 <uni-popup ref="popup" :type="type">
@@ -238,6 +238,29 @@ export default {
 			.iconfont{
 				margin:0 10rpx 0 5rpx;
 			}
+			.phoneImage{
+				margin-right: 20rpx;
+				width:26rpx;
+				height:34rpx;
+			}
+			.verImage{
+				margin-right: 20rpx;
+				width:26rpx;
+				height:30rpx;
+			}
+			.lockImage{
+				margin-right: 20rpx;
+				width:26rpx;
+				height:31rpx;
+			}
+			.codeImage{
+				margin-right: 20rpx;
+				width:26rpx;
+				height:27rpx;
+			}
+			.verInput{
+				width:400rpx;
+			}
 			.verification-code{
 				font-size:28rpx;
 				color:$theme-text-color;
@@ -255,6 +278,7 @@ export default {
 			line-height: 80rpx;
 			margin-top: 60rpx;
 		}
+		
 		.problem{
 			display: flex;
 			justify-content: space-between;

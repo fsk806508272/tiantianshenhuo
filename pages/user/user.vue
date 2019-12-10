@@ -59,7 +59,7 @@
 						</view>
 						<view class="rt">
 							<text>查看全部订单</text>
-							<text class="iconfont icon-xiaojiantou"></text>
+							<image src="/static/cut/grayright.png"></image>
 						</view>
 					</view>
 					<view class="lower">
@@ -80,7 +80,7 @@
 							<view class="title">已完成</view>
 						</view>
 						<view class="orderType" @tap="toSellerOrder(4)">
-							<image src="/static/cut/user/backdealorder.png"></image>
+							<image class="backImage" src="/static/cut/user/backdealorder.png"></image>
 							<view class="title">退款中</view>
 						</view>
 					</view>
@@ -96,7 +96,7 @@
 						</view>
 						<view class="rt">
 							<text class="gray">查看明细</text>
-							<text class="iconfont icon-xiaojiantou"></text>
+							<image src="/static/cut/grayright.png"></image>
 						</view>
 					</view>
 					<view class="lower">
@@ -527,7 +527,7 @@ export default{
 		}
 		.my-message{
 			height:88rpx;
-			margin:47rpx 50rpx 47rpx;
+			margin:47rpx 50rpx 40rpx;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
@@ -586,7 +586,7 @@ export default{
 					
 				}
 				view{
-					margin:20rpx 0;
+					margin:10rpx 0;
 				}
 			}
 		}
@@ -614,6 +614,13 @@ export default{
 						font-weight:500;
 					}
 				}
+				.rt{
+					image{
+						margin-left: 10rpx;
+						width:10rpx;
+						height:20rpx;
+					}
+				}
 			}
 			.lower{
 				display: flex;
@@ -627,8 +634,12 @@ export default{
 						width:42rpx;
 						height:48rpx;
 					}
+					.backImage{
+						width:52rpx;
+						height:47rpx;
+					}
 					.title{
-						margin-top: 18rpx;
+						margin-top: 8rpx;
 						color:#3B3C3C;
 					}
 				}
@@ -652,6 +663,11 @@ export default{
 			background-color: #fff;
 			padding:0 30rpx;
 			.upper{
+				image{
+					margin-left: 10rpx;
+					width:10rpx;
+					height:20rpx;
+				}
 				height:72rpx;
 				display: flex;
 				align-items: center;
@@ -675,6 +691,7 @@ export default{
 				}
 				.rt{
 					display: flex;
+
 					.button{
 						display: flex;
 						align-items: center;
