@@ -3,8 +3,8 @@
 		<view class="navbar">
 			<view class="top">
 				<image class="back" @tap="toIndex" src="/static/cut/lifecircle/backto-white.png"></image>
-				<view class="title">生活圈</view>
-				<image @tap="toPublish" class="camera" src="/static/cut/lifecircle/camera-white.png"></image>
+				<view class="title">个人主页</view>
+				<!-- <image @tap="toPublish" class="camera" src="/static/cut/lifecircle/camera-white.png"></image> -->
 			</view>
 			
 			<view v-if="this.type==0" class="down">
@@ -315,12 +315,13 @@
 			height:88rpx;
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
+			// justify-content: space-between;
 			.back{
 				width:21rpx;
 				height:36rpx;
 			}
 			.title{
+				margin-left: 260rpx;
 				font-size:36rpx;
 				font-weight:500;
 				color:#fff;
@@ -362,15 +363,18 @@
 		}
 		.storeInfo{
 			width:440rpx;
+			height:100rpx;
 			margin-left: 20rpx;
 			.title{
 				font-size:28rpx;
 				color:#1E1E1E;
 			}
 			.score{
+				margin-top: 20rpx;
 				font-size:24rpx;
 				color:#646464;
 				image{
+					margin-right: 10rpx;
 					width:25rpx;
 					height:23rpx;
 				}

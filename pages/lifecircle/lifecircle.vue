@@ -82,7 +82,9 @@
 		},
 		filters:{
 			timeDeal(value){
-				let day = new Date(value).getTime()
+				let time = value.replace(/-/g,':').replace(' ',':')
+				time = time.split(':')
+				let day = new Date(time[0],(time[1]-1),time[2],time[3],time[4],time[5]).getTime()
 				let today = new Date().getTime()
 				let total = (today-day)/1000
 				let days = parseInt(total/(24*60*60))
