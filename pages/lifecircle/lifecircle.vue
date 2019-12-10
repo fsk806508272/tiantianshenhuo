@@ -25,14 +25,14 @@
 					<image @tap.stop="toOtherPage(item)" :src='item.logoImg'></image>
 					<view class="info">
 						<view class='nickName'>{{item.nickname}}</view>
-						<view class="gray">{{item.createTime}}</view>
+						<view class="gray">{{item.createTime|timeDeal}}</view>
 					</view>
 				</view>
 				<view class="content">{{item.dynamicContent}}</view>
 				
 				<view class="one" v-if="item.pictureList.length==1">
 					<block v-for="(img,number) in item.pictureList" :key="number">
-						<image mode="aspectFit" @tap.stop="preview(item.pictureList,number)" :src="img"></image>
+						<image mode="widthFix" @tap.stop="preview(item.pictureList,number)" :src="img"></image>
 					</block>
 				</view>
 				<view class="two" v-if="item.pictureList.length==2">
@@ -79,6 +79,22 @@
 	export default {
 		components:{
 			uniLoadMore
+		},
+		filters:{
+			timeDeal(value){
+				let day = new Date(value).getTime()
+				let today = new Date().getTime()
+				let total = (today-day)/1000
+				let days = parseInt(total/(24*60*60))
+				if(days==0){
+					return '今天 ' +  value.substring(11,16)
+				}else if(days==1){
+					return '昨天 ' +  value.substring(11,16)
+				}else{
+					return days + '天前'
+				}
+				
+			}
 		},
 		data() {
 			return {

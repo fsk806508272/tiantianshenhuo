@@ -11,7 +11,7 @@
 			<view class="content">{{item.dynamicContent}}</view>
 			
 			<view class="one" v-if="item.pictureList.length==1">
-				<image :src="item.dynamicPicture"></image>
+				<image mode="widthFix" :src="item.dynamicPicture"></image>
 			</view>
 			<view class="two" v-if="item.pictureList.length==2">
 				<block v-for="(img,number) in item.pictureList" :key="number">
