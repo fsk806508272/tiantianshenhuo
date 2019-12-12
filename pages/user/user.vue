@@ -45,7 +45,7 @@
 					</view>
 					<view class="item">
 						<text>45</text>
-						<view>信用积分</view>
+						<view>我的积分</view>
 					</view>
 					<view class="item" @tap="toMyRecord">
 						<text>0</text>
@@ -91,6 +91,7 @@
 				<view class="wallet-box">
 					<view class="upper" @tap="toMyWallet()">
 						<view class="lf">
+							<image class="walletImg" src="/static/cut/discenter_icon2.png"></image>
 							<text class="my-wallet">我的钱包</text>
 						</view>
 						<view class="rt">
@@ -162,12 +163,6 @@
 								<image src="../../static/cut/ionc-f.png" mode="widthFix"></image>
 							</view>
 							<text>我的收藏</text>
-						</view>
-						<view class="item">
-							<view class='icon'>
-								<image src="../../static/cut/ionc-e.png" mode="widthFix"></image>
-							</view>
-							<text>发布记录</text>
 						</view>
 						<view class="item" @tap="toMyCoupon()">
 							<view class='icon'>
@@ -662,6 +657,20 @@ export default{
 			background-color: #fff;
 			padding:0 30rpx;
 			.upper{
+				.lf{
+					display: flex;
+					align-items: center;
+					.walletImg{
+						margin-right: 10rpx;
+						width:28rpx;
+						height: 28rpx;
+					}
+					text{
+						color:#3C3C3C;
+						margin-right: 10rpx;
+						font-weight:500;
+					}
+				}
 				image{
 					margin-left: 10rpx;
 					width:10rpx;

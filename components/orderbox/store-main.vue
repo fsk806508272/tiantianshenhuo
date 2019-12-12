@@ -7,8 +7,8 @@
 				<view class="price">{{price}}</view>
 			</view>
 			<view class="detail">
-				<view class="gray">{{specsize}}</view>
-				<view class="gray">{{spec}}</view>
+				<view class="gray spec">{{specsize}}</view>
+				<view class="gray spec">{{spec}}</view>
 			</view>
 			<slot />
 		</view>
@@ -69,6 +69,21 @@ export default {
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-start;
+			.spec{
+				margin-top: 10rpx;
+				font-size:24rpx;
+			}
+			.title{
+				width:420rpx;
+				font-size:28rpx;
+				overflow : hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				word-wrap: break-word;
+				word-break: break-all;
+			}
 		}	
 	}
 }

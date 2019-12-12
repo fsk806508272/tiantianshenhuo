@@ -27,10 +27,10 @@
 		</view>
 		
 		
-		<view v-if="avalible==0" class="aval"><view>可用余额{{change.toFixed(2)}}元</view></view>
+		<view v-if="avalible==0" class="aval"><view>可用余额{{change}}元</view></view>
 		<view v-if="avalible==1" class="alert"><view>金额已超过可提现金额</view></view>
 		
-		<view class="submit-button" @tap="withdraw()" :class="{'imColor':avalible}">预计两小时到账，确认提现</view>
+		<view class="submit-button" @tap="withdraw()" :class="{'imColor':avalible}">确认提现</view>
 	</view>
 </template>
 

@@ -25,7 +25,7 @@
 		<view class="time">
 			<view class="gray">{{row.createTime}}</view>
 			<view v-if="button==1" class="gray">来自用户{{row.user}}的评价</view>
-			<view v-if="button==0" class="grayButton" @tap="deleteComment">删除评价</view>
+			<view v-if="button==0" class="deleteButton" @tap="deleteComment">删除评价</view>
 		</view>
 	</view>
 </template>
@@ -95,5 +95,17 @@
 		align-items: center;
 		justify-content: space-between
 	}
+}
+
+.deleteButton{
+	width:160rpx;
+	height:60rpx;
+	background:rgba(255,255,255,1);
+	border:1rpx solid rgba(200,200,200,1);
+	border-radius:10rpx;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color:#787878;
 }
 </style>

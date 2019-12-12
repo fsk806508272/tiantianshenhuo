@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<block v-if="commentList.length!=0">
+		<block v-if="commentList.goodCommentList.length!=0">
 			<block v-for="(item,index) in commentList.goodCommentList" :key="index">
 				<comment-box :row="item" :margin="true" :button="false" v-on:delete="deleteUserComment(item)">
 					<view class="commentInfo">
@@ -13,8 +13,9 @@
 				</comment-box>
 			</block>
 		</block>
-		<block v-if="commentList.length==0">
+		<block v-else>
 			<image class="image" src="/static/cut/no_user_comment.png"></image>
+			<view class="nocomment">暂无评价记录</view>
 		</block>
 	</view>
 </template>
@@ -43,10 +44,18 @@ export default{
 	},
 	methods:{
 		deleteUserComment(item){
-			usermodel.deleteUserComment({commentIds:item.commentId},(data)=>{
-				usermodel.getUserComment((data)=>{
-					this.commentList = data
-				})
+			uni.showModal({
+				title: "提示",
+				content: "确定删除评论？",
+				success: (res) => {
+					if(res.confirm){
+						usermodel.deleteUserComment({commentIds:item.commentId},(data)=>{
+							usermodel.getUserComment((data)=>{
+								this.commentList = data
+							})
+						})
+					}
+				}
 			})
 		}
 	}
@@ -62,6 +71,11 @@ page{
 	margin-left: 174rpx;
 	width:402rpx;
 	height:389rpx;
+}
+.nocomment{
+	color:#505050;
+	margin-top: 40rpx;
+	margin-left: 292rpx;
 }
 
 .commentInfo{
@@ -79,7 +93,13 @@ page{
 		flex-direction: column;
 		justify-content: space-around;
 		.title{
-			
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-line-clamp:1;
+			-webkit-box-orient:vertical;
+			overflow: hidden;
+			word-wrap: break-word;
+			word-break: break-all;
 		}
 		.price{
 			

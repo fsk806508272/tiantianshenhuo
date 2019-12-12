@@ -1,6 +1,6 @@
 <template name="storeTime">
 	<view class="time">
-		<view class="payTime gray">{{time}}</view>
+		<view class="payTime gray">{{time|timeDeal}}</view>
 		<view class="buttons">
 			<block v-if="type=='unpaid'"><view class="default" @tap.stop="cancelOrder">取消订单</view><view class="pay" @tap.stop="toPayment">去付款</view></block>
 			<block v-if="type=='unreceived'"><view class="default" @tap.stop="drawback">退款</view></block>
@@ -23,6 +23,11 @@
 
 <script>
 export default {
+	filters:{
+		timeDeal(value){
+			return value.substring(5,16)
+		}
+	},
 	name:'storeTime',
 	props:{
 		time:{
@@ -74,6 +79,9 @@ export default {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	.payTime{
+		font-size:26rpx;
+	}
 	.buttons{
 		display: flex;
 		view{

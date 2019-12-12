@@ -73,7 +73,7 @@ export default {
 			height:23rpx;
 		}
 		.storetitle{
-			font-size: 24rpx;
+			font-size: 26rpx;
 			margin-left: 10rpx;
 		}
 		.arrow{
@@ -83,7 +83,7 @@ export default {
 		}
 	}
 	.status{
-		font-size:22rpx;
+		font-size:26rpx;
 		color:#FF6600;
 	}
 }

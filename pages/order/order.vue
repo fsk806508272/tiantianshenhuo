@@ -844,13 +844,13 @@ page{
 						padding-left:20rpx;
 						padding-right:20rpx;
 						.title{
-							font-size:24rpx;
+							font-size:26rpx;
 							font-family:Source Han Sans CN;
 							font-weight:400;
 							color:rgba(60,60,60,1);
 						}
 						.spec{
-							font-size:20rpx;
+							font-size:24rpx;
 							font-family:Source Han Sans CN;
 							font-weight:400;
 							color:rgba(160,160,160,1);
@@ -861,7 +861,7 @@ page{
 							display: flex;
 							justify-content: space-between;
 							.price{
-								font-size:24rpx;
+								font-size:26rpx;
 								font-family:Source Han Sans CN;
 								font-weight:400;
 								color:rgba(255,102,0,1);
