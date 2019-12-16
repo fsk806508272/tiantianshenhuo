@@ -97,12 +97,9 @@
 			}
 		},
 		onLoad(options){
-			console.log(options)
 			this.type = options.type
 			this.token = options.token
 			this.item = JSON.parse(options.item)
-			console.log(this.item)
-			
 			this.getList()
 		},
 		methods:{
@@ -272,14 +269,17 @@
 				})
 			},
 			toStore(){
-				// console.log(this.storeInfo.sellerId,(parseInt(this.type)+1).toString(),this.storeInfo.firstTypeId)
-				// console.log(typeof(parseInt(this.type)  + 1).toString())
-				// console.log(let num = this.type==0?'1':'2')
 				if (window.android) {
 					let num = this.type==0?'1':'2'
-					
-					
 					window.android.toShop(this.storeInfo.sellerId,num,this.storeInfo.firstTypeId);
+				}else if(window.webkit){
+					// window.webkit.messageHandlers.getMyStore.postMessage(this.sellerId)
+					if(this.type==0){
+						window.webkit.messageHandlers.getMyStore.postMessage(this.sellerId)
+					}else{
+						window.webkit.messageHandlers.getOtherStore.postMessage(this.sellerId)
+					}
+					
 				}else{
 					console.log(this.storeInfo)
 					if(this.type==0){

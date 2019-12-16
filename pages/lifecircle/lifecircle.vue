@@ -11,7 +11,6 @@
 				<image :src="userIcon"></image>
 				<view>{{userName}}</view>
 			</view>
-			
 		</view>
 		
 		<view :class="scrollTop>200?'fix':''" class="tabbar">
@@ -88,6 +87,7 @@
 				let today = new Date().getTime()
 				let total = (today-day)/1000
 				let days = parseInt(total/(24*60*60))
+				console.log(day,today,total,days)
 				if(days==0){
 					return '今天 ' +  value.substring(11,16)
 				}else if(days==1){
@@ -135,8 +135,7 @@
 					})
 					return
 				}
-				
-				console.log(this.token)
+			
 				let that = this
 				if(index==0){
 					item.isGiveTheThumbsUp = 1
@@ -180,6 +179,12 @@
 					const android = window.android
 					if (window.android) {
 						window.android.toLogin();
+					}else{
+						uni.showToast({
+							duration:1500,
+							title:'请先登录',
+							icon:'none'
+						})
 					}
 				}else{
 					uni.navigateTo({
@@ -195,8 +200,11 @@
 				this.requestData()
 			},
 			toIndex(){
+				
 				if (window.android) {
-					window.android.finish();
+					window.android.finish()
+				}else if(window.webkit){
+					window.webkit.messageHandlers.getBack.postMessage(0)
 				} else {
 					uni.navigateBack({
 						delta:1
@@ -267,6 +275,7 @@
 					let data = {}
 					data.logoImg = this.userIcon
 					data.nickname=this.userName
+					console.log(JSON.stringify(data))
 					uni.navigateTo({
 						url:'personalIndex?type=0&token=' + this.token + '&item=' + JSON.stringify(data)
 					})

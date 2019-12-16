@@ -2,7 +2,7 @@
 	<view>
 		<view class="topContainer">
 			<view class="title">当前积分总数量</view>
-			<view class="point">{{myScore}}</view>
+			<view class="point">{{uerInfo.store}}</view>
 			<view class="button" @tap="showPop()">兑换成余额</view>
 		</view>
 		
@@ -65,7 +65,7 @@
 			}
 		},
 		computed: {
-			...mapState(['myScore'])
+			...mapState(['myScore','uerInfo'])
 		},  
 		onLoad() {
 			usermodel.getStoreflow(1,(data)=>{
