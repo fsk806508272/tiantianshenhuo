@@ -1,8 +1,5 @@
 <template>
 	<view>
-		<!-- <view class="status_bar">  
-		    <view class="top_view"></view>  
-		</view> -->
 		<view class="top_fixed">
 			<view @tap="toSelectFixed()">
 				<image src="/static/cut/fixed_icon.png" mode=""></image>
@@ -12,9 +9,6 @@
 		</view>
 		<!-- 顶部导航 -->
 		<view class="top">
-			<!-- <view class="top-Location" @click="showMulLinkageThreePicker">
-				<text>{{pickerText}}</text><image class="drop-down" src="/static/cut/drop-down.png" mode=""></image>
-			</view> -->
 			<view class="top-search" @click="clicksearch(8)">
 				<view>
 					<image class="lf" src="../../static/cut/ss.png" mode=""></image>
@@ -69,16 +63,16 @@
 			</view>
 			<view class="content">
 				<view class="user">
-					<image :src="DynamicData.logoImg"></image>
+					<image @tap.stop="toDynamicUser" :src="DynamicData.logoImg"></image>
 					<view class="info">
 						<view class="nickName">{{DynamicData.nickname}}</view>
 						<view class="time">{{DynamicData.createTime}}</view>
 					</view>
 				</view>
-				<view class="text">
-					非常好用非常喜欢简直太好了太棒了太妙了下次还要光顾这家。服务态度一级棒!!
+				<view @tap="toDynamicDetail" class="text">
+					{{DynamicData.dynamicContent}}
 				</view>
-				<view class="imageGroup">
+				<view @tap="toDynamicDetail" class="imageGroup">
 					<image :src="DynamicData.pictureList[0]"></image>
 					<image :src="DynamicData.pictureList[1]"></image>
 					<image :src="DynamicData.pictureList[2]"></image>
@@ -256,6 +250,33 @@
 			toSelectFixed(){
 				uni.navigateTo({
 					url: '/pages/index/fixed/select_fixed'
+				})
+			},
+			toDynamicUser(){
+				console.log(this.uerInfo)
+				console.log(this.DynamicData)
+				let token = ''
+				if(this.hasLogin){
+					token = this.uerInfo.token
+				}
+				let type = 1
+				if(this.DynamicData.userId==this.uerInfo.appuserId){
+					type = 0
+				}
+				uni.navigateTo({
+					
+					//status为0表示进入个人主页的入口是app首页
+					url:`/pages/lifecircle/personalIndex?type=${type}&token=${token}&item=${JSON.stringify(this.DynamicData)}&status=0`
+				})
+			},
+			toDynamicDetail(){
+				let token = ''
+				if(this.hasLogin){
+					token = this.uerInfo.token
+				}
+				console.log(this.DynamicData.id,token)
+				uni.navigateTo({
+					url:`/pages/lifecircle/detail?token=${token}&id=${this.DynamicData.id}&status=0`
 				})
 			},
 			toMessage(){

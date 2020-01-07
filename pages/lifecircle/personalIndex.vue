@@ -77,10 +77,8 @@
 						<view>{{item.commentNumber}}</view>
 					</view>
 				</view>
-				
 			</view>
-		</block>
-		
+		</block>		
 	</view>
 </template>
 
@@ -93,10 +91,12 @@
 				storeInfo:'',
 				item:'',
 				token:'',
-				sellerId:''
+				sellerId:'',
+				status:''
 			}
 		},
 		onLoad(options){
+			this.status = options.status
 			this.type = options.type
 			this.token = options.token
 			this.item = JSON.parse(options.item)
@@ -117,7 +117,6 @@
 							token:that.token
 						},
 						success(res){
-							console.log(res)
 							that.data = res.data.data.userDynamicList
 							that.sellerId = that.data[0].sellerId
 							console.log(that.sellerId)
@@ -133,7 +132,6 @@
 									token:that.token
 								},
 								success(res){
-									console.log(res)
 									that.storeInfo = res.data.data
 								}
 							})
@@ -182,9 +180,16 @@
 				}
 			},
 			toIndex(){
-				uni.navigateBack({
-					delta: 1
-				})
+				if(this.status==0){
+					uni.navigateTo({
+						url:'/pages/lifecircle/lifecircle?token=' + this.token
+					})
+				}else{
+					uni.navigateBack({
+						delta: 1
+					})
+				}
+				
 			},
 			preview(list,number){
 				uni.previewImage({

@@ -2,13 +2,14 @@
 	<view class="upload_img_box">
 		<image @tap="selectPhoto" class="add_img" src="/static/cut/upload_photo.png" mode="widthFix"></image>
 		<view class="image_item" @tap="previewImage(index)" v-for="(item,index) in photos" :key="index">
-			<image class="img" :src="item" mode="aspectFill"></image>
+			<image class="img" :src="item" mode="aspectFill" id="img"></image>
 			<view class="del_icon" @tap.stop="deletePhoto(index)"><image src="/static/cut/delete.png" mode="widthFix"></image></view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {EXIF} from 'exif-js/exif.js'
 	export default{
 		name: 'publishImage',
 		data(){
@@ -32,82 +33,72 @@
 					success: function (res) {
 						for(let i in res.tempFilePaths){
 							uni.getImageInfo({
-							src:res.tempFilePaths[i],
-							success(res) {
-								console.log('压缩前', res)
-								let canvasWidth = res.width //图片原始长宽
-								let canvasHeight = res.height
-								let actualWidth = ''
-								let actualHeight =''
-								if(canvasWidth>0&&canvasWidth<500){
-									actualHeight = canvasHeight
-									actualWidth = canvasWidth
-								}else if(canvasWidth>500&&canvasWidth<1000){
-									actualHeight = canvasHeight / 2 
-									actualWidth = canvasWidth / 2 
-								}else if(canvasWidth>1000&&canvasWidth<2000){
-									actualHeight = canvasHeight / 4
-									actualWidth = canvasWidth / 4
-								}else if(canvasWidth>2000&&canvasWidth<3000){
-									actualHeight = canvasHeight / 6
-									actualWidth = canvasWidth / 6
-								}else{
-									actualHeight = canvasHeight / 10
-									actualWidth = canvasWidth / 10
-								}
-								let img = new Image()
-								img.src = res.path
-								let canvas = document.createElement('canvas');
-								let ctx = canvas.getContext('2d')
-								canvas.width = actualWidth
-								canvas.height = actualHeight
-								ctx.drawImage(img, 0, 0, actualWidth, actualHeight)
-								console.log('画布大小：',actualHeight,actualWidth)
-								canvas.toBlob(function(fileSrc) {
-									let imgSrc = window.URL.createObjectURL(fileSrc)
-									console.log('压缩后', imgSrc)
-									uni.uploadFile({
-										url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
-										filePath: imgSrc,
-										name: 'img',
-										success: (uploadFileRes) => {
-											var data = JSON.parse(uploadFileRes.data);
-											if(data.resultCode == 1){
-												if(that.photos.length >= 9){
+								src:res.tempFilePaths[i],
+								success(res) {
+									console.log('压缩前', res)
+									
+									let canvasWidth = res.width //图片原始长宽
+									let canvasHeight = res.height
+									let actualWidth = ''
+									let actualHeight =''
+									if(canvasWidth>0&&canvasWidth<=500){
+										actualHeight = canvasHeight
+										actualWidth = canvasWidth
+									}else if(canvasWidth>500&&canvasWidth<=1000){
+										actualHeight = canvasHeight / 2 
+										actualWidth = canvasWidth / 2 
+									}else if(canvasWidth>1000&&canvasWidth<=2000){
+										actualHeight = canvasHeight / 4
+										actualWidth = canvasWidth / 4
+									}else if(canvasWidth>2000&&canvasWidth<=3000){
+										actualHeight = canvasHeight / 6
+										actualWidth = canvasWidth / 6
+									}else{
+										actualHeight = canvasHeight / 10
+										actualWidth = canvasWidth / 10
+									}
+									let img = new Image()
+									img.src = res.path
+									let canvas = document.createElement('canvas');
+									let ctx = canvas.getContext('2d')
+									canvas.width = actualWidth
+									canvas.height = actualHeight
+									ctx.drawImage(img, 0, 0, actualWidth, actualHeight)
+									console.log('画布大小：',actualHeight,actualWidth)
+									canvas.toBlob(function(fileSrc) {
+										let imgSrc = window.URL.createObjectURL(fileSrc)
+										console.log('压缩后', imgSrc)
+										uni.uploadFile({
+											url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
+											filePath: imgSrc,
+											name: 'img',
+											success: (uploadFileRes) => {
+												var data = JSON.parse(uploadFileRes.data);
+												if(data.resultCode == 1){
+													if(that.photos.length >= 9){
+														uni.showToast({
+															title: "最多发布9张图片",
+															icon: 'none'
+														})
+														return false;
+													}
+													var url = data.data;
+													that.photos.push(url)
+
+												}else{
 													uni.showToast({
-														title: "最多发布9张图片",
-														icon: 'none'
+														title:data.message,
+														icon:'none',
 													})
-													return false;
 												}
-												var url = data.data;
-												that.photos.push(url);
-												
-												console.log(that.photos);
-											}else{
-												uni.showToast({
-													title:data.message,
-													icon:'none',
-												});
 											}
-										}
-									});
-								})
-							}
-						})
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
+										})
+									})
+								}
+							})
 						}
 						that.$emit("changes",that.photos)
+						
 					},
 					fail: (res) => {
 						uni.showToast({
@@ -115,7 +106,7 @@
 							icon:'none',
 						});
 					}
-				});
+				})
 			},
 			// 删除图片
 			deletePhoto(e){

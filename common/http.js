@@ -37,7 +37,9 @@ class HTTP {
 		
         if (startChar == 1) {
           params.success && params.success(res.data);
-        } else {
+        }else if(startChar == 1000){
+			store.commit('logout')
+		}else {
 			uni.showToast({
 				title:res.message,
 				icon:'none'

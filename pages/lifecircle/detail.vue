@@ -1,7 +1,11 @@
 <template>
 	<view :class="isShowDC?'paddingView':''" @tap="isShowDC=false">
+		<view class="back">
+			<image @tap="toBack" src="/static/cut/leftIcon.png"></image>
+			<view>详情</view>
+		</view>
 		<view class="box">
-			<view class="user">
+			<view class="user" @tap="toUser">
 				<image :src='item.logoImg'></image>
 				<view class="info">
 					<view class='nickName'>{{item.nickname}}</view>
@@ -49,7 +53,7 @@
 		<view class="commentList" v-if="item.userDynamicCommentViewList.length>0">
 			<block v-for="(data,index) in item.userDynamicCommentViewList" :key="index">
 				<view class="top">
-					<view class="lf">
+					<view @tap="toUserPage(data)" class="lf">
 						<image :src="data.logoImg"></image>
 						<view class="info">
 							<view class="name">{{data.nickname}}</view>
@@ -72,7 +76,7 @@
 			</block>
 		</view>
 		
-		<view class="toComment" v-if="showInput">
+		<view :class="isIOS?'ios':''" class="toComment" v-if="showInput">
 			<input v-model="comment" :placeholder="placeholder" :focus="focus" />
 			<view @tap="send">发送</view>
 		</view>
@@ -85,6 +89,7 @@
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default{
 		data(){
 			return{
@@ -100,10 +105,29 @@
 				replyData:'',
 				replyItemData:'',
 				itemId:'',
-				isShowDC:false
+				isShowDC:false,
+				status:'',
+				isIOS:false
 			}
 		},
+		computed:{
+			...mapState(['hasLogin','lat','lon','uerInfo'])
+		},
 		methods: {
+			toBack(){
+				if(this.status==0){
+					uni.navigateTo({
+						url:'/pages/lifecircle/lifecircle?token=' + this.token
+					})
+				}else{
+					uni.navigateBack({
+						delta:1
+					})
+				}
+				uni.navigateBack({
+					delta:1
+				})
+			},
 			queryDetail() {
 				
 				let that = this
@@ -181,6 +205,46 @@
 					}
 				})
 			},
+			toUser(){
+				console.log(this.item)
+				let that = this
+				if(this.item.userId==this.uerInfo.appuserId){
+					let data = {}
+					data.logoImg = that.item.logoImg
+					data.nickname=that.item.nickname
+					uni.navigateTo({
+						url:'personalIndex?type=0&token=' + that.token + '&item=' + JSON.stringify(data)
+					})
+				}else{
+					let data = {}
+					data.logoImg = that.item.logoImg
+					data.nickname=that.item.nickname
+					data.userId = that.item.userId
+					uni.navigateTo({
+						url:'personalIndex?type=1&item=' + JSON.stringify(data) + '&token=' + that.token
+					})
+				}
+			},
+			toUserPage(data){
+				let that = this
+				if(data.userId==this.uerInfo.appuserId){
+					let info = {}
+					info.logoImg = data.logoImg
+					info.nickname= data.nickname
+					uni.navigateTo({
+						url:'personalIndex?type=0&token=' + that.token + '&item=' + JSON.stringify(info)
+					})
+				}else{
+					let info = {}
+					info.logoImg = data.logoImg
+					info.nickname = data.nickname
+					info.userId = data.userId
+					console.log(info)
+					uni.navigateTo({
+						url:'personalIndex?type=1&item=' + JSON.stringify(info) + '&token=' + that.token
+					})
+				}
+			},
 			focusButn(){
 				this.placeholder = '点击输入评论'
 				this.showInput = true
@@ -236,9 +300,13 @@
 		},
 		
 		onLoad(options){
+			this.status = options.status
 			this.id = options.id
 			this.token = options.token
 			this.queryDetail()
+			if(window.webkit){
+				this.isIOS = true
+			}
 		},
 	}
 </script>
@@ -336,6 +404,9 @@
 		align-items: center;
 		position: fixed;
 		bottom: 0;
+		&.ios{
+			bottom:40rpx;
+		}
 		input{
 			width:580rpx;
 			background-color:#fff;
@@ -435,4 +506,20 @@
 	// .paddingView{
 	// 	padding-bottom: 180rpx;
 	// }
+	
+	.back{
+		height:88rpx;
+		background-color: #fff;
+		display: flex;
+		align-items: center;
+		padding:0 20rpx;
+		image{
+			width:20rpx;
+			height:34rpx;
+		}
+		view{
+			font-size:36rpx;
+			margin-left: 299rpx;
+		}
+	}
 </style>

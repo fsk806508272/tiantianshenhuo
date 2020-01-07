@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import store from './store'
+import BaiduMap from 'vue-baidu-map'
 Vue.config.productionTip = false
 
 App.mpType = 'app'
@@ -42,7 +43,10 @@ const msg = (title, duration=1500, mask=false, icon='none')=>{
     })
   }
 
-
+Vue.use(BaiduMap, {
+  // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
+  ak: 'q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey'
+})
 
 
 Vue.prototype.$api = {msg,tip};

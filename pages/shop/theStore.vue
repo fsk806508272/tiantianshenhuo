@@ -248,7 +248,6 @@
 						this.getElementTop();	
 					});
 				})
-				
 			},
 			/* 获取元素顶部信息 */
 			getElementTop(){

@@ -14,8 +14,8 @@
 		</view>
 		
 		<view :class="scrollTop>200?'fix':''" class="tabbar">
-			<view @tap="clickTab(0)" class="tab" :class="tabIndex==0?'light':''">最新动态</view>
-			<view @tap="clickTab(1)" class="tab" :class="tabIndex==1?'light':''">热门动态</view>
+			<view @tap="clickTab(0)" class="tab" :class="tabIndex==0?'light':''">热门动态</view>
+			<view @tap="clickTab(1)" class="tab" :class="tabIndex==1?'light':''">最新动态</view>
 		</view>
 		
 		<block v-for="(item,index) in data" :key="index">
@@ -81,13 +81,19 @@
 		},
 		filters:{
 			timeDeal(value){
-				let time = value.replace(/-/g,':').replace(' ',':')
-				time = time.split(':')
-				let day = new Date(time[0],(time[1]-1),time[2],time[3],time[4],time[5]).getTime()
-				let today = new Date().getTime()
-				let total = (today-day)/1000
-				let days = parseInt(total/(24*60*60))
-				console.log(day,today,total,days)
+				console.log(value)
+				let date = value.toString()
+				let year = value.substring(0,4)
+				let month = value.substring(5,7)
+				let day = date.substring(8,10)
+				let time = new Date(year + '/' + month + '/' + day)
+				let today = new Date()
+				let y = today.getFullYear()
+				let m = today.getMonth() + 1
+				let d = today.getDate()
+				let time2 = new Date(y + '/' + m + '/' + d)
+				console.log(time2,time)
+				let days = parseInt(time2-time)/1000/3600/24
 				if(days==0){
 					return '今天 ' +  value.substring(11,16)
 				}else if(days==1){
@@ -95,7 +101,6 @@
 				}else{
 					return days + '天前'
 				}
-				
 			}
 		},
 		data() {
@@ -113,6 +118,9 @@
 		},
 		onLoad(options){
 			this.token = options.token
+		},
+		onShow() {
+			console.log(111)
 			this.getUserInfo()
 			this.requestData()
 		},
@@ -206,8 +214,8 @@
 				}else if(window.webkit){
 					window.webkit.messageHandlers.getBack.postMessage(0)
 				} else {
-					uni.navigateBack({
-						delta:1
+					uni.switchTab({
+						url:'/pages/index/index'
 					})
 				}
 				
@@ -246,7 +254,7 @@
 			},
 			requestData(){
 				let req = {}
-				if(this.tabIndex==1){
+				if(this.tabIndex==0){
 					req.type = 2
 				}
 				req.pageNo = this.pageNo
@@ -263,7 +271,11 @@
 					},
 					success(res){
 						if(res.data.data.userDynamicList.length>0){
-							that.data = that.data.concat(res.data.data.userDynamicList)
+							if(req.pageNo == 1){
+								that.data = res.data.data.userDynamicList
+							}else{
+								that.data = that.data.concat(res.data.data.userDynamicList)
+							}
 						}else{
 							that.status = "nomore"
 						}

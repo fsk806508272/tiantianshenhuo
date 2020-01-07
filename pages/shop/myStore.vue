@@ -218,53 +218,53 @@
 				
 			},
 			okStartPopup(e){
-					   let now = new Date();
-					   var selectDate = new Date();
-					   selectDate.setFullYear(this.year);
-					   selectDate.setMonth(this.month - 1);
-					   selectDate.setDate(this.day);
-					   if(selectDate.toDateString() != now.toDateString()){
-						   this.$api.msg("起始时间必须是今天");
-						   return;
-					   }
-					   this.dateStart = this.year+'-'+this.month+'-'+this.day
-					   this.startDay = this.day
-					   this.is_select_start = 1
+				let now = new Date();
+				var selectDate = new Date();
+				selectDate.setFullYear(this.year);
+				selectDate.setMonth(this.month - 1);
+				selectDate.setDate(this.day);
+				if(selectDate.toDateString() != now.toDateString()){
+				   this.$api.msg("起始时间必须是今天");
+				   return;
+				}
+				this.dateStart = this.year+'-'+this.month+'-'+this.day
+				this.startDay = this.day
+				this.is_select_start = 1
 			},
 			okEndPopup(e){
-					   let now = new Date();
-					   var selectDate = new Date();
-					   selectDate.setFullYear(this.year);
-					   selectDate.setMonth(this.month - 1);
-					   selectDate.setDate(this.day);
-					   
-					   if(selectDate < now){
-						   this.$api.msg("结束时间不能小于今天");
-						   return;
-					   }
-					   this.dateEnd = this.year+'-'+this.month+'-'+this.day
-					   this.is_select_start = 0
-						this.$refs.popup.close()
-						usermodel.closeShop({
-							sellerId: this.sellerId,
-							closeStatsDate: this.dateStart,
-							closeEndDate: this.dateEnd
-						},(data)=>{
-							console.log(data);
-							usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
-								console.log(res.isOpenDate);
-								this.isOpenDate = res.isOpenDate;
-							})
-						})
+				let now = new Date();
+				var selectDate = new Date();
+				selectDate.setFullYear(this.year);
+				selectDate.setMonth(this.month - 1);
+				selectDate.setDate(this.day);
+
+				if(selectDate < now){
+				   this.$api.msg("结束时间不能小于今天");
+				   return;
+				}
+				this.dateEnd = this.year+'-'+this.month+'-'+this.day
+				this.is_select_start = 0
+				this.$refs.popup.close()
+				usermodel.closeShop({
+					sellerId: this.sellerId,
+					closeStatsDate: this.dateStart,
+					closeEndDate: this.dateEnd
+				},(data)=>{
+					console.log(data);
+					usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
+						console.log(res.isOpenDate);
+						this.isOpenDate = res.isOpenDate;
+					})
+				})
 			},
 			openShop(){
-					   usermodel.openShop({sellerId: this.sellerId},(data)=>{
-						   console.log(data);
-						   usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
-						   	console.log(res.isOpenDate);
-						   	this.isOpenDate = res.isOpenDate;
-						   })
-					   })
+				usermodel.openShop({sellerId: this.sellerId},(data)=>{
+				   console.log(data);
+				   usermodel.checkStoreInfo({sellerId: this.sellerId},(res)=>{
+					console.log(res.isOpenDate);
+					this.isOpenDate = res.isOpenDate;
+				   })
+				})
 			},
 			showPopup(){
 					   uni.showModal({

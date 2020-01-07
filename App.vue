@@ -61,6 +61,14 @@
 <style lang="scss">
 	@import 'static/font/iconfont.css';
 	/*每个页面公共css */
+	page {
+		/* 适配齐刘海*/
+		padding-top: constant(safe-area-inset-top);  
+		/* 适配底部黑条*/
+		padding-bottom: constant(safe-area-inset-bottom);
+	}
+	
+	
 	view,
 	scroll-view,
 	swiper,

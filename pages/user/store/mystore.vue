@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view v-if="storeId=='null'" class="null">
+		<view v-if="storeId=='null'||storeId==''" class="null">
 			<image src="/static/cut/user/storeicon.png"></image>
 			<view class="content">您还没有开通过店铺哦</view>
 			<view class="gray">快快申请属于自己的店铺吧</view>
