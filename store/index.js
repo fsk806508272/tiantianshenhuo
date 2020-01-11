@@ -12,7 +12,8 @@ export default new Vuex.Store({
 		myScore: 0,
 		signCount: 0,
 		lat:0,
-		lon:0
+		lon:0,
+		location:'',
 	}, 
 	mutations:{
 		// 签到积分+10
@@ -67,6 +68,9 @@ export default new Vuex.Store({
 		},
 		getLon(state,longitude){
 			state.lon = longitude
+		},
+		setLocation(state,location){
+			state.location = location
 		}
 	}
 })

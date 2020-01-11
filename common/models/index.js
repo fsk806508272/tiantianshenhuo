@@ -104,6 +104,15 @@ class IndexModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	getReceiveAddress(success){
+		let params = {
+			method:"POST",
+			url:'/app/receiveraddress/getByUserIdAddr',
+			success:success
+		}
+		this.request(params)
+	}
 
 
 }

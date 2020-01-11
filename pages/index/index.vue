@@ -3,7 +3,7 @@
 		<view class="top_fixed">
 			<view @tap="toSelectFixed()">
 				<image src="/static/cut/fixed_icon.png" mode=""></image>
-				<text>{{pickerText}}</text>
+				<text>{{location}}</text>
 			</view>
 			<image src="/static/cut/mess_icon.png" @tap="toMessage()" mode=""></image>
 		</view>
@@ -159,6 +159,7 @@
 	import store from '@/store/index.js'
 	import {mapState} from 'vuex'
 	import {mapMutations} from "vuex"
+	import getCurrentCityName from '@/common/mapH5.js'
 	export default {
 		filters:{
 			formatDistance(value){
@@ -194,10 +195,23 @@
 			}
 		},
 		computed:{
-			...mapState(['hasLogin','lat','lon','uerInfo'])
+			...mapState(['hasLogin','lat','lon','uerInfo','location'])
 		},
 		onLoad() {
+			this.getCurrentCity()
 			let that = this
+			// uni.getLocation({
+			//     type: 'wgs84',
+			//     success: function (res) {
+			//         console.log('当前位置的经度：' + res.longitude);
+			//         console.log('当前位置的纬度：' + res.latitude);
+			// 		console.log(res)
+			// 		that.getLat(res.latitude)
+			// 		that.getLon(res.longitude)
+			//     }
+			// });
+			
+			
 			uni.request({
 				data:{
 					type:1,
@@ -209,47 +223,60 @@
 					'content-type':'application/x-www-form-urlencoded', 
 				},
 				success: (res) => {
+					console.log(res)
 					this.DynamicData = res.data.data.userDynamicList[0]
 					console.log(this.DynamicData)
 				}
 			})
 			
-			uni.getLocation({
-			    type: 'wgs84',
-			    success: function (res) {
-			        console.log('当前位置的经度：' + res.longitude);
-			        console.log('当前位置的纬度：' + res.latitude);
-					console.log(res)
-					that.getLat(res.latitude)
-					that.getLon(res.longitude)
-			    }
-			});
+			
 
-			this.BMap = new bmap.BMapWX({
-				ak: 'q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey' 
-			});
-			console.log(this.BMap)
-			this.BMap.regeocoding({
-				
-				success: data => {
-			        console.log(data)
-			        this.pickerText = data.originalData.result.addressComponent.city.replace(/市/g, ''); //把"市"去掉
-						}
-			});
+			// this.BMap = new bmap.BMapWX({
+			// 	ak: 'q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey' 
+			// });
+			// console.log(this.BMap)
+			// this.BMap.regeocoding({
+			// 	
+			// 	success: data => {
+			//         console.log(data)
+			//         this.pickerText = data.originalData.result.addressComponent.city.replace(/市/g, ''); //把"市"去掉
+			// 			}
+			// });
 
 	
 		},
 		onShow(){
-
+			this.pagelfunm = 1
+			this.getprovide(this.pagelfunm)
 		},
 		onReady(){
 			this.loadData()					
 		},
 		methods: {
-			...mapMutations(['getLat','getLon']),
+			...mapMutations(['getLat','getLon','setLocation']),
+			getCurrentCity(){
+				getCurrentCityName.init().then(BMap=>{
+					const geolocation = new BMap.Geolocation()
+					let that = this
+					geolocation.getCurrentPosition(
+						function getinfo(position){
+							console.log(position)
+							let city = position.address.city
+							let province = position.address.province
+							that.setLocation(city)
+							that.getLat(position.point.lat)
+							that.getLon(position.point.lng)
+						},
+						function(e){
+							console.log(e)
+						},
+						{provider:"baidu"}
+					)
+				})
+			},
 			toSelectFixed(){
 				uni.navigateTo({
-					url: '/pages/index/fixed/select_fixed'
+					url: '/pages/index/fixed/select_fixed?data=' + this.pickerText
 				})
 			},
 			toDynamicUser(){
@@ -402,7 +429,7 @@
 					url:`/pages/HM-search/HM-search?type=${type}`
 				});
 			},	
-			 getprovide (pagelfunm){
+			getprovide (pagelfunm){
 				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10},data=>{
 					if(data.length==0){
 						this.loadingType = 'nomore'
@@ -452,10 +479,10 @@
 				this.getprovide (this.pagelfunm)
 		}),
 		onBackPress() { //监听页面返回
-		  if (this.$refs.mpvueCityPicker.showPicker) {
-		  	this.$refs.mpvueCityPicker.pickerCancel();
-		    return true;
-		  }
+			if (this.$refs.mpvueCityPicker.showPicker) {
+				this.$refs.mpvueCityPicker.pickerCancel();
+				return true;
+			}
 		},
 		onUnload() {  //监听页面卸载
 			if (this.$refs.mpvueCityPicker.showPicker) {
