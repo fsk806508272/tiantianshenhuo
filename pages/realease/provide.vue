@@ -54,7 +54,7 @@
 		<!-- 代购发布显示 start -->
 		<view v-if="firstTypeId==10" class="listItem">
 			<view class="star no">进口税费</view>
-			<input placeholder="0元则为免税费"/>
+			<input v-model="importPrice" placeholder="0元则为免税费"/>
 		</view>
 		<!-- 代购发布 end -->
 		
@@ -486,7 +486,8 @@ export default{
 				}
 			],
 			rangeArry:[],
-			selectIndex: 0
+			selectIndex: 0,
+			importPrice:''
 		}
 	},
 	computed:{
@@ -775,6 +776,85 @@ export default{
 				req.goods.sellerId = this.sellerId
 				req.goods.postFee = this.goodsPost
 				// req.goods.serviceScope = 60
+				req.goodsDesc = {}
+				req.goodsDesc.itemImages = this.goods_photos.join(',')
+				req.itemList = this.$refs.specData.specLists
+				for(let i of req.itemList){
+					delete i.isAdd
+				}
+				let goodsJSON = JSON.stringify(req)
+				providemodel.addSellerGoods({goodsJSON},(data)=>{
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					},1500)
+				})
+			}else if(this.firstTypeId==10){
+				if(this.demand_parent_idx==null){
+					uni.showToast({
+						title:'请选择服务商子类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goodsName==''){
+					uni.showToast({
+						title:'请输入商品名称',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goodsPrice==''){
+					uni.showToast({
+						title:'请输入商品价格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.$refs.specData.specLists[0].image==''){
+					uni.showToast({
+						title:'请设置商品规格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.goods = {}
+				req.goods.goodsFirsttype = 10
+				req.goods.goodsName = this.goodsName
+				req.goods.goodsSecondtype = this.secondtypeinfoId
+				req.goods.latitudeLongitude = this.lon + ',' + this.lat
+				req.goods.importPrice = this.importPrice
+				req.goods.price = this.goodsPrice
+				req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.goods.sellerId = this.sellerId
+				req.goods.normalPrice = ''
 				req.goodsDesc = {}
 				req.goodsDesc.itemImages = this.goods_photos.join(',')
 				req.itemList = this.$refs.specData.specLists
@@ -1448,10 +1528,13 @@ export default{
 </script>
 
 <style lang="scss">
-.bottom_place{
-	height: 100rpx;
-	margin-top: 20rpx;
-}
+	page{
+		padding-bottom:100rpx;
+	}
+// .bottom_place{
+// 	height: 100rpx;
+// 	margin-top: 20rpx;
+// }
 .upload_btn{
 	position: fixed;
 	width: 100%;
@@ -1459,7 +1542,7 @@ export default{
 	line-height: 100rpx;
 	border-radius: 0;
 	left: 0;
-	bottom: 100rpx;
+	bottom: 0;
 	color: #fff;
 	font-size: 34rpx;
 	background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));

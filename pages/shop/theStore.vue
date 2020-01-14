@@ -12,7 +12,7 @@
 					<image src="/static/cut/no_collect.png"></image>
 				</view>
 				<view class="address">
-					<text class="gray">深圳市龙岗区龙翔大道9002号志联佳大厦508</text>
+					<text class="gray">{{sellerData.address}}</text>
 				</view>
 				<view class="score">
 					<block v-for="(item,index) in starIndex" :key="index">

@@ -8,6 +8,13 @@
 			}
 		},
 		{
+			"path": "pages/realease/provideIndex",
+			"style": {
+				"navigationBarTitleText": "发布中心",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "订单",
@@ -966,7 +973,7 @@
 			"text": "附近"
 		},  
 		 {
-			"pagePath": "pages/realease/provide",
+			"pagePath": "pages/realease/provideIndex",
 			"iconPath": "static/tab/tab_add_onselected.png",
 			"selectedIconPath": "static/tab/tab_add_onselected.png"
 		},{

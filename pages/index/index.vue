@@ -898,6 +898,7 @@
 							display: flex;
 							justify-content: space-between;						
 							.tit{
+								font-size:28rpx;
 								max-height: 80rpx;
 								overflow: hidden;
 								font-weight:400;
@@ -923,7 +924,7 @@
 								color: #FF6600;								
 							}
 							.volume{
-								font-size:22rpx;					
+								font-size:24rpx;					
 								color:rgba(180,180,180,1);								
 							}
 							image{
