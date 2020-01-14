@@ -44,7 +44,7 @@
 						<view>享受服务</view>
 					</view>
 					<view class="item">
-						<text>45</text>
+						<text>{{uerInfo.store}}</text>
 						<view>我的积分</view>
 					</view>
 					<view class="item" @tap="toMyRecord">
@@ -478,29 +478,22 @@ export default{
 		toMyStore(){
 			userModel.getInfo((data)=>{
 				if(data.personalCerStatus==3||data.companyCerStatus==3){
-					if(data.storeId==null||data.storeId==''){
+					storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
 						uni.navigateTo({
-							url:'/pages/user/store/mystore?storeId=' + data.storeId
+							url:`/pages/shop/myStore?sellerId=${data.storeId}&type=${res.firstTypeId}`
 						})
-					}else{
-						console.log(data);
-						storemodel.getSellerStore({sellerId: data.storeId},(res)=>{
-							uni.navigateTo({
-								url:`/pages/shop/myStore?sellerId=${data.storeId}&type=${res.firstTypeId}`
-							})
-						})
-					}
-				}else{
-					uni.showModal({
-						title:'您还没有认证，请先做认证',
-						confirmText:'去认证',
-						success(res){
-							if(res.confirm){
-								uni.navigateTo({
-									url:'/pages/modify/certification'
-								})
-							}
-						}
+					})
+				}else if(data.personalCerStatus==1&&data.companyCerStatus==1){
+					uni.navigateTo({
+						url:'/pages/user/store/openStore'
+					})
+				}else if(data.personalCerStatus==2||data.companyCerStatus==2){
+					uni.navigateTo({
+						url:'/pages/user/store/verify'
+					})
+				}else if(data.personalCerStatus==4||data.companyCerStatus==4){
+					uni.navigateTo({
+						url:'/pages/user/store/verifyFailed?reason=' + data.personalCerReason
 					})
 				}
 			})

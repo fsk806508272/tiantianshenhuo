@@ -412,6 +412,28 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	
+	personalCerAndOpeningStore(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/appuser/personalCerAndOpeningStore',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	companyCerAndOpeningStore(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/appuser/companyCerAndOpeningStore',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+
 }
 
 export {UserModel}

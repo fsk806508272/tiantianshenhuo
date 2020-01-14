@@ -912,6 +912,34 @@
 				"navigationBarTitleText": "隐私政策",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
+		},
+		{
+			"path" : "pages/user/store/openStore",
+			"style" : {
+				"navigationBarTitleText": "开通店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/store/storeOpen",
+			"style" : {
+				"navigationBarTitleText": "个人开店",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/store/verify",
+			"style" : {
+				"navigationBarTitleText": "开通店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/user/store/verifyFailed",
+			"style" : {
+				"navigationBarTitleText": "认证失败",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
 		}
     ],
 	"globalStyle": {

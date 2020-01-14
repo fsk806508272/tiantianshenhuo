@@ -24,7 +24,7 @@
 		<!-- 房屋发布 end -->
 		
 		<!-- 维修发布 start -->
-		<view v-if="firstTypeId==9||firstTypeId==5" class="listItem">
+		<view v-if="firstTypeId==9||firstTypeId==5||firstTypeId==3" class="listItem">
 			<view class="star">服务名称</view>
 			<input v-model="serviceName" placeholder="请输入标题(26字内)"/>
 		</view>
@@ -34,7 +34,7 @@
 		</view>
 		<view v-if="firstTypeId==9" class="listItem">
 			<view class="star">上门费</view>
-			<input placeholder="请输入"/>
+			<input v-model="fixFee" placeholder="请输入"/>
 		</view>
 		<!-- 维修发布 end -->
 		
@@ -46,7 +46,7 @@
 			<view class="star">商品价格</view>
 			<input v-model="goodsPrice" placeholder="请输入"/>
 		</view>
-		<view v-if="firstTypeId==8||firstTypeId==10" class="listItem">
+		<view v-if="firstTypeId==8" class="listItem">
 			<view class="star">配送费</view>
 			<input v-model="goodsPost" placeholder="请输入"/>
 		</view>
@@ -60,7 +60,7 @@
 		
 		<!-- 店铺内商品所属分类 -->
 		<view class="category">
-			<view class="top"><view class="title">店铺内商品所属分类</view><view class="addOk">添加完成</view></view>
+			<view class="top"><view class="title">店铺内商品所属分类</view></view>
 			<view class="category start">
 				<view class="gray">已有分类</view>
 				<view class="buttons">
@@ -73,6 +73,20 @@
 					<input v-model='newCateName' placeholder="请输入分类名称(限4字内)"/>
 					<view class="add" @tap="addCate">添加</view>
 				</view>
+			</view>
+		</view>
+		
+		<!-- 家政发布 -->
+		<view class="payTypeSetting" v-if="firstTypeId==3">
+			<view class="star">收费设置</view>
+			<view class="priceSetting">
+				<view class="priceTop">
+					<view class="settingTitle">价格类型</view>
+					<block v-for="(item,index) in houseHoldPriceList" :key="index">
+						<view @tap="choosePriceType(index)" :class="houseHoldPriceIndex===index?'on':''" class="label">{{item}}</view>
+					</block>
+				</view>
+				<input v-model="houseHoldPrice" placeholder="请输入价格"/>
 			</view>
 		</view>
 		
@@ -343,6 +357,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 import settingSpec from '@/components/settingSpec.vue'
 import uploadImgs from '@/components/uploadImgs.vue'
 import mpvueCityPicker from '@/components/mpvue-citypicker/mpvueCityPicker.vue'
@@ -360,6 +375,10 @@ export default{
 	},
 	data(){
 		return{
+			fixFee:'',
+			houseHoldPriceList:['一口价','小时费','月薪'],
+			houseHoldPriceIndex:'',
+			houseHoldPrice:'',
 			userId:'',
 			second:false,
 			cityPickerValueDefault: [0, 0, 1],
@@ -417,7 +436,7 @@ export default{
 			deliverySelect: [
 				{
 					name: "请选择",
-					amount: 0,
+					amount: 1,
 					isAdd: false
 				}
 			],
@@ -470,7 +489,13 @@ export default{
 			selectIndex: 0
 		}
 	},
+	computed:{
+		...mapState(['lat','lon'])
+	},
 	onLoad(){
+		
+	},
+	onShow(){
 		this.getCateList()
 		new Promise((resolve)=>{
 			usermodel.getInfo((data)=>{
@@ -539,9 +564,6 @@ export default{
 			})
 		})
 	},
-	onShow(){
-		
-	},
 	onReady(){
 		
 	},
@@ -549,6 +571,9 @@ export default{
 		
 	},
 	methods:{
+		choosePriceType(index){
+			this.houseHoldPriceIndex = index
+		},
 		goodsPhoto(e){
 			this.goods_photos = e;
 			console.log(this.goods_photos);
@@ -758,7 +783,16 @@ export default{
 				}
 				let goodsJSON = JSON.stringify(req)
 				providemodel.addSellerGoods({goodsJSON},(data)=>{
-					console.log(data)
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					},1500)
 				})
 			}else if(this.firstTypeId==1){
 				if(this.demand_parent_idx==null){
@@ -1008,7 +1042,16 @@ export default{
 				}
 				req.informationList = JSON.stringify(req.informationList)
 				providemodel.addHouse(req,(data)=>{
-					
+					uni.showToast({
+						title:'上传成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						},1500)
+					})
 				})
 			}else if(this.firstTypeId==5&&this.item=='财务代理'){
 				if(this.serviceName==''){
@@ -1094,6 +1137,11 @@ export default{
 						duration:1500,
 						icon:'none'
 					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					},1500)
 					
 				})
 			}else if(this.firstTypeId==5&&this.item=='保险'){
@@ -1221,6 +1269,178 @@ export default{
 						})
 					},1500)
 				})
+			}else if(this.firstTypeId==3){
+				if(this.serviceName==''){
+					uni.showToast({
+						title:'请输入服务名称',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.houseHoldPrice==''){
+					uni.showToast({
+						title:'请设置收费价格',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.houseHoldPriceIndex ===''){
+					uni.showToast({
+						title:'请选择价格类型',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.$refs.specData.specLists[0].image==''){
+					uni.showToast({
+						title:'请设置商品规格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.goods = {}
+				req.goods.latitudeLongitude = this.lat + ',' + this.lon
+				req.goods.price = this.houseHoldPrice
+				req.goods.goodsFirsttype = 3
+				req.goods.caption = this.detail
+				if(this.houseHoldPriceIndex==1){
+					req.goods.chargeType = 31
+				}else if(this.houseHoldPriceIndex==2){
+					req.goods.chargeType = 32
+				}else if(this.houseHoldPriceIndex==3){
+					req.goods.chargeType = 33
+				}
+				req.goods.goodsName = this.serviceName
+				req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.goods.sellerId = this.sellerId
+				req.goods.goodsSecondtype = this.secondtypeinfoId
+				req.goodsDesc = {}
+				req.goodsDesc.itemImages = this.goods_photos.join(',')
+				req.itemList = []
+				for(let i of this.$refs.specData.specLists){
+					let obj = {}
+					obj.image = i.image
+					obj.spec = i.spec
+					obj.price = i.price
+					req.itemList.push(obj)
+				}
+				console.log(req)
+				let goodsJSON = JSON.stringify(req)
+				providemodel.addSellerGoods({goodsJSON},(data)=>{
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					},1500)
+				})
+			}else if(this.firstTypeId==9){
+				if(this.demand_parent_idx==null){
+					uni.showToast({
+						title:'请选择服务商子类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.serviceName==''){
+					uni.showToast({
+						title:'请输入服务名称',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.fixFee==''){
+					uni.showToast({
+						title:'请设置上门费',
+						icon:'none',
+						duration:1500
+					})
+					return
+				}
+				if(this.cate_idx==null){
+					uni.showToast({
+						title:'请选择店铺商品分类',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.$refs.specData.specLists[0].image==''){
+					uni.showToast({
+						title:'请设置商品规格',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				if(this.goods_photos.length==0){
+					uni.showToast({
+						title:'请上传商品图片',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				let req = {}
+				req.goods = {}
+				req.goods.latitudeLongitude = this.lat + ',' + this.lon
+				req.goods.price = this.fixFee
+				req.goods.goodsFirsttype = 9
+				req.goods.caption = this.detail
+				req.goods.goodsName = this.serviceName
+				req.goods.sellerGroupId = this.cateIdList[this.cate_idx]
+				req.goods.sellerId = this.sellerId
+				req.goods.goodsSecondtype = this.secondtypeinfoId
+				req.goodsDesc = {}
+				req.goodsDesc.itemImages = this.goods_photos.join(',')
+				req.itemList = []
+				for(let i of this.$refs.specData.specLists){
+					let obj = {}
+					obj.image = i.image
+					obj.spec = i.spec
+					obj.price = i.price
+					req.itemList.push(obj)
+				}
+				let goodsJSON = JSON.stringify(req)
+				providemodel.addSellerGoods({goodsJSON},(data)=>{
+					uni.showToast({
+						title:'发布成功',
+						duration:1500,
+						icon:'none'
+					})
+					setTimeout(()=>{
+						uni.switchTab({
+							url:'/pages/index/index'
+						})
+					},1500)
+				})
 			}
 		}
 	}
@@ -1265,7 +1485,7 @@ export default{
 		height:180rpx;
 		border:1rpx solid #A0A0A0;
 		border-radius:8rpx;
-		color: #B4B4B4;
+		color: #1e1e1e;
 		font-size: 26rpx;
 		padding: 15rpx 20rpx;
 	}
@@ -1322,6 +1542,7 @@ export default{
 		padding-left: 10rpx;
 	}
 	input{
+		color:#1e1e1e;
 		font-size: 26rpx;
 	}
 }
@@ -1465,7 +1686,7 @@ export default{
 				padding: 13rpx 20rpx;
 				box-sizing: border-box;
 				input{
-					color: #B4B4B4;
+					color: #1e1e1e;
 					font-size: 26rpx;
 				}
 			}
@@ -1493,7 +1714,7 @@ export default{
 			font-size: 26rpx;
 			padding: 13rpx 20rpx;
 			input{
-				color: #B4B4B4;
+				color: #1e1e1e;
 				font-size: 26rpx;
 				max-width: 52%;
 			}
@@ -1615,6 +1836,7 @@ export default{
 			align-items: center;
 			padding-left: 20rpx;
 			input{
+				color:#1e1e1e;
 				width:160rpx;
 			}
 		}
@@ -1676,6 +1898,7 @@ export default{
 				display: flex;
 			}
 			input{
+				color:#1e1e1e;
 				width:220rpx;
 			}
 		}
@@ -1805,9 +2028,65 @@ export default{
 		margin-top: 20rpx;
 		input{
 			width: 100%;
-			color: #3C3C3C;
+			color: #1e1e1e;
 			font-size: 26rpx;
 		}
 	}
+}
+
+.payTypeSetting{
+	padding:0 20rpx;
+	margin-top: 20rpx;
+	height:328rpx;
+	background-color: #fff;
+	.star{
+		height:84rpx;
+		border-bottom: 1rpx solid #F2F2F2;
+		display: flex;
+		align-items: center;
+	}
+	.priceSetting{
+		margin-top: 30rpx;
+		height:50rpx;
+		input{
+			margin-left: 132rpx;
+			margin-top: 40rpx;
+			font-size: 26rpx;
+			width:568rpx;
+			height:64rpx;
+			border:1rpx solid rgba(160,160,160,1);
+			border-radius:8rpx;
+			padding-left: 20rpx;
+		}
+		.priceTop{
+			display: flex;
+			align-items: center;
+			.settingTitle{
+				margin-right: 38rpx;
+				font-size:24rpx;
+				color:rgba(160,160,160,1);
+			}
+			.label{
+				margin-right: 30rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width:140rpx;
+				height:50rpx;
+				border:1rpx solid rgba(200,200,200,1);
+				border-radius:8rpx;
+				&.on{
+					border:1px solid rgba(255,102,0,1);
+					color:#FE6600;
+				}
+			}
+		}
+		
+	}
+	
+}
+
+input{
+	color:#1e1e1e;
 }
 </style>
