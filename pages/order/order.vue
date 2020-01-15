@@ -313,8 +313,8 @@
 				this.allSelected ? this.shopingCarlist.forEach((row)=>this.shopTrue(row)) : this.shopingCarlist.forEach((row)=>this.shopFalse(row))
 			},
 			sub(good){
-				if(good.num === 1){
-					good.num
+				if(good.num == 1){
+					good.num 
 				}else{
 					good.num--
 					good.selected?this.sumPrice -= good.price : ''
@@ -821,11 +821,12 @@ page{
 					background-color: #fff;
 					position:absolute;
 					display: flex;
-					align-items: center;
+					// align-items: center;
 					width:100%;
 					height:100%;
 					z-index:3;
 					.checkbox{
+						margin-top: 80rpx;
 						margin-left:19rpx;
 						image{
 							height:34rpx;
@@ -833,12 +834,14 @@ page{
 						}
 					}
 					.storeImage{
+						margin-top: 20rpx;
 						margin-left:21rpx;
 						width:140rpx;
 						height:140rpx;
 						border-radius:10rpx;
 					}
 					.detail{
+						margin-top: 20rpx;
 						height:140rpx;
 						width:560rpx;
 						padding-left:20rpx;
@@ -906,7 +909,7 @@ page{
 		bottom:0;
 		/*  #endif  */
 		/*  #ifdef  H5  */
-		bottom:100rpx;
+		bottom:90rpx;
 		/*  #endif  */
 		
 		width:100%;

@@ -331,7 +331,7 @@
 		box-sizing: border-box;
 		display: flex;
 		align-items: center;
-		z-index: 100;
+		z-index: 1;
 		.collect{
 			width:45rpx;
 			margin-left: 34rpx;

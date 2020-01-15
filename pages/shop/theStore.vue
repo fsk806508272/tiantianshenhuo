@@ -9,7 +9,8 @@
 						<view>{{sellerData.nickName}}</view>
 						<image src="/static/cut/company_cer.png"></image>
 					</view>
-					<image src="/static/cut/no_collect.png"></image>
+					<image @tap="toCollect(1)" v-if="sellerData.isCollect==0" src="/static/cut/no_collect.png"></image>
+					<image v-else @tap="toCollect(0)" src="/static/cut/collected.png"></image>
 				</view>
 				<view class="address">
 					<text class="gray">{{sellerData.address}}</text>
@@ -312,6 +313,29 @@
 				this.leftIndex=Number(index);
 				this.scrollInto=`item-${index}`;
 				
+			},
+			toCollect(num){
+				if(num==1){
+					this.sellerData.isCollect = 1
+					uni.showToast({
+						title:'收藏成功',
+						duration:1500,
+						icon:'none'
+					})
+					Likemodel.likeShop(this.sellerData.sellerId,1,data=>{
+						
+					})
+				}else{
+					this.sellerData.isCollect = 0
+					uni.showToast({
+						title:'取消收藏成功',
+						duration:1500,
+						icon:'none'
+					})
+					Likemodel.likeShop(this.sellerData.sellerId,0,data=>{
+						
+					})
+				}
 			},
 			addCart(item){
 				providemodel.addCart({goodsItemId:item.defaultItemId,num:1},(data)=>{

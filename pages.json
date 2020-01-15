@@ -15,6 +15,13 @@
 			}
 		},
 		{
+			"path": "pages/login/agreement",
+			"style": {
+				"navigationBarTitleText": "用户协议",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "订单",
@@ -88,6 +95,13 @@
 					"titleNView": false ,//禁用原生导航栏
 					"bounce":"none"
 				}
+			}
+		},
+		{
+			"path": "pages/realease/success",
+			"style":{
+				"navigationBarTitleText":"发布成功",
+				"navigationBarBackgroundColor":"#FFF"
 			}
 		},
 		{

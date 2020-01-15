@@ -133,7 +133,7 @@
 								</view>
 								<text class="volume">月销{{item.monthSale}}</text>
 								<text class="volume">免费配送</text>
-								<image src="/static/cut/car.png" mode=""></image>
+								<image @tap.stop="addToCart(item)" src="/static/cut/car.png" mode=""></image>
 							</view>
 						</view>
 					</view>
@@ -148,6 +148,8 @@
 </template>
 
 <script>
+	import {ProvideModel} from '@/common/models/provide.js'
+	const providemodel = new ProvideModel()
 	import tool from "@/common/common.js"
 	import bmap from '@/common/SDK/bmap-wx.js';
 	import {IndexModel} from '@/common/models/index.js'
@@ -254,6 +256,15 @@
 		},
 		methods: {
 			...mapMutations(['getLat','getLon','setLocation']),
+			addToCart(item){
+				providemodel.addCart({goodsItemId:item.defaultItemId,num:1},(data)=>{
+					uni.showToast({
+						title:"添加购物车成功",
+						duration:1500,
+						icon:'none'
+					})
+				})
+			},
 			getCurrentCity(){
 				getCurrentCityName.init().then(BMap=>{
 					const geolocation = new BMap.Geolocation()
@@ -430,7 +441,7 @@
 				});
 			},	
 			getprovide (pagelfunm){
-				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10},data=>{
+				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10,goodsFirsttype:8},data=>{
 					if(data.length==0){
 						this.loadingType = 'nomore'
 						return
@@ -703,7 +714,7 @@
 				background-color:#F6F6F6 ;
 				padding:0 20rpx;
 				.lf{
-					width: 28rpx;
+					width: 27rpx;
 					height: 28rpx;
 					
 				}

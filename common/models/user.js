@@ -67,6 +67,17 @@ class UserModel extends HTTP{
 		this.request(params)
 	}
 	
+	
+	deleteVisitRecord(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/historyRecord/cleanMultiple',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
 	//查询用户评论
 	
 	getUserComment(success){

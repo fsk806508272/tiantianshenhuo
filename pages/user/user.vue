@@ -22,8 +22,8 @@
 						<view class="information">
 							<view class="names">
 								<text>{{uerInfo.nickname}}</text>
-								<image src="../../static/cut/lable.png" mode=""></image>
-								<image src="../../static/cut/portrait.png" mode=""></image>
+								<image v-if="uerInfo.personalCerStatus==3&&uerInfo.companyCerStatus!=3" src="../../static/cut/lable.png" mode=""></image>
+								<image v-if="uerInfo.companyCerStatus==3" src="../../static/cut/portrait.png" mode=""></image>
 							</view>
 							<text v-if="uerInfo.loginName!=null">
 								ID：{{uerInfo.loginName}}
@@ -247,10 +247,13 @@ export default{
 	},
 	onShow:function(){
 		// 查询是否签到
-		checkModel.getSignSelect({},data=>{
-			this.isAttendance = data.isTodaySign;
-			console.log(this.isAttendance);
-		})
+		if(this.hasLogin){
+			checkModel.getSignSelect({},data=>{
+				this.isAttendance = data.isTodaySign;
+				console.log(this.isAttendance);
+			})
+		}
+		
 		// 查询是否授权登录
 		// #ifndef H5
 		uni.getSetting({
@@ -608,7 +611,7 @@ export default{
 				padding-bottom: 24rpx;
 				.lf{
 					.my-provide{
-						color:#3C3C3C;
+						color:#1e1e1e;
 						margin-right: 10rpx;
 						font-weight:500;
 					}
@@ -674,7 +677,7 @@ export default{
 						height: 28rpx;
 					}
 					text{
-						color:#3C3C3C;
+						color:#1e1e1e;
 						margin-right: 10rpx;
 						font-weight:500;
 					}
@@ -744,6 +747,9 @@ export default{
 				font-weight:500;
 				color:rgba(60,60,60,1);
 				line-height:22rpx;
+				text{
+					color:#1e1e1e;
+				}
 				image{
 					width: 25rpx;
 					height: 31rpx;
