@@ -89,7 +89,7 @@
 				</view>
 				<view v-if="isAccounted==1" class="right">
 					<view class="acomplish" @tap="tab()">完成</view>
-					<view class="moveButton">移至收藏</view>
+					<!-- <view class="moveButton">移至收藏</view> -->
 					<view class="button" @tap="deleteList">删除</view>
 				</view>
 						
@@ -992,7 +992,7 @@ page{
 				color:rgba(60,60,60,1);
 			}
 			.button{
-				margin-left:20rpx;
+				margin-left:352rpx;
 				display: flex;
 				align-items: center;
 				justify-content: center;

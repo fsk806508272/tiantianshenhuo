@@ -6,7 +6,7 @@
 	  <view class="login">
 		 	<view class="item">
 				<image class="phoneImage" src="/static/cut/p.png"></image>
-				<input placeholder="请输入手机号" v-model="phoneNumber"/>
+				<input type="number" placeholder="请输入手机号" v-model="phoneNumber"/>
 			</view>	
 			<view class="item" v-if="switchShow">
 				<image class="verImage" src="/static/cut/confirm.png"></image>
@@ -121,7 +121,9 @@ export default {
 			loginModel.getCodeLogin(phoneNumber,verificationCode,Invitation,(res)=>{
 				console.log(res)
 				 this.login(res)
-				 uni.navigateBack()
+				uni.switchTab({
+					url:'/pages/index/index'
+				})
 			})
 		}else{
 			if(!(/^[\w]{6,12}$/.test(loginPassword))){
@@ -132,9 +134,11 @@ export default {
 			// 	mask:true
 			// });
 			loginModel.getLogin(phoneNumber,loginPassword,(res)=>{
-				console.log(res)
 				 this.login(res)
-				 uni.navigateBack()
+				 this.tim.login({userID:res.appuserId,userSig:res.userSig})
+				 uni.switchTab({
+				 	url:'/pages/index/index'
+				 })
 			})
 		}
 		

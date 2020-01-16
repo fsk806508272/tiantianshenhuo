@@ -82,7 +82,7 @@
 	let addressModel=new AddressModel()
 	import {PayModel} from '@/common/models/pay.js'
 	let payModel=new PayModel()
-	
+	import {UserModel} from '@/common/models/user.js'
 	import {ConfirmationModel} from '@/common/models/confirmation.js'
 	let confirmationModel = new ConfirmationModel()
 	
@@ -177,8 +177,30 @@
 					subData.goodsItemIdList=goodsItemIdList
 					subData.buyerMessage=JSON.stringify(buyerMessage)
 					//获取订单流水号 data
-					confirmationModel.addCartToOrder(subData,(outTradeNo)=>{					
-						payModel.tenpayPayOrder({outTradeNo:outTradeNo})  //调用支付
+					confirmationModel.addCartToOrder(subData,(outTradeNo)=>{
+						if(this.isWechat==true){
+							payModel.htmlPay({outTradeNo:outTradeNo,type:1},data=>{
+								let src = data.mwebUrl;
+								window.location = src;
+							})
+						}else{
+							payModel.htmlPay({outTradeNo:outTradeNo,type:2},res=>{
+								let id = document.getElementById('zy-pay');
+								if( id ){
+									id.remove();
+								}
+								const div = document.createElement('div');
+								div.id = 'zy-pay';
+								
+								div.innerHTML = (res);
+								document.body.appendChild(div);
+								document.forms[0].acceptCharset = 'UTF-8';
+								document.forms[0].submit();
+								return;
+							})
+						}
+						
+						// payModel.tenpayPayOrder({outTradeNo:outTradeNo,type:1},)  //调用支付
 					})
 					
 				}else if(this.difference == 0){

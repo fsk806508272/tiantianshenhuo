@@ -119,7 +119,7 @@
 						<text>常用功能</text>
 					</view>
 					<view class="main">
-						<view class="item" @tap="scanCode()">
+						<view class="item" @tap="toQrcode()">
 							<view class='icon'>
 								<image src="/static/cut/user/payCode.png" mode="widthFix"></image>
 							</view>
@@ -205,7 +205,7 @@
 							</view>
 							<text>邀请有礼</text>
 						</view>
-						<view class="item">
+						<view class="item"  @tap="toChat()">
 							<view class='icon'>
 								<image src="../../static/cut/ionc-m.png" mode="widthFix"></image>
 							</view>
@@ -298,7 +298,25 @@ export default{
 	},
 	methods:{
 		...mapMutations(["login"]),
-		
+		toChat(){
+			let that = this
+			uni.request({
+				url:'https://sgz.wdttsh.com/app/systemparam/getServiceInfo',
+				method:'POST',
+				success(res){
+					that.$store.commit('resetCurrentConversation')
+					that.$store.commit('resetGroup')
+					that.tim.getConversationProfile(`C2C${res.data.data.serviceId}`)
+						.then((result) => {
+							that.$store.commit('updateCurrentConversation',result.data.conversation)
+							that.$store.dispatch('getMessageList')
+						}) 
+					uni.navigateTo({
+						url:"/pages/msg/chat?toAccount="+ res.data.data.serviceNickname
+					})
+				}
+			})
+		},
 		navToLogin(){
 			// uni.navigateTo({
 			// 	url:"../login/login"
@@ -338,6 +356,11 @@ export default{
 				});
 			}
 			// #endif
+		},
+		toQrcode(){
+			uni.navigateTo({
+				url:'/pages/user/qrcode/qrcode?type=0'
+			})
 		},
 		scanCode(){
 			// #ifndef H5

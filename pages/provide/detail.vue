@@ -59,7 +59,7 @@
 		
 		<view v-if="type==8||type==10" class="bottomFix">
 			
-			<view class="contact">
+			<view @tap="toChat" class="contact">
 				<image src="/static/cut/message.png"></image>
 				<view>联系TA</view>
 			</view>
@@ -183,6 +183,28 @@ export default{
 		
 	},
 	methods:{
+		async toChat(){
+			if(this.sellerdata.isFalse == 1){
+				uni.showToast({
+					title:'该商家不在线，请您电话联系',
+					duration:1500,
+					icon:'none'
+				})
+				return
+			}
+			console.log(222)
+			let name = ''
+			this.$store.commit('resetCurrentConversation')
+			this.$store.commit('resetGroup')
+			const {data:res} = await this.tim.getConversationProfile(`C2C${this.sellerdata.userId}`)
+			console.log(res)
+			name = res.conversation.userProfile.nick
+			this.$store.commit('updateCurrentConversation',res.conversation)
+			this.$store.dispatch('getMessageList')
+			uni.navigateTo({
+				url:'/pages/msg/chat?toAccount=' + name
+			})
+		},
 	    toBack(){
 			uni.navigateBack({
 				delta: 1

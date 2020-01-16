@@ -444,7 +444,27 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
-
+	
+	
+	createQrcode(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/business/createCollectionQRCode',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getReceiptRecord(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/business/queryReceiptRecord',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

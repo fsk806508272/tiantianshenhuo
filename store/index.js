@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import conversation from './conversation.js'
+import user from './user.js'
+import global from './global.js'
+import group from './group.js'
 // import state from './state'
 // import mutations from './mutations'
 
@@ -72,5 +76,11 @@ export default new Vuex.Store({
 		setLocation(state,location){
 			state.location = location
 		}
+	},
+	modules:{
+		conversation,
+		user,
+		global,
+		group
 	}
 })

@@ -61,11 +61,11 @@
 		</view>
 		
 		<view class="buttons">
-			<view class="whiteButton">
+			<view @tap="toChat" class="whiteButton">
 				<image src="/static/cut/message.png"></image>
 				<view>联系TA</view>
 			</view>
-			<view class="cartButton">购物车</view>
+			<view @tap="toCart" class="cartButton">购物车</view>
 		</view>
 	</view>
 
@@ -138,6 +138,35 @@
 			this.getListData();
 		},
 		methods: {
+			async toChat(){
+				if(this.sellerData.isFalse == 1){
+					uni.showToast({
+						title:'该商家不在线，请您电话联系',
+						duration:1500,
+						icon:'none'
+					})
+					return
+				}
+				console.log(222)
+				let name = ''
+				this.$store.commit('resetCurrentConversation')
+				this.$store.commit('resetGroup')
+				const {data:res} = await this.tim.getConversationProfile(`C2C${this.sellerData.userId}`)
+				console.log(res)
+				name = res.conversation.userProfile.nick
+				this.$store.commit('updateCurrentConversation',res.conversation)
+				this.$store.dispatch('getMessageList')
+				uni.navigateTo({
+					url:'/pages/msg/chat?toAccount=' + name
+				})
+			},
+			
+			toCart(){
+				uni.switchTab({
+					url:'/pages/order/order'
+				})
+			},
+			
 			/* 获取列表数据 */
 			getListData(){
 				/* 因无真实数据，当前方法模拟数据 */
