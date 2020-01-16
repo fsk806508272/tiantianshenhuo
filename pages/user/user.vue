@@ -43,8 +43,8 @@
 						<text>0</text>
 						<view>享受服务</view>
 					</view>
-					<view class="item">
-						<text>{{uerInfo.store}}</text>
+					<view @tap="toMyAttendance()" class="item">
+						<text>{{store}}</text>
 						<view>我的积分</view>
 					</view>
 					<view class="item" @tap="toMyRecord">
@@ -236,7 +236,8 @@ export default{
 			userid:'',
 			money: '',
 			isAttendance:'',
-			moneyShow:true
+			moneyShow:true,
+			store:''
 		}
 	},
 	computed: {
@@ -246,6 +247,12 @@ export default{
 		
 	},
 	onShow:function(){
+		if(this.hasLogin){
+			checkModel.getUserInfo(data=>{
+				this.store = data.store
+			})
+		}
+		
 		// 查询是否签到
 		if(this.hasLogin){
 			checkModel.getSignSelect({},data=>{

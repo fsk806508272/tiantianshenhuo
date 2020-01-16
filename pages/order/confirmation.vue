@@ -215,14 +215,26 @@
 						onesubData.buyerMessage=buylist[i].val
 					}
 					confirmationModel.addOneGoodsToOrder(onesubData,(outTradeNo)=>{
-						let type = ''
-						if(this.isAli==true){
-							type = 1
+						if(this.isWechat==true){
+							payModel.htmlPay({outTradeNo:outTradeNo,type:1},data=>{
+								let src = data.mwebUrl;
+								window.location = src;
+							})
 						}else{
-							type = 2
-						}
-						if(type==1){
-							payModel.aliPayOrder({outTradeNo:outTradeNo,type})  //调用支付 1表示商品类型支付
+							payModel.htmlPay({outTradeNo:outTradeNo,type:2},res=>{
+								let id = document.getElementById('zy-pay');
+								if( id ){
+									id.remove();
+								}
+								const div = document.createElement('div');
+								div.id = 'zy-pay';
+								
+								div.innerHTML = (res);
+								document.body.appendChild(div);
+								document.forms[0].acceptCharset = 'UTF-8';
+								document.forms[0].submit();
+								return;
+							})
 						}
 						
 					})
@@ -233,7 +245,27 @@
 					}
 					orderIdList = orderIdList.join(',')
 					confirmationModel.addPayOrder({orderIdList,payType:2},(data)=>{
-						payModel.tenpayPayOrder({outTradeNo:data})
+						if(this.isWechat==true){
+							payModel.htmlPay({outTradeNo:data,type:1},data=>{
+								let src = data.mwebUrl;
+								window.location = src;
+							})
+						}else{
+							payModel.htmlPay({outTradeNo:data,type:2},res=>{
+								let id = document.getElementById('zy-pay');
+								if( id ){
+									id.remove();
+								}
+								const div = document.createElement('div');
+								div.id = 'zy-pay';
+								
+								div.innerHTML = (res);
+								document.body.appendChild(div);
+								document.forms[0].acceptCharset = 'UTF-8';
+								document.forms[0].submit();
+								return;
+							})
+						}
 					})
 				}
 				uni.hideLoading();
