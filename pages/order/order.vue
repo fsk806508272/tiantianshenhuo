@@ -46,8 +46,8 @@
 							<view class="icon iconfont icon-iconfontshanchu1"></view>
 						</view>
 						
-						<view class="carrier" :class="[theIndex==index&&theNumber==number?'open':oldIndex==index&&oldNumber==number?'close':'']" @touchstart="touchStart(index,number,$event)" @touchmove="touchMove(index,number,$event)" @touchend="touchEnd(index,number,$event)">
-							<view class="checkbox" @tap="goodChoose(row,good)">
+						<view @tap="toGoodsDetail(row,good)" class="carrier" :class="[theIndex==index&&theNumber==number?'open':oldIndex==index&&oldNumber==number?'close':'']" @touchstart="touchStart(index,number,$event)" @touchmove="touchMove(index,number,$event)" @touchend="touchEnd(index,number,$event)">
+							<view class="checkbox" @tap.stop="goodChoose(row,good)">
 								<image v-if="good.selected == false" src="../../static/cut/no_selected.png"></image>
 								<image v-if="good.selected == true" src="../../static/cut/selected.png"></image>
 								
@@ -266,6 +266,9 @@
 			...mapState(['hasLogin'])
 		},
 		methods:{
+			toGoodsDetail(row,good){
+				console.log(row,good)
+			},
 			navToLogin(){
 				uni.navigateTo({
 					url:"../login/login"

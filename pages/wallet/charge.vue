@@ -4,7 +4,7 @@
 			<view class="title">充值金额</view>
 			<view class="number">
 				<view class="renmibi">￥</view>
-				<input type="digit" v-model="number" @input="checkChange"/>
+				<input type="number" v-model="number" @input="checkChange"/>
 				<image src="/static/cut/cancel.png" @tap="clearNumber()"></image>
 			</view>
 		</view>

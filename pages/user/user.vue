@@ -35,13 +35,13 @@
 					</view>
 				</view>
 				<view class="service-block">
-					<view class="item">
-						<text>0</text>
-						<view>提供服务</view>
+					<view @tap="toMyComment()" class="item">
+						<text>{{commentCount}}</text>
+						<view>我的评价</view>
 					</view>
-					<view class="item">
-						<text>0</text>
-						<view>享受服务</view>
+					<view  @tap="toMyCollection()" class="item">
+						<text>{{collectCount}}</text>
+						<view>我的收藏</view>
 					</view>
 					<view @tap="toMyAttendance()" class="item">
 						<text>{{store}}</text>
@@ -104,7 +104,7 @@
 					<view class="lower">
 						<view class="lf" @tap="toMyWallet()">
 							<text class="balance">余额：</text>
-							<text v-if="moneyShow">{{uerInfo.withdrawYuMoney}}</text>
+							<text v-if="moneyShow">{{withdrawYuMoney}}</text>
 							<text v-else>****</text>
 						</view>
 						<view class="rt">
@@ -161,24 +161,19 @@
 							</view>
 							<text>我的同事</text>
 						</view>
-						<view class="item" @tap="toMyCollection()">
+						<!-- <view class="item">
 							<view class='icon'>
 								<image src="../../static/cut/ionc-f.png" mode="widthFix"></image>
 							</view>
 							<text>我的收藏</text>
-						</view>
+						</view> -->
 						<view class="item" @tap="toMyCoupon()">
 							<view class='icon'>
 								<image src="../../static/cut/ionc-g.png" mode="widthFix"></image>
 							</view>
 							<text>我的优惠券</text>
 						</view>
-						<view class="item" @tap="toMyPoints()">
-							<view class='icon'>
-								<image src="../../static/cut/ionc-h.png" mode="widthFix"></image>
-							</view>
-							<text>我的积分</text>
-						</view>
+						
 					</view>
 				</view>
 				<view class="service-block">
@@ -193,11 +188,17 @@
 							</view>
 							<text>分销中心</text>
 						</view>
-						<view class="item" @tap="toMyComment()">
+						<!-- <view class="item" >
 							<view class='icon'>
 								<image src="../../static/cut/ionc-k.png" mode="widthFix"></image>
 							</view>
 							<text>我的评价</text>
+						</view> -->
+						<view class="item" @tap="toMyPoints()">
+							<view class='icon'>
+								<image src="../../static/cut/ionc-h.png" mode="widthFix"></image>
+							</view>
+							<text>我的积分</text>
 						</view>
 						<view class="item" @tap="toShare()">
 							<view class='icon'>
@@ -237,7 +238,10 @@ export default{
 			money: '',
 			isAttendance:'',
 			moneyShow:true,
-			store:''
+			store:'',
+			commentCount:'',
+			collectCount:'',
+			withdrawYuMoney:''
 		}
 	},
 	computed: {
@@ -250,6 +254,9 @@ export default{
 		if(this.hasLogin){
 			checkModel.getUserInfo(data=>{
 				this.store = data.store
+				this.commentCount = data.goodCommentCount
+				this.collectCount = data.collectCount
+				this.withdrawYuMoney = data.withdrawYuMoney
 			})
 		}
 		

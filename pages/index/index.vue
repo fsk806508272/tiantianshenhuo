@@ -531,6 +531,7 @@
 						background:rgba(255,102,0,1);
 					}
 					.word{
+						font-weight: 500;
 						font-size:32rpx;
 						margin-left: 10rpx;
 					}
@@ -706,6 +707,7 @@
 				}
 			}
 			.top-search{
+				border-radius: 8rpx;
 				flex: 1;
 				height: 64rpx;
 				display: flex;

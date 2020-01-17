@@ -42,7 +42,7 @@
 						<view class="title">
 							<view>{{item.title}}</view>
 						</view>
-						<view class="goods" v-for="(item2,index2) in item.list" :key="index2">
+						<view @tap="toDetail(item2)" class="goods" v-for="(item2,index2) in item.list" :key="index2">
 							<image v-if="typeId!=1&&typeId!=5" :src="item2.smallPic" mode=""></image>
 							<image v-if="typeId==1||typeId==5" :src="item2.picture.split(',')[0]" mode=""></image>
 							<view class="content">
@@ -160,6 +160,24 @@
 					url:'/pages/msg/chat?toAccount=' + name
 				})
 			},
+			
+			toDetail(item){
+				console.log(item)
+				if(this.typeId!=5&&this.typeId!=1){
+					uni.navigateTo({
+						url:`/pages/provide/detail?sellerId=${item.sellerId}&id=${item.id}&type=${item.goodsFirsttype}`
+					})
+				}else if(this.typeId==1){
+					uni.navigateTo({
+						url:'/pages/house/housedetail?data='+item.id
+					})
+				}else if(this.typeId==5){
+					uni.navigateTo({
+						url:'/pages/finance/financedetail?financeId=' + item.financeId + '&code=' + item.financeCode + '&sellerId=' + item.sellerId
+					})
+				}
+			},
+			
 			
 			toCart(){
 				uni.switchTab({
