@@ -54,7 +54,7 @@
 			}
 		},
 		onLoad() {
-			
+		
 		},
 		methods:{
 			changePayType(index){
@@ -97,6 +97,9 @@
 					}else{
 						let src = res.mwebUrl;
 						window.location = src;
+						// uni.navigateTo({
+						// 	url:'chargesuccess'
+						// })
 					}
 					// #endif
 				},(err) =>{
