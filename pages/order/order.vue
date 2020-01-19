@@ -777,8 +777,8 @@ page{
 					margin-left:10rpx;
 					font-size:28rpx;
 					font-family:Source Han Sans CN;
-					font-weight:400;
-					color:rgba(100,100,100,1);
+					font-weight:500;
+					color:#1e1e1e;
 					line-height:36rpx;
 				}
 			}
