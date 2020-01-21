@@ -48,7 +48,7 @@
 						<view>我的积分</view>
 					</view>
 					<view class="item" @tap="toMyRecord">
-						<text>0</text>
+						<text>{{historyRecordCount}}</text>
 						<view>访问记录</view>
 					</view>
 				</view>
@@ -241,7 +241,8 @@ export default{
 			store:'',
 			commentCount:'',
 			collectCount:'',
-			withdrawYuMoney:''
+			withdrawYuMoney:'',
+			historyRecordCount:''
 		}
 	},
 	computed: {
@@ -257,6 +258,7 @@ export default{
 				this.commentCount = data.goodCommentCount
 				this.collectCount = data.collectCount
 				this.withdrawYuMoney = data.withdrawYuMoney
+				this.historyRecordCount = data.historyRecordCount
 			})
 		}
 		

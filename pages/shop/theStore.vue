@@ -50,7 +50,7 @@
 								<view v-if="typeId!=1&&typeId!=5" class="goodsTitle">{{item2.goodsName}}</view>
 								<!-- <view class="describe">第{{index2+1}}个商品的描述内容</view> -->
 								<view class="money">
-									<view class="price">{{item2.price}}</view>
+									<view class="price">￥{{item2.price}}</view>
 									<image @tap="addCart(item2)" v-if="typeId==8||typeId==10" src="/static/cut/car.png"></image>
 								</view>
 							</view>

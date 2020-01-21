@@ -995,7 +995,14 @@
 				"navigationBarTitleText": "收付款码",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
-        }
+        },
+		{
+		    "path" : "pages/user/store/submitSuccess",
+		    "style" : {
+				"navigationBarTitleText": "开通店铺",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

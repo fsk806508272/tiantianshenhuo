@@ -473,7 +473,9 @@ page{
 	}
 }
 
+
 .popBox{
+	border-radius: 20rpx 20rpx 0 0;
 	z-index:9999;
 	padding:20rpx;
 	// padding-bottom:110rpx;
