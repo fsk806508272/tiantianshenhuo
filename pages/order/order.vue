@@ -16,7 +16,9 @@
 		
 		<view class="topTabBar" :style="{position:headerPosition,top:headerTop}">
 			<view class="grid" v-for="(grid,tbIndex) in orderType" :key="tbIndex" @tap="showType(tbIndex)" >
-				<view class="text" :class="[tbIndex==tabbarIndex?'on':'']">{{grid}}</view>
+				<!-- <view class="text" :class="[tbIndex==tabbarIndex?'on':'']">{{grid}}</view> -->
+				<view class="text">{{grid}}</view>
+				<view class="block" v-if="tbIndex==tabbarIndex"></view>
 			</view>
 		</view>
 		
@@ -57,7 +59,7 @@
 								<view class="title">{{good.title.substring(0,42)}}</view>
 								<view class="spec">{{good.spec}}</view>
 								<view class="choose">
-									<view class="price">￥{{good.price}}</view>
+									<view class="price">￥<text>{{good.price}}</text></view>
 									<view class="number">
 										<view class="sub">
 											<image src="../../static/cut/sub_click.png" @tap.stop="sub(good)"></image>
@@ -124,7 +126,7 @@
 				</view>
 				
 				<view v-if="item.firsttypeId==1" class="type" @tap="toDetail(item)">
-					<store-title :title="item.nickName" :status="item.type"></store-title>
+					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
 					<store-main :pic="item|picOne" :title="item.title" :specsize="item.paymentMethod">
 						<view class="fee">
 							<view class="feename">押金</view>
@@ -706,6 +708,7 @@ page{
 	}
 }
 .topTabBar{
+	border-radius:0px 0px 30rpx 30rpx;
 	position:fixed;
 	z-index: 10;
 	top:0;
@@ -714,16 +717,24 @@ page{
 	background-color: #fff;
 	display: flex;
 	justify-content: space-around;
+	
 	.grid{
 		width:20%;
 		height:64rpx;
 		display:flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		color:#787878;
 		font-size:24rpx;
+		.block{
+			width:50rpx;
+			height:4rpx;
+			background:rgba(255,102,0,1);
+			border-radius:2rpx;
+		}
 		.text{
-			height:62rpx;
+			// height:62rpx;
 			display: flex;
 			align-items: center;
 			&.on{
@@ -755,6 +766,7 @@ page{
 	}
 	.row{
 		.container{
+			border-radius:30rpx;
 			background-color: #fff;
 			margin-top:20rpx;
 			.storeInfo{
@@ -762,6 +774,7 @@ page{
 				align-items: center;
 				height:88rpx;
 				.checkbox{
+					margin-top: 8rpx;
 					margin-left:19rpx;
 					image{
 						height:34rpx;
@@ -770,8 +783,8 @@ page{
 				}
 				.storeIcon{
 					margin-left:19rpx;
-					width:30rpx;
-					height:29rpx;
+					width:26rpx;
+					height:25rpx;
 				}
 				.storeTitle{
 					margin-left:10rpx;
@@ -792,6 +805,7 @@ page{
 				z-index: 4;
 				border: 0;
 				.menu{
+					border-radius: 0 40rpx 40rpx 0;
 					.icon{
 						color:#fff;
 						font-size: 48rpx;
@@ -809,6 +823,7 @@ page{
 				}
 				
 				.carrier{
+					border-radius:30rpx;
 					@keyframes showMenu {
 						0% {transform: translateX(0);}100% {transform: translateX(-30%);}
 					}
@@ -867,9 +882,9 @@ page{
 							display: flex;
 							justify-content: space-between;
 							.price{
-								font-size:26rpx;
-								font-family:Source Han Sans CN;
-								font-weight:400;
+								text{
+									font-size:36rpx;
+								}
 								color:rgba(255,102,0,1);
 							}
 							.number{
@@ -1069,6 +1084,7 @@ checkbox .uni-checkbox-input.uni-checkbox-input-checked::before{
 	-webkit-transform: translate(-70%, -50%) scale(1);
 }
 .type{
+	border-radius:30rpx;
 	margin-top: 20rpx;
 	padding:0 20rpx;
 	background-color: #fff;
