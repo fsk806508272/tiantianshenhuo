@@ -125,14 +125,21 @@
 						<view class="main-left">
 							<view class="main-title">
 								<view class="tit ellipsis">{{item.goodsName}}</view>
-								<text class="distance">{{item.distance|formatDistance}}</text>
+								<!-- <text class="distance">{{item.distance|formatDistance}}</text> -->
 							</view>
+							<view class="main-tag">
+								<view v-if="item.postFee==0" class="no-fee">免费配送</view>
+								<view class="normal-tag" v-else>配送￥{{item.postFee}}</view>
+								<view class="normal-tag">月售{{item.monthSale}}</view>
+							</view>
+							
 							<view class="main-parameter">
 								<view>
 									<text class="price">￥{{item.price}}</text>
 								</view>
-								<text class="volume">月销{{item.monthSale}}</text>
-								<text class="volume">免费配送</text>
+								<!-- <text class="volume">月销{{item.monthSale}}</text> -->
+								<!-- <text class="volume">免费配送</text> -->
+								<view>距离{{item.distance|formatDistance}}</view>
 								<image @tap.stop="addToCart(item)" src="/static/cut/car.png" mode=""></image>
 							</view>
 						</view>
@@ -888,16 +895,16 @@
 		.list{	
 			background:rgba(246,246,246,1);	
 			.list-lf{
-				margin:10rpx 0;
+				margin:5rpx 0;
 				.item{
-					height: 220rpx;
-					padding: 30rpx 20rpx;
+					height: 190rpx;
+					padding: 20rpx 20rpx;
 					display: flex;
 					margin:10rpx 0;
 					background:#FFFFFF;	
 					.item-img{
-						width: 160rpx;
-						height: 160rpx;
+						width: 150rpx;
+						height: 150rpx;
 						background:rgba(250,250,250,1);
 						border-radius:10rpx;
 						margin-right: 20rpx;
@@ -911,7 +918,7 @@
 							display: flex;
 							justify-content: space-between;						
 							.tit{
-								font-size:28rpx;
+								font-size:30rpx;
 								max-height: 80rpx;
 								overflow: hidden;
 								font-weight:400;
@@ -921,6 +928,29 @@
 							.distance{
 								font-size:24rpx;
 								color:rgba(120,120,120,1);
+							}
+						}
+						.main-tag{
+							margin-top: 10rpx;
+							display: flex;
+							view{
+								margin-right: 10rpx;
+							}
+							.no-fee{
+								padding:0rpx 5rpx;
+								font-size:22rpx;
+								color:#FF6600;
+								background:rgba(255,255,255,1);
+								border:1px solid rgba(255,102,0,1);
+								border-radius:6rpx;
+							}
+							.normal-tag{
+								padding:0rpx 5rpx;
+								font-size:22rpx;
+								color:#8C8C8C;
+								background:rgba(255,255,255,1);
+								border:1px solid rgba(160,160,160,1);
+								border-radius:6rpx;
 							}
 						}
 						.main-parameter{
