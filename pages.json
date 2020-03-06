@@ -43,6 +43,16 @@
 			}
 		},
 		{
+			"path":"pages/index/webNavigation",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
+			}
+		},
+		{
 			"path": "pages/HM-search/searchSeller",
 			"style": {
 				"navigationBarTitleText": "店铺搜索",

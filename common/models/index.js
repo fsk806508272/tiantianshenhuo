@@ -69,7 +69,7 @@ class IndexModel extends HTTP{
 	getOther(success){
 	  let params={
 		  method:"POST",
-		  url:"/app/otheradvert/getList?showPage=1&showPosition=1",
+		  url:"/app/otheradvert/getListNew?showPage=1",
 		  success:success
 	  }
 	  this.request(params)
@@ -109,6 +109,16 @@ class IndexModel extends HTTP{
 		let params = {
 			method:"POST",
 			url:'/app/receiveraddress/getByUserIdAddr',
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getAdvertisement(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/banner/getAdvertisement',
+			data:data,
 			success:success
 		}
 		this.request(params)

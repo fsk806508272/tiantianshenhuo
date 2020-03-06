@@ -19,10 +19,10 @@
 		</view>
 		<view class="place"></view>
 		<!-- 授权登录按钮 -->
-		<view class="getuser_box" v-if="!hasLogin">
+<!-- 		<view class="getuser_box" v-if="!hasLogin">
 			<text>登录后可领取海量权益哦</text>
 			<button @tap="toUserInfo"> 马上登录 </button>
-		</view>
+		</view> -->
 		
 		<!-- 轮播图 -->
 		<view class="carousel-section">
@@ -41,11 +41,29 @@
 		</view>
 		<!-- 分类 -->
 		<view class="icons">
-			<view class="item" @click="Jump(index+1)" v-for="(item,index) in Iconslist" :key="index">				 
+			<scroll-view @scrolltolower="scrolltolowerEvent" @scrolltoupper="scrolltoupperEvent" class="scroll_nav_box" scroll-x="true">
 				<view>
-					<image :src="item.coverImg" mode="widthFix"></image>
+					<view class="item" @click="Jump(item.firsttypeinfoId)" v-for="(item,index) in Iconslist" :key="index" v-if="index<=5">				 
+						<view>
+							<image :src="item.coverImg" mode="widthFix"></image>
+						</view>
+						<text>{{item.title}}</text>
+					</view>
 				</view>
-				<text>{{item.title}}</text>
+				<view>
+					<view class="item" @click="Jump(item.firsttypeinfoId)" v-for="(item,index) in Iconslist" :key="index" v-if="index>5">				 
+						<view>
+							<image :src="item.coverImg" mode="widthFix"></image>
+						</view>
+						<text>{{item.title}}</text>
+					</view>
+				</view>
+				
+			</scroll-view>
+			
+			<view class="move">
+				<image :src="showMove==0?showSrc[0]:showSrc[1]"></image>
+				<image :src="showMove==0?showSrc[1]:showSrc[0]"></image>
 			</view>
 		</view>
 		<view class="bg"></view>
@@ -56,6 +74,7 @@
 					<view class="block"></view>
 					<view class="word">生活圈</view>
 				</view>
+				<image v-if="adShow==1" class="epid" :src="adImg" @tap.stop="toAdver()"></image>
 				<view class="rt" @tap="toLifecircle">
 					<view class="block">查看更多</view>
 					<image src="/static/cut/right_orange.png"></image>
@@ -89,16 +108,16 @@
 			</view>
 			<view class="life-cen">
 				<view class="lf">
-					<image :src="Otherlisttwo[0].coverImg" mode=""></image>
+					<image @tap="toLife(Otherlisttwo[0])" :src="Otherlisttwo[0].coverImg" mode=""></image>
 				</view>
 				<view class="rt">
-					<image :src="Otherlisttwo[1].coverImg" mode=""></image>
-					<image :src="Otherlisttwo[2].coverImg" mode=""></image>
+					<image :src="Otherlisttwo[1].coverImg" @tap="toLife(Otherlisttwo[1])" mode=""></image>
+					<image :src="Otherlisttwo[2].coverImg" @tap="toLife(Otherlisttwo[2])" mode=""></image>
 				</view>
 			</view>
 			<view class="life-bottom">
 				<view class="item" v-for="(item,index) in Otherlistone" :key="index">
-					<image :src="item.coverImg" mode="widthFix"></image>
+					<image :src="item.coverImg" mode="widthFix" @tap="toLife(item)"></image>
 				</view>
 				
 			</view>
@@ -110,7 +129,7 @@
 				<view class="mark"></view><text>其他服务</text>
 			</view>
 			<view class="item-img">
-				<image v-for="(item,index) in Otherlistthree" :key="index" :src="item.coverImg" mode=""></image>				
+				<image v-for="(item,index) in Otherlistthree" :key="index" :src="item.coverImg" @tap="toLife(item)" mode=""></image>				
 			</view>	
 		</view>
 		<view class="bg"></view>
@@ -200,7 +219,12 @@
 				Otherlistone:'',
 				Otherlisttwo:[{coverImg:""},{coverImg:""},{coverImg:""}],
 				Otherlistthree:[],
-				DynamicData:''
+				DynamicData:'',
+				showMove:false,
+				showSrc:['https://sgz.wdttsh.com/mini_static/cut/show-on.png','https://sgz.wdttsh.com/mini_static/cut/show-off.png'],
+				adShow:false,
+				adUrl:'',
+				adImg:''
 			}
 		},
 		computed:{
@@ -251,7 +275,7 @@
 			//         this.pickerText = data.originalData.result.addressComponent.city.replace(/市/g, ''); //把"市"去掉
 			// 			}
 			// });
-
+			
 	
 		},
 		onShow(){
@@ -263,6 +287,12 @@
 		},
 		methods: {
 			...mapMutations(['getLat','getLon','setLocation']),
+			scrolltolowerEvent(){
+				this.showMove = true
+			},
+			scrolltoupperEvent(){
+				this.showMove = false
+			},
 			addToCart(item){
 				providemodel.addCart({goodsItemId:item.defaultItemId,num:1},(data)=>{
 					uni.showToast({
@@ -270,6 +300,12 @@
 						duration:1500,
 						icon:'none'
 					})
+				})
+			},
+			toAdver(){
+				console.log(this.adUrl)
+				uni.navigateTo({
+					url:'/pages/index/webNavigation?src=' + this.adUrl
 				})
 			},
 			getCurrentCity(){
@@ -370,6 +406,15 @@
 					// 	}
 					// }
 				})
+				
+				indexModel.getAdvertisement({},data=>{
+					console.log(data)
+					this.adImg = data.coverImg
+					this.adUrl = data.skipId
+					if(data.status==0){
+						this.adShow = true
+					}
+				})
 			},
 			toLifecircle(){
 				let token = ''
@@ -465,6 +510,40 @@
 					url: '/pages/provide/detail?id=' + item.id + '&type=' + 8 + '&sellerId=' + item.sellerId
 				});
 			},
+			toLife(item){
+				console.log(item)
+				if(item.skipType==1){
+					if(item.firstTypeId!=5&&item.firstTypeId!=1){
+						uni.navigateTo({
+							url:`/pages/shop/theStore?sellerId=${item.skipId}&type=${item.firstTypeId}`
+						})
+					}else if(item.firstTypeId==5){
+						uni.navigateTo({
+							url:`/pages/shop/theStore?sellerId=${item.skipId}&type=5`
+						})
+					}else if(item.firstTypeId == 1){
+						uni.navigateTo({
+							url:`/pages/shop/storeindex?sellerId=${item.sellerId}&type=1`
+						})
+					}
+					
+				}else if(item.skipType==2){
+					if(item.firstTypeId!=5&&item.firstTypeId!=1){
+						uni.navigateTo({
+							url:`/pages/provide/detail?sellerId=${item.sellerId}&id=${item.skipId}&type=${item.firstTypeId}`
+						})
+					}else if(item.firstTypeId==5){
+						uni.navigateTo({
+							url:'/pages/finance/financedetail?financeId=' + item.skipId + '&code=' + item.financeCode + '&sellerId=' + item.sellerId
+						})
+					}else if(item.firstTypeId == 1){
+						uni.navigateTo({
+							url:'/pages/house/housedetail?data=' + item.shipId
+						})
+					}
+					
+				}
+			},
 			onCancel(e) {
 				console.log(e)
 			},
@@ -542,6 +621,10 @@
 						font-size:32rpx;
 						margin-left: 10rpx;
 					}
+				}
+				.epid{
+					width:241rpx;
+					height:55rpx;
 				}
 				.rt{
 					display: flex;
@@ -782,28 +865,34 @@
 			     }
 		}
 		.icons{
-			width: 100%;
-			height: 336rpx;
-			background: #fff;
-			// height: 168rpx;
-			margin-top: 43rpx;
-			display: flex;
-			flex-wrap: wrap;
-			margin-bottom:20rpx;
-			.item{
-				width: 20%;	
+			.scroll_nav_box{
+				width:100%;
+				height:366rpx;
 				display: flex;
-				flex-direction: column;
-				align-items: center;
-				margin-bottom: 40rpx;			
-				image{
-					width: 100rpx;
-					height: 82rpx;
-				}
-				text{
-					font-size: 26rpx;
+				box-sizing: border-box;
+				white-space: nowrap;
+				.item{
+					margin:20rpx 24rpx;
+					text-align: center;
+					display: inline-block;
+					image{
+						width:100rpx;
+						height:82rpx;	
+					}
 				}
 			}
+			.move{
+				height:20px;
+				display: flex;
+				align-items:center;
+				justify-content: center;
+				image{
+					width:30rpx;
+					margin-right:10rpx ;
+					height:6rpx;
+				}
+			}
+			
 		}
 		.life-box{
 			height: 620rpx;

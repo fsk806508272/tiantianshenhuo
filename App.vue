@@ -107,6 +107,14 @@
 		font-size: 26rpx;
 		color: #3C3C3C;
 	}
+	
+	::-webkit-scrollbar{
+		width:0;
+		height: 0;
+		background-color: transparent;
+	}
+	
+	
 	//文字省略
 	.ellipsis{
 		overflow: hidden;
