@@ -39,6 +39,20 @@
 			  </block>
 		  </view>
 		</view>
+		
+		<view v-if="showDistance" class="distance-filter" :class="showDistance?'':'fadeOut'">
+			<view class="distance-title">距离筛选</view>
+			<view class="tags">
+				<view class="tag" v-for="(item,index) in distanceList" :key="index"
+					@tap="chooseTag(index)" :class="distanceIndex===index?'on':''">
+					{{item}}
+				</view>
+			</view>
+			<view @tap="confirmDistance" class="confirm-button">确定</view>
+		</view>
+		
+		
+		
 		<!-- 分类 -->
 		<view class="icons">
 			<scroll-view @scrolltolower="scrolltolowerEvent" @scrolltoupper="scrolltoupperEvent" class="scroll_nav_box" scroll-x="true">
@@ -66,7 +80,6 @@
 				<image :src="showMove==0?showSrc[1]:showSrc[0]"></image>
 			</view>
 		</view>
-		<view class="bg"></view>
 		
 		<view class="lifeCircle">
 			<view class="title">
@@ -100,7 +113,6 @@
 		</view>
 		
 		
-		<view class="bg" @click="Jump(1)"></view>
 		<!-- 生活服务 -->
 		<view class="life-box">
 			<view class="title">
@@ -122,7 +134,6 @@
 				
 			</view>
 		</view>
-		<view class="bg"></view>
 		<!-- 其他服务 -->
 		<view class="Other-box">
 			<view class="title">
@@ -132,10 +143,18 @@
 				<image v-for="(item,index) in Otherlistthree" :key="index" :src="item.coverImg" @tap="toLife(item)" mode=""></image>				
 			</view>	
 		</view>
-		<view class="bg"></view>
 
 		<view class="content">
-			
+			<view class="hits">
+				<view class="hit-left">
+					<view class="hit-border"></view>
+					<view class="hit-title">热门推荐</view>
+				</view>
+				<view @tap="showDistance=!showDistance" class="hit-right">
+					<view class="distance-title">距离筛选</view>
+					<image src="https://sgz.wdttsh.com/mini_static/cut/triangle-down.png"></image>
+				</view>
+			</view>
 			<view class="list">
 				<!--  TA的提供-->
 				<view class="list-lf" v-if="chenck">
@@ -224,7 +243,20 @@
 				showSrc:['https://sgz.wdttsh.com/mini_static/cut/show-on.png','https://sgz.wdttsh.com/mini_static/cut/show-off.png'],
 				adShow:false,
 				adUrl:'',
-				adImg:''
+				adImg:'',
+				showDistance:false,
+				distanceList:['500m','1km','5km','10km','20km','全部'],
+				distanceIndex:null,
+				dataParams:{
+					latitude:'',
+					longitude:'',
+					pageNo:'',
+					smallProgram:1,
+					pageSize:10,
+					goodsFirsttype:8,
+					homeRange:''
+				},
+				homeRange:''
 			}
 		},
 		computed:{
@@ -306,6 +338,42 @@
 				console.log(this.adUrl)
 				uni.navigateTo({
 					url:'/pages/index/webNavigation?src=' + this.adUrl
+				})
+			},
+			chooseTag(index){
+				this.distanceIndex = index
+			},
+			confirmDistance(){
+				this.showDistance = false
+				let homeRange = ''
+				if(this.distanceIndex===null){
+					return
+				}else if(this.distanceIndex===0){
+					this.homeRange = 500
+				}else if(this.distanceIndex===1){
+					this.homeRange = 1000
+				}else if(this.distanceIndex===2){
+					this.homeRange = 5000
+				}else if(this.distanceIndex===3){
+					this.homeRange = 10000
+				}else if(this.distanceIndex===4){
+					this.homeRange = 20000
+				}else if(this.distanceIndex===5){
+					this.homeRange = ''
+				}
+				this.pagelfunm = 1
+				this.getDistanceData(this.homeRange)
+			},
+			getDistanceData(homeRange){
+				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,smallProgram:1,pageSize:10,goodsFirsttype:8,homeRange:homeRange},data=>{
+					if(data.length==0){
+						this.loadingType = 'nomore'
+						return
+					}else if(this.pagelfunm==1){
+						this.listlf = data
+					}else{
+						this.listlf = this.listlf.concat(data)
+					}
 				})
 			},
 			getCurrentCity(){
@@ -427,7 +495,7 @@
 			},
 			Jump (num) {
 				
-				if(num==1){
+				if(num==8){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 8
 					})
@@ -435,28 +503,28 @@
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 3
 					})
-				}else if(num==7){
+				}else if(num==9){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 9
 					})
 				}
-				else if(num==2){
+				else if(num==10){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 10
 					})
-				}else if(num==6){
+				}else if(num==1){
 					uni.navigateTo({
 						url:'/pages/house/house'
 					})
-				}else if(num==4){
+				}else if(num==5){
 					uni.navigateTo({
 						url:'/pages/finance/finance'
 					})
-				}else if(num==8){
+				}else if(num==4){
 					uni.navigateTo({
 						url:'/pages/VIPCard/VIPCard'
 					})
-				}else if(num==5){
+				}else if(num==2){
 					if(!this.hasLogin){
 						// #ifdef H5
 						uni.navigateTo({
@@ -473,11 +541,11 @@
 							url:'/pages/user/attendance/attendance'
 						})
 					}
-				}else if(num==9){
+				}else if(num==6){
 					uni.navigateTo({
 						url:'/pages/user/collection/collection'
 					})
-				}else if(num==10){
+				}else if(num==7){
 					uni.navigateTo({
 						url:'/pages/wallet/coupon'
 					})
@@ -506,12 +574,17 @@
 			},
 			//商品跳转
 			toGoods(item) {
+				if(this.showDistance == true){
+					return this.showDistance = false
+				}
 				uni.navigateTo({
 					url: '/pages/provide/detail?id=' + item.id + '&type=' + 8 + '&sellerId=' + item.sellerId
 				});
 			},
 			toLife(item){
-				console.log(item)
+				if(this.showDistance == true){
+					return this.showDistance = false
+				}
 				if(item.skipType==1){
 					if(item.firstTypeId!=5&&item.firstTypeId!=1){
 						uni.navigateTo({
@@ -572,8 +645,13 @@
 
 		//上拉加载，需要自己在page.json文件中配置"onReachBottomDistance"
 		onReachBottom:tool.debounce(function(){
+			if(this.homeRange==''){
 				this.pagelfunm++
-				this.getprovide (this.pagelfunm)
+				this.getprovide ()
+			}else{
+				this.pagelfunm++
+				this.getDistanceData(this.homeRange)
+			}
 		}),
 		onBackPress() { //监听页面返回
 			if (this.$refs.mpvueCityPicker.showPicker) {
@@ -592,12 +670,48 @@
 <style lang="scss">
 	//ctrl+alt+/ 即可生成正确注释 条件编译是利用注释实现的，在不同语法里注释写法不一样，js使用 // 注释、css 使用 /* 注释 */、vue/nvue 模板里使用 <!-- 注释 -->；
 		page{
-			background:#fff;	
+			background:#f2f2f2;	
 		}		
-		.bg{height: 20rpx;background:rgba(246,246,246,1);}
+		
+		.content{
+			.hits{
+				margin: 30rpx 0;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding:0 20rpx;
+				.hit-left{
+					display: flex;
+					align-items: center;
+					.hit-border{
+						margin-right: 13rpx;
+						width:8rpx;
+						height:30rpx;
+						background:rgba(255,102,0,1);
+					}
+				}
+				.hit-right{
+					display: flex;
+					align-items: center;
+					.distance-title{
+						margin-right: 10rpx;
+						font-size:28rpx;
+						font-family:Source Han Sans CN;
+						font-weight:400;
+						color:rgba(255,102,0,1);
+					}
+					image{
+						width:18rpx;
+						height:12rpx;
+					}
+				}
+			}
+		}
+		
 		
 		
 		.lifeCircle{
+			border-radius: 30rpx;
 			width:750rpx;
 			height:547rpx;
 			background-color: #fff;
@@ -666,6 +780,8 @@
 					}
 				}
 			}
+			
+			
 			.text{
 				margin-top: 32rpx;
 				overflow : hidden;
@@ -824,16 +940,21 @@
 		}
 		.place{height: 88rpx;}// height: 232rpx;
 		.carousel-section{
+			background-color: #fff;
 			width: 100%;
 			height: 33.3vw;
 			overflow: hidden;
 			position: relative;
 			swiper{
+				border-radius: 30rpx;
 				width: 100%;
 				height: 33.3vw;
 				position: relative;
+				padding:0 20rpx;
 				swiper-item{
+					border-radius: 30rpx;
 					.swiper-img{
+						border-radius: 30rpx;
 						width: 100%;
 						height: 33.3vw;
 					}
@@ -865,6 +986,9 @@
 			     }
 		}
 		.icons{
+			background-color: #fff;
+			margin-bottom: 20rpx;
+			border-radius: 0 0 30rpx 30rpx;
 			.scroll_nav_box{
 				width:100%;
 				height:366rpx;
@@ -895,6 +1019,11 @@
 			
 		}
 		.life-box{
+			margin-top: 20rpx;
+			background-color: #fff;
+			padding:0 20rpx;
+			padding-bottom: 30rpx;
+			border-radius: 30rpx;
 			height: 620rpx;
 			padding: 0 20rpx;
 			.life-cen{	
@@ -938,8 +1067,11 @@
 			}
 		}
 		.Other-box{
-			margin:10rpx 0;
+			background-color: #fff;
+			border-radius: 30rpx;
+			margin:20rpx 0;
 			padding:0 20rpx;
+			padding-bottom:30rpx;
 			.item-img{
 				display: flex;
 				flex-wrap: wrap;
@@ -986,6 +1118,7 @@
 			.list-lf{
 				margin:5rpx 0;
 				.item{
+					border-radius: 30rpx;
 					height: 190rpx;
 					padding: 20rpx 20rpx;
 					display: flex;
@@ -1159,5 +1292,54 @@
 				}
 			}
 			
+		}
+		
+		.distance-filter{
+			z-index: 99;
+			position: fixed;
+			top:170rpx;
+			padding-bottom:40rpx ;
+			background-color: #fff;
+			-webkit-animation:fadenum 0.5s ease;
+			-moz-animation:fadenum 0.5s ease;
+			animation: fadenum 0.5s ease;
+			.distance-title{
+				color:#646464;
+				display: inline-block;
+				margin-top: 20rpx;
+				margin-left: 10rpx;
+			}
+			.tags{
+				display: flex;
+				flex-wrap: wrap;
+				.tag{
+					margin:20rpx;
+					width:145rpx;
+					height:58rpx;
+					background:rgba(240,240,240,1);
+					border-radius:29rpx;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					&.on{
+						background:rgba(255,241,232,1);
+						border:1rpx solid rgba(255,102,0,1);
+						color:#FF6600;
+					}
+				}
+			}
+			.confirm-button{
+				margin-top: 50rpx;
+				margin-left: 20rpx;
+				width:710rpx;
+				height:70rpx;
+				background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
+				border-radius:35rpx;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+				font-size:30rpx;
+			}
 		}
 </style>		
