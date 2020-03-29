@@ -293,7 +293,7 @@ page{
 		align-items: center;
 		font-size:28rpx;
 		font-weight:400;
-		color:rgba(120,120,120,1);
+		color:#ff6600;
 		image{
 			margin-left: 10rpx;
 			width:18rpx;

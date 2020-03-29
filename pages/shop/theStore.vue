@@ -51,7 +51,7 @@
 								<!-- <view class="describe">第{{index2+1}}个商品的描述内容</view> -->
 								<view class="money">
 									<view class="price">￥{{item2.price}}</view>
-									<image @tap="addCart(item2)" v-if="typeId==8||typeId==10" src="/static/cut/car.png"></image>
+									<image @tap.stop="addCart(item2)" v-if="typeId==8||typeId==10" src="/static/cut/car.png"></image>
 								</view>
 							</view>
 						</view>
@@ -496,7 +496,7 @@
 			}
 			
 			&.active,&:active{
-				color: #42b983;
+				color: #FF6600;
 				background-color: #fff;
 				border-left: 6rpx solid #ff6600;
 			}

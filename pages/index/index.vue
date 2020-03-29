@@ -9,7 +9,7 @@
 		</view>
 		<!-- 顶部导航 -->
 		<view class="top">
-			<view class="top-search" @click="clicksearch(8)">
+			<view class="top-search" @click="clicksearch('')">
 				<view>
 					<image class="lf" src="../../static/cut/ss.png" mode=""></image>
 					<text>搜索标题</text>
@@ -57,7 +57,7 @@
 		<view class="icons">
 			<scroll-view @scrolltolower="scrolltolowerEvent" @scrolltoupper="scrolltoupperEvent" class="scroll_nav_box" scroll-x="true">
 				<view>
-					<view class="item" @click="Jump(item.firsttypeinfoId)" v-for="(item,index) in Iconslist" :key="index" v-if="index<=5">				 
+					<view class="item" @click="Jump(item)" v-for="(item,index) in Iconslist" :key="index" v-if="index%2==0">				 
 						<view>
 							<image :src="item.coverImg" mode="widthFix"></image>
 						</view>
@@ -65,7 +65,7 @@
 					</view>
 				</view>
 				<view>
-					<view class="item" @click="Jump(item.firsttypeinfoId)" v-for="(item,index) in Iconslist" :key="index" v-if="index>5">				 
+					<view class="item" @click="Jump(item)" v-for="(item,index) in Iconslist" :key="index" v-if="index%2==1">				 
 						<view>
 							<image :src="item.coverImg" mode="widthFix"></image>
 						</view>
@@ -479,7 +479,7 @@
 					console.log(data)
 					this.adImg = data.coverImg
 					this.adUrl = data.skipId
-					if(data.status==0){
+					if(data.status==1){
 						this.adShow = true
 					}
 				})
@@ -493,38 +493,38 @@
 					url:'/pages/lifecircle/lifecircle?token=' + token
 				})
 			},
-			Jump (num) {
+			Jump (item) {
 				
-				if(num==8){
+				if(item.firsttypeinfoId==8){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 8
 					})
-				}else if(num==3){
+				}else if(item.firsttypeinfoId==3){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 3
 					})
-				}else if(num==9){
+				}else if(item.firsttypeinfoId==9){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 9
 					})
 				}
-				else if(num==10){
+				else if(item.firsttypeinfoId==10){
 					uni.navigateTo({
 						url: '/pages/provide/index?type=' + 10
 					})
-				}else if(num==1){
+				}else if(item.firsttypeinfoId==1){
 					uni.navigateTo({
 						url:'/pages/house/house'
 					})
-				}else if(num==5){
+				}else if(item.firsttypeinfoId==5){
 					uni.navigateTo({
 						url:'/pages/finance/finance'
 					})
-				}else if(num==4){
+				}else if(item.firsttypeinfoId==4){
 					uni.navigateTo({
 						url:'/pages/VIPCard/VIPCard'
 					})
-				}else if(num==2){
+				}else if(item.firsttypeinfoId==2){
 					if(!this.hasLogin){
 						// #ifdef H5
 						uni.navigateTo({
@@ -541,13 +541,21 @@
 							url:'/pages/user/attendance/attendance'
 						})
 					}
-				}else if(num==6){
+				}else if(item.firsttypeinfoId==6){
 					uni.navigateTo({
 						url:'/pages/user/collection/collection'
 					})
-				}else if(num==7){
+				}else if(item.firsttypeinfoId==7){
 					uni.navigateTo({
 						url:'/pages/wallet/coupon'
+					})
+				}else if(item.firsttypeinfoId==11){
+					uni.navigateTo({
+						url:'/pages/index/feedback'
+					})
+				}else if(item.firsttypeinfoId==12){
+					uni.navigateTo({
+						url:'/pages/index/webNavigation?src=' + item.skipUrl
 					})
 				}
 				
@@ -561,6 +569,7 @@
 				});
 			},	
 			getprovide (pagelfunm){
+				console.log(this.lat,this.lon)
 				indexModel.getIndexData({latitude:this.lat,longitude:this.lon,pageNo:this.pagelfunm,pageSize:10,goodsFirsttype:8},data=>{
 					if(data.length==0){
 						this.loadingType = 'nomore'
@@ -689,6 +698,11 @@
 						height:30rpx;
 						background:rgba(255,102,0,1);
 					}
+					.hit-title{
+						font-size:34rpx;
+						color:#1E1E1E;
+						font-weight: 700;
+					}
 				}
 				.hit-right{
 					display: flex;
@@ -731,8 +745,9 @@
 						background:rgba(255,102,0,1);
 					}
 					.word{
-						font-weight: 500;
-						font-size:32rpx;
+						color:#1E1E1E;
+						font-weight: 700;
+						font-size:34rpx;
 						margin-left: 10rpx;
 					}
 				}
@@ -842,9 +857,9 @@
 				margin-right: 10rpx;
 			}
 			text{
-				font-size:32rpx;
-				font-weight:500;
-				color:rgba(60,60,60,1);
+				font-size:34rpx;
+				font-weight:700;
+				color:rgba(30,30,30,1);
 			}
 		}
 		.top_fixed{
@@ -1002,6 +1017,11 @@
 					image{
 						width:100rpx;
 						height:82rpx;	
+					}
+					text{
+						font-size:28rpx;
+						font-weight:600;
+						color:rgba(60,60,60,1);
 					}
 				}
 			}

@@ -315,6 +315,13 @@
 					font-size:32rpx;
 					color:#1E1E1E;
 					font-weight: bolder;
+					overflow: hidden;
+					display: -webkit-box;
+					text-overflow: ellipsis;
+					-webkit-line-clamp:1;
+					-webkit-box-orient:vertical;
+					word-wrap:break-word;
+					word-break: break-all;
 				}
 			}
 			.middle{
@@ -343,14 +350,14 @@
 				justify-content: space-between;
 				margin-top: 20rpx;
 				.yellowBox{
-					padding:0rpx 10rpx;
+					padding:0rpx 5rpx;
 					border:1px solid rgba(255,102,0,1);
 					font-size:22rpx;
 					border-radius: 6rpx;
 					color:rgba(255,102,0,1);
 				}
 				.grayBox{
-					padding: 0 10rpx;
+					padding: 0 5rpx;
 					border:1px solid  rgba(160,160,160,1);
 					font-size:22rpx;
 					border-radius: 6rpx;

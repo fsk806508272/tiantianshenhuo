@@ -70,8 +70,8 @@
 		</view>
 		
 		<view v-if="type==3||type==9" class="longwidth bottomFix">
-			<view class="add_car_button" @tap="addCar">
-				加入购物车
+			<view class="add_car_button" @tap="toChat">
+				联系TA
 			</view>
 			<view class="theme-button" @tap="toPay">立即下单</view>
 		</view>
@@ -83,8 +83,8 @@
 					<image v-if="labelIndex==null" :src="data.itemList[0].image"></image>
 					<image v-else :src="data.itemList[labelIndex].image"></image>
 					<view class="content">
-						<view v-if="labelIndex==null">{{data.itemList[0].price}}</view>
-						<view v-else>{{data.itemList[labelIndex].price}}</view>
+						<view v-if="labelIndex==null">￥{{data.itemList[0].price}}</view>
+						<view v-else>￥{{data.itemList[labelIndex].price}}</view>
 					</view>
 				</view>
 				<view class="tips">请选择规格</view>
@@ -156,6 +156,7 @@ export default{
 	},
 	onLoad(options){
 		this.type = options.type
+		console.log(options)
 		this.id = options.id
 		if(this.hasLogin){
 			providemodel.addVisitRecord({firstTypeInfoId:options.type,mainId:options.id},(data)=>{
@@ -493,6 +494,10 @@ page{
 		height:200rpx;
 		.content{
 			margin-top: 84rpx;
+			view{
+				color:#FF4E00;
+				font-size:36rpx;
+			}
 		}
 		image{
 			margin-right: 15rpx;

@@ -16,8 +16,7 @@
 		
 		<view class="topTabBar" :style="{position:headerPosition,top:headerTop}">
 			<view class="grid" v-for="(grid,tbIndex) in orderType" :key="tbIndex" @tap="showType(tbIndex)" >
-				<!-- <view class="text" :class="[tbIndex==tabbarIndex?'on':'']">{{grid}}</view> -->
-				<view class="text">{{grid}}</view>
+				<view :class="[tbIndex==tabbarIndex?'on':'']" class="text">{{grid}}</view>
 				<view class="block" v-if="tbIndex==tabbarIndex"></view>
 			</view>
 		</view>
@@ -56,19 +55,20 @@
 							</view>
 							<image class="storeImage" :src="good.picPath"></image>
 							<view class="detail">
-								<view class="title">{{good.title.substring(0,42)}}</view>
+								<view class="title">{{good.title}}</view>
 								<view class="spec">{{good.spec}}</view>
 								<view class="choose">
 									<view class="price">￥<text>{{good.price}}</text></view>
 									<view class="number">
-										<view class="sub">
-											<image src="../../static/cut/sub_click.png" @tap.stop="sub(good)"></image>
+										<view class="sub" @tap.stop="sub(good)">
+											<image v-if="good.num==1" src="/static/cut/minus-disable.png"></image>
+											<image v-else src="/static/cut/minus-able.png"></image>
 										</view>
-										<view class="input">
+										<view @tap.stop="doNothing" class="input">
 											<input type="number" v-model="good.num"/>
 										</view>
-										<view class="add">
-											<image src="../../static/cut/add_click.png" @tap.stop="add(good)"></image>
+										<view class="add" @tap.stop="add(good)">
+											<image src="/static/cut/plus-able.png" ></image>
 										</view>
 									</view>
 								</view>
@@ -114,11 +114,16 @@
 						<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
 						:specsize="row.spec" :spec="'×' + row.num"></store-main>
 					</block>
-					<view v-if="tabbarIndex!=5" class="deliverMoney">
+					<!-- <view v-if="tabbarIndex!=5" class="deliverMoney">
 						<view class="deliverTitle">配送费</view>
 						<view class="money">￥{{item.postFee}}</view>
+					</view> -->
+					<!-- <view v-if="tabbarIndex!=5" class="total">合计:￥{{item.payment}}</view> -->
+					<view v-if="tabbarIndex!=5" class="total">
+						<text class="numbers">共{{item.goodsOrderItemList.length}}件商品，合计：</text>
+						<text class="total_price">￥{{item.payment}}</text>
+						<view class="deliver">(含运费￥{{item.postFee}})</view>
 					</view>
-					<view v-if="tabbarIndex!=5" class="total">合计:￥{{item.payment}}</view>
 					<store-time :time="item.createTime" :type="item.type" 
 					@rating="goRating(item)" @confirmOrder="confirmOrderOk(item)" 
 					@backOrder="applyService(item) " @cancelOrder="cancelUnpaidOrder(item)"
@@ -147,19 +152,19 @@
 				</view>
 				
 				<view v-if="item.firsttypeId==5&&item.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'" class="type" @tap="toDetail(item)">
-					<store-title :title="item.nickName" :status="item.type"></store-title>
+					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
 					<store-main :pic="item|picOne" :title="item.title" :specsize="item.specsName"
 					:price="'￥'+item.specsPrice"></store-main>
 					<view class="sum">合计:￥{{item.sum}}</view>
 					<store-time :time="item.createDate" :type="item.type" v-on:cancelOrder="cancelUnpaidOrder(item)"
-					v-on:toPay="toPayment(item)"></store-time>
+					v-on:toPay="toPayment(item)" @rating="goRating(item)"></store-time>
 				</view>
 				
 				<view v-if="item.firsttypeId==5&&item.secondTypeId!='6364df4f0ede49da9063b6cc5d4dfc72'" class="type" @tap="toDetail(item)">
-					<store-title :title="item.nickName" :status="item.type"></store-title>
+					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
 					<store-main :pic="item|picOne" :title="item.title" :specsize="item.specsName"></store-main>
 					<store-time :time="item.createDate" :type="item.type" v-on:cancelOrder="cancelUnpaidOrder(item)"
-					v-on:toPay="toPayment(item)"></store-time>
+					v-on:toPay="toPayment(item)" @rating="goRating(item)"></store-time>
 				</view>
 			</block>
 		</view>
@@ -270,6 +275,9 @@
 		methods:{
 			toGoodsDetail(row,good){
 				console.log(row,good)
+				uni.navigateTo({
+					url:`/pages/provide/detail?sellerId=${good.sellerId}&id=${good.goodsId}&type=8`
+				})
 			},
 			navToLogin(){
 				uni.navigateTo({
@@ -296,6 +304,9 @@
 				}
 				this.allSelected = false
 				this.sumPrice -= good.num * good.price
+			},
+			doNothing(){
+				
 			},
 			goodChoose(row,good){
 				!good.selected?this.chooseTrue(row,good):this.chooseFalse(row,good)
@@ -439,6 +450,8 @@
 					uni.navigateTo({
 						url:'comment?data=' + JSON.stringify(data)
 					})
+				}else if(item.firsttypeId == 5){
+					console.log(item)
 				}
 			},
 			showType(tbIndex){
@@ -482,6 +495,8 @@
 								if(item.status==6){
 									item.type = "completed"
 								}
+							}else if(item.firsttypeId==5){
+								item.type = "completed"
 							}
 						}
 					})
@@ -725,7 +740,7 @@ page{
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		color:#787878;
+		color:#1E1E1E;
 		font-size:24rpx;
 		.block{
 			width:50rpx;
@@ -738,8 +753,8 @@ page{
 			display: flex;
 			align-items: center;
 			&.on{
+				font-weight: 600;
 				color: #FF6600;
-				border-bottom: solid 2rpx #FF6600;
 			}
 		}
 	}
@@ -869,6 +884,13 @@ page{
 							font-family:Source Han Sans CN;
 							font-weight:400;
 							color:rgba(60,60,60,1);
+							overflow : hidden;
+							text-overflow: ellipsis;
+							display: -webkit-box;
+							-webkit-line-clamp: 2;
+							-webkit-box-orient: vertical;
+							word-wrap: break-word;
+							word-break: break-all;
 						}
 						.spec{
 							font-size:24rpx;
@@ -890,25 +912,39 @@ page{
 							.number{
 								display: flex;
 								.sub{
+									display: flex;
+									align-items: center;
+									justify-content: center;
+									width:54rpx;
+									height:54rpx;
+									background:rgba(236,236,236,1);
+									border-radius:6rpx 0rpx 0rpx 6rpx;
 									image{
-										height:50rpx;
-										width:50rpx;
+										width:18rpx;
+										height:4rpx;
 									}
 								}
 								.input{
-									width:113rpx;
-									height:50rpx;
-									border:1rpx solid rgba(180,180,180,1);
-									border-radius:6rpx;
-									padding-left:50rpx;
-									margin-left: 10rpx;
+									width:110rpx;
+									height:54rpx;
+									background:rgba(236,236,236,1);
+									text-align: center;
+									margin-left: 2rpx;
+									line-height: 54rpx;
 									
 								}
 								.add{
-									margin-left: 10rpx;
+									margin-left: 2rpx;
+									width:54rpx;
+									height:54rpx;
+									background:rgba(236,236,236,1);
+									border-radius:0rpx 6rpx 6rpx 0rpx;
+									display: flex;
+									align-items: center;
+									justify-content: center;
 									image{
-										height:50rpx;
-										width:50rpx;
+										height:18rpx;
+										width:18rpx;
 									}
 								}
 							}
@@ -1065,6 +1101,17 @@ page{
 	display: flex;
 	justify-content: flex-end;
 	margin-top: 20rpx;
+	align-items: center;
+	.numbers{
+		color:rgba(100,100,100,1);
+	}
+	.total_price{
+		font-size:36rpx;
+		color:rgba(30,30,30,1);
+	}
+	.deliver{
+		color:#1E1E1E;
+	}
 }
 
 

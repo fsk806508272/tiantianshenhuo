@@ -61,7 +61,7 @@
 		
 		<view class='contact'>
 			<view class='showMessage'>
-				<image src="../../static/cut/message.png"></image>
+				<image src="../../static/cut/message_icon.png"></image>
 				<view>联系TA</view>
 			</view>
 			<view class="tel">

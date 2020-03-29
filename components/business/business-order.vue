@@ -66,16 +66,16 @@
 		
 		<view class="bottom">
 			<view class="content">
-				<text v-if="id==8||id==9||id==10">共计{{length}}件商品，实收￥{{sum}}</text>
+				<text v-if="id==8||id==9||id==10">共计{{length}}件商品，实收<text class="price-tag">￥{{sum}}</text></text>
 				<text v-if="id==1&&status=='houseWaitingDeal'" class="gray">签约后，租户才可以付款哦~</text>
 				<text v-if="id==5&&status=='agentWaitingDeal'" class="gray">签约后，租户才可以付款哦~</text>
 				<text v-if="id==5&&status=='agentWaitingDealed'" class="gray">已签约，等待客户付款吧~</text>
-				<text v-if="id==5&&(status=='agentWaitingFinish'||status=='agentBack')" class="gray">实收：{{sum}}</text>
-				<text v-if="id==5&&status=='financeWaitingFinish'" class="gray">实收：{{sum}}</text>
+				<text v-if="id==5&&(status=='agentWaitingFinish'||status=='agentBack')" class="gray">实收：<text class="price-tag">￥{{sum}}</text></text>
+				<text v-if="id==5&&status=='financeWaitingFinish'" class="gray">实收：<text class="price-tag">￥{{sum}}</text></text>
 				<text v-if="id==5&&status=='financeWaitingDeal'" class="gray">快去处理吧~</text>
 				<text v-if="id==5&&status=='financeWaitingDealed'" class="gray">已完成预约</text>
 				<text v-if="id==1&&status=='houseDealed'" class="gray">已签约，等待租户付款吧~</text>
-				<text v-if="id==1&&(status=='houseFinished'||status=='houseBack')" class="gray">实收:{{houseSum}}</text>
+				<text v-if="id==1&&(status=='houseFinished'||status=='houseBack')" class="gray">实收:<text class="price-tag">￥{{houseSum}}</text></text>
 			</view>
 			<view class="status">{{statusObj[status]}}</view>
 		</view>
@@ -283,11 +283,11 @@ page{
 	background-color: #f2f2f2;
 }
 .box{
+	border-radius: 30rpx;
 	background-color: #fff;
 	margin-bottom: 20rpx;
 }
 .top{
-	border-bottom: 1rpx solid #f2f2f2;
 	padding:0 20rpx;
 	height:87rpx;
 	display: flex;
@@ -303,8 +303,8 @@ page{
 		}
 		.ordercode{
 			font-size:20rpx;
-			color:rgba(100,100,100,1);
-			width:400rpx;
+			color:#8c8c8c;
+			width:300rpx;
 			overflow : hidden;
 			text-overflow: ellipsis;
 			display: -webkit-box;
@@ -435,7 +435,6 @@ page{
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	border-top: 1rpx solid #f2f2f2;
 	padding-right: 20rpx;
 	.default{
 		margin-left: 20rpx;
@@ -445,7 +444,7 @@ page{
 		padding:0 20rpx;
 		background:rgba(255,255,255,1);
 		border:1rpx solid rgba(200,200,200,1);
-		border-radius:10rpx;
+		border-radius:30rpx;
 	}
 	.white{
 		margin-left: 20rpx;
@@ -455,7 +454,7 @@ page{
 		padding:0 20rpx;
 		background:rgba(255,255,255,1);
 		border:1rpx solid rgba(255,102,0,1);
-		border-radius:10rpx;
+		border-radius:30rpx;
 		color:#FF6600;
 	}
 	.yellow{
@@ -466,8 +465,12 @@ page{
 		padding:0 20rpx;
 		background:linear-gradient(90deg,rgba(255,145,48,1),rgba(255,102,0,1));
 		border:1rpx solid rgba(255,102,0,1);
-		border-radius:10rpx;
+		border-radius:30rpx;
 		color:#FFF;
 	}
+}
+
+.price-tag{
+	color:#FF6600;
 }
 </style>

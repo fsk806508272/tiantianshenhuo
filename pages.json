@@ -36,6 +36,19 @@
 			}
 		},
 		{
+			"path": "pages/index/feedback",
+			"style" : {
+				"navigationStyle":"custom"
+			}
+		},
+		{
+			"path":"pages/index/feedList",
+			"style": {
+				"navigationBarTitleText": "我的建议",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/order/order",
 			"style": {
 				"navigationBarTitleText": "订单",
@@ -45,11 +58,8 @@
 		{
 			"path":"pages/index/webNavigation",
 			"style": {
-				"navigationBarTitleText": "我的",
-				"app-plus": {
-					"titleNView": false ,//禁用原生导航栏
-					"bounce":"none"
-				}
+				"navigationBarTitleText": "网站导航",
+				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		},
 		{
@@ -121,6 +131,12 @@
 					"softinputNavBar":"none",
 					"bounce":"none"
 				}
+			}
+		},
+		{
+		    "path" : "pages/msg/systempage",
+		    "style" : {
+				"navigationBarTitleText": "系统消息"
 			}
 		},
 		{
@@ -826,8 +842,7 @@
 		{
 		    "path" : "pages/lifecircle/publish",
 		    "style" : {
-				"navigationBarTitleText": "发布动态",
-				"navigationBarBackgroundColor":"#FFFFFF"
+				"navigationStyle":"custom"
 			}
 		},
 		{
@@ -852,7 +867,7 @@
 		{
 			"path":"pages/shop/theStore",
 			"style":{
-				"navigationBarTitleText": "店铺详情",
+				"navigationBarTitleText": "店铺主页",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		},
@@ -972,6 +987,13 @@
 			}
 		},
 		{
+			"path" : "pages/user/colleague/newColleague",
+			"style" : {
+				"navigationBarTitleText": "新的好友",
+				"navigationBarBackgroundColor":"#FFFFFF"
+			}
+		},
+		{
 			"path" : "pages/user/store/openStore",
 			"style" : {
 				"navigationBarTitleText": "开通店铺",
@@ -1013,6 +1035,18 @@
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		}
+        ,{
+            "path" : "pages/lottery/lottery",
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        }
+        ,{
+            "path" : "pages/move/move",
+            "style" : {
+				"navigationStyle":"custom"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

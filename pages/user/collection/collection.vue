@@ -14,22 +14,23 @@
 			
 			<block v-if="provideList.length!=0">
 				<block v-for="(row,index) in provideList" :key="index">
-					<view class="item">
-						<view class="image">
-							<image :src="row.smallPic"></image>
-						</view>
-						
+					<view class="item" @tap="toDetail(row)">
+						<image class="img" :src="row.smallPic"></image>
 						<view class="detail">
-							<view class="title col2">{{row.goodsName}}</view>
+							<view class="title">{{row.goodsName}}</view>
 							<view class="price">
-								<view  class="singlePrice">￥<text>{{row.price}}</text></view>
-								<view class="sales">月售{{row.monthSale}}</view>
-								<view class="deliver">配送费￥{{row.postFee}}</view>
+								<view class="price_lf">
+									<view class="top">
+										<view class="noFee" v-if="row.postFee==0">免费配送</view>
+										<view class="tag" v-else>配送￥{{row.postFee}}</view>
+										<view class="tag">月售{{row.monthSale}}</view>
+									</view>
+									<view class="bottom">
+										￥{{row.price}}
+									</view>
+								</view>
+								<image class="like" @tap.stop="delCollectGoods(row)" src="/static/cut/collected.png"></image>
 							</view>
-						</view>
-						
-						<view class="like" @tap="delCollectGoods(row)">
-							<image src="/static/cut/collected.png"></image>
 						</view>
 					</view>
 				</block>
@@ -45,26 +46,32 @@
 			</block>
 			<block v-if="storeList.length!=0">
 				<block v-for="(item,index) in storeList" :key="index">
-					<view class="row">
-						<view class="storeImage">
-							<image :src="item.logoPic"></image>
-						</view>
+					<view class="row" @tap="toStore(item)">
+						<image class="img" :src="item.logoPic"></image>
 						<view class="storeInfo">
 							<view class="title">
 								<view>{{item.nickName}}</view>
-								<image src="/static/cut/company_cer.png"></image>
+								<image @tap.stop="delCollectShop(item.sellerId)" src="/static/cut/collected.png"></image>
 							</view>
-							<view class="address">地址：{{item.address}}</view>
+							<view class="address">
+								<view class="points">
+									<image src="/static/cut/comment-star.png"></image>
+									 {{item.mainScore}}
+								</view>
+								<view class="sale">总售{{item.monthlySale}}</view>
+							</view>
 							<view class="stars">
-								<block v-for="(score,idx) in starIndex" :key="idx">
-									<image :src="item.mainScore>idx?starSrc:''"></image>
-								</block>
-								<view>评分: {{item.mainScore}}</view>
+								<view class="tag">
+									商品{{item.goodsCount}}
+								</view>
+								<view class="toShop">
+									<view>进店</view>
+									<image src="/static/cut/right_orange.png"></image>
+								</view>
 							</view>
+							
 						</view>
-						<view class="like" @tap="delCollectShop(item.sellerId)">
-							<image src="/static/cut/collected.png"></image>
-						</view>
+						
 					</view>
 				</block>
 				<uni-load-more :status="loadingType"></uni-load-more>
@@ -79,28 +86,26 @@
 			</block>
 			<block v-if="vipcardList.length!=0">
 				<block v-for="(row,index) in vipcardList" :key="index">
-					<view class="item">
-						<view class="image">
-							<image :src="row.firstPictures"></image>
-						</view>
-						
+					<view class="item" @tap="toVipDetail(row)">
+						<image class="img" :src="row.firstPictures"></image>
 						<view class="detail">
-							<view class="title col2">{{row.title}}</view>
+							<view class="title">{{row.title}}</view>
 							<view class="price">
-								<view class="singlePrice">
-									<block v-if="row.cardType==1">
-										<text>免费办理</text>
-									</block>
-									<block v-else>
-										￥<text>{{row.price}}</text>
-									</block>
+								<view class="price_lf">
+									<view class="top">
+										<view class="tag">办理人数{{row.totalSale}}</view>
+									</view>
+									<view class="bottom">
+										<block v-if="row.cardType==1">
+											<text>免费办理</text>
+										</block>
+										<block v-else>
+											￥<text>{{row.price}}</text>
+										</block>
+									</view>
 								</view>
-								<view class="sales">办理人数{{row.totalSale}}</view>
+								<image @tap.stop="delCollectCard(row.cardId)" src="/static/cut/collected.png"></image>
 							</view>
-						</view>
-						
-						<view class="like" @tap="delCollectCard(row.cardId)">
-							<image src="/static/cut/collected.png"></image>
 						</view>
 					</view>
 				</block>
@@ -137,7 +142,9 @@ export default{
 		}
 	},
 	onLoad:function(option){
-		
+		this.getCollectgood(this.page)
+		this.getCollectshop(this.page)
+		this.getCollectcard(this.page)
 		//兼容H5下排序栏位置
 		// #ifdef H5
 			//定时器方式循环获取高度为止，这么写的原因是onLoad中head未必已经渲染出来。
@@ -151,9 +158,7 @@ export default{
 		// #endif
 	},
 	onShow(){
-		this.getCollectgood(this.page)
-		this.getCollectshop(this.page)
-		this.getCollectcard(this.page)
+		
 	},
 	onReady (){
 		
@@ -205,6 +210,41 @@ export default{
 		},
 		showType(tbIndex){
 			this.tabbarIndex = tbIndex;
+		},
+				toDetail(item){
+			if(item.isMarketable==0){
+				uni.showToast({
+					icon:'none',
+					duration:1500,
+					title:'该商品已下架'
+				})
+				return 
+			}
+			
+			
+			if(item.goodsFirsttype!=5&&item.goodsFirsttype!=1){
+				uni.navigateTo({
+					url:`/pages/provide/detail?sellerId=${item.sellerId}&id=${item.goodsId}&type=${item.goodsFirsttype}`
+				})
+			}else if(item.goodsFirsttype==1){
+				uni.navigateTo({
+					url:'/pages/house/housedetail?data='+item.houseId
+				})
+			}else if(item.goodsFirsttype==5){
+				uni.navigateTo({
+					url:'/pages/finance/financedetail?financeId=' + item.goodsId + '&code=' + item.financeCode + '&sellerId=' + item.sellerId
+				})
+			}
+		},
+		toStore(row){
+			uni.navigateTo({
+				url:`/pages/shop/theStore?sellerId=${row.sellerId}&type=${row.firstTypeId}`
+			})
+		},	
+		toVipDetail(row){
+			uni.navigateTo({
+				url:'/pages/VIPCard/vipdetail?id=' + row.cardId + '&sellerId=' + row.sellerId
+			})
 		}
 	}
 }
@@ -215,25 +255,27 @@ page{
 	background-color: #f2f2f2;
 }
 .topTabBar{
+	border-radius: 0 0 30rpx 30rpx;
 	margin-top:1rpx;
 	position:fixed;
 	z-index: 10;
 	top:0;
 	width:100%;
-	height:64rpx;
+	height:78rpx;
 	background-color: #fff;
 	display: flex;
 	justify-content: space-around;
 	.grid{
 		width:20%;
-		height:64rpx;
+		height:78rpx;
 		display:flex;
 		justify-content: center;
 		align-items: center;
 		color:#787878;
 		font-size:24rpx;
 		.text{
-			height:62rpx;
+			color:#1E1E1E;
+			height:40rpx;
 			display: flex;
 			align-items: center;
 			&.on{
@@ -245,64 +287,81 @@ page{
 }
 
 .provideList{
-	margin-top:75rpx;
+	margin-top:88rpx;
 	.item{
+		border-radius: 30rpx;
 		background-color: #fff;
 		margin-top:10rpx;
-		height:220rpx;
+		height:190rpx;
 		width:100%;
+		padding:20rpx;
 		display: flex;
-		.image{
-			width:200rpx;
-			padding:30rpx 19rpx 30rpx 20rpx;
-			image{
-				width:160rpx;
-				height:160rpx;
-				border-radius:10rpx;
-			}
+		.img{
+			width:150rpx;
+			height:150rpx;
+			border-radius: 10rpx;
 		}
 		.detail{
-			margin-top:39rpx;
-			width:378rpx;
+			width:540rpx;
+			margin-left: 20rpx;
 			.title{
-				font-size:26rpx;
-				font-family:Source Han Sans CN;
-				font-weight:400;
-				color:rgba(60,60,60,1);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				display: -webkit-box;
+				font-size:30rpx;
+				color:rgba(30,30,30,1);
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+				word-wrap: break-word;
+				word-break: break-all;
 			}
 			.price{
-				margin-top:42rpx;
 				display: flex;
 				align-items: center;
-				.sales,.deliver{
-					margin-left: 39rpx;
-					font-size:22rpx;
-					font-family:Source Han Sans CN;
-					font-weight:400;
-					color:rgba(180,180,180,1);
+				justify-content: space-between;
+				image{
+					width:41rpx;
+					height:34rpx;
 				}
-				.singlePrice{
-					text{
-						font-family:Source Han Sans CN;
-						font-size:34rpx;
-						color:#FF6600;
+				.price_lf{
+					.top{
+						margin-top: 20rpx;
+						display: flex;
+						.noFee{
+							margin-right: 10rpx;
+							font-size:22rpx;
+							color:rgba(255,102,0,1);
+							height:30rpx;
+							border:1rpx solid rgba(255,102,0,1);
+							border-radius:6rpx;
+							padding:0 5rpx;
+							line-height: 30rpx;
+						}
+						.tag{
+							margin-right: 10rpx;
+							font-size:22rpx;
+							color:#8C8C8C;
+							height:30rpx;
+							border:1rpx solid #A0A0A0;
+							border-radius:6rpx;
+							padding:0 5rpx;
+							line-height: 30rpx;
+						}
+					}
+					.bottom{
+						margin-top: 20rpx;
+						font-size:36rpx;
+						color:rgba(255,78,0,1);
+						line-height:36rpx;
 					}
 				}
 			}
 		}
-		.like{
-			padding:50rpx 30rpx 0 102rpx; 
-			image{
-				width:41rpx;
-				height:34rpx;
-			}
-		}
-		
 	}
 }
 
 .needList{
-	margin-top:75rpx;
+	margin-top:88rpx;
 	.container{
 		background-color: #fff;
 		height:436rpx;
@@ -422,71 +481,82 @@ page{
 }
 
 .storeList{
-	margin-top: 75rpx;
+	margin-top: 88rpx;
 	.row{
 		margin-top:10rpx;
 		display: flex;
-		height:210rpx;
+		height:190rpx;
 		background-color: #fff;
-		
-		.storeImage{
-			width:140rpx;
-			padding: 30rpx 0 60rpx 20rpx;
-			image{
-				width:120rpx;
-				height:120rpx;
-				border-radius:10rpx;
-			}
+		padding:20rpx;
+		.img{
+			width:150rpx;
+			height:150rpx;
+			border-radius: 10rpx;
 		}
 		.storeInfo{
-			width:539rpx;
-			padding-top: 32rpx;
-			padding-left: 20rpx;
+			width:540rpx;
+			margin-left: 20rpx;
 			.title{
 				display: flex;
 				align-items: center;
-				view{
-					font-size:34rpx;
-					font-family:Source Han Sans CN;
-					font-weight:500;
-					color:rgba(60,60,60,1);
-				}
+				justify-content: space-between;
 				image{
-					width:24rpx;
-					height:24rpx;
+					width:41rpx;
+					height:34rpx;
+				}
+				view{
+					font-size:32rpx;
+					font-weight:600;
+					color:rgba(30,30,30,1);
+					line-height:32rpx;
 				}
 			}
 			.address{
-				width:424rpx;
-				font-size:24rpx;
-				font-family:Source Han Sans CN;
-				font-weight:400;
-				color:rgba(160,160,160,1);
-				line-height:30rpx;
-			}
-			.stars{
+				margin-top: 30rpx;
 				display: flex;
 				align-items: center;
-				image{
-					margin-right: 10rpx;
-					width:25rpx;
-					height:23rpx;
-				}
-				view{
-					margin-left: 10rpx;
+				.points{
+					margin-right: 20rpx;
 					font-size:26rpx;
-					font-family:Source Han Sans CN;
-					font-weight:400;
-					color:rgba(255,102,0,1);
+					font-weight:600;
+					color:rgba(255,198,0,1);
+					image{
+						margin-right: 5rpx;
+						width:25rpx;
+						height:25rpx;
+					}
+				}
+				.sale{
+					font-size:24rpx;
+					color:rgba(80,80,80,1);
 				}
 			}
-		}
-		.like{
-			width:71rpx;
-			padding-top: 50rpx;
-			image{
-				width:41rpx;
-				height:34rpx;
+			.stars{
+				margin-top: 10rpx;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				.tag{
+					padding:0 5rpx;
+					border:1rpx solid rgba(255,102,0,1);
+					border-radius:6rpx;
+					height:30rpx;
+					line-height:30rpx;
+					font-size:22rpx;
+					color:rgba(255,102,0,1);
+				}
+				.toShop{
+					display: flex;
+					align-items: center;
+					image{
+						margin-left: 10rpx;
+						width:10rpx;
+						height:19rpx;
+					}
+					view{
+						color:#FF6600;
+					}
+				}
 			}
 		}
 	}

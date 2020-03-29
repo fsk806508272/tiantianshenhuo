@@ -124,12 +124,11 @@ export default {
 			margin-top:20rpx;
 			display: flex;
 			.gray-box{
-				background-color: #fff;
 				border:1rpx solid rgba(160,160,160,1);
 				border-radius: 6rpx;
 				font-size:22rpx;
 				color:rgba(140,140,140,1);
-				padding:5rpx 10rpx;
+				padding:0rpx 10rpx;
 			}
 		}
 		.bottom{
