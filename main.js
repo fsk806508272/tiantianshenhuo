@@ -15,7 +15,7 @@ let options = {
 }
 
 const tim = TIM.create(options)
-tim.setLogLevel(0)
+tim.setLogLevel(1)
 tim.registerPlugin({'cos-wx-sdk': COS})
 
 const msg = (title, duration=1500, mask=false, icon='none')=>{ 

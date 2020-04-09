@@ -173,6 +173,12 @@
 							</view>
 							<text>我的优惠券</text>
 						</view>
+						<view class="item" @tap="toDraw()">
+							<view class='icon'>
+								<image src="/static/cut/draw-icon.png" mode="widthFix"></image>
+							</view>
+							<text>购物抽奖</text>
+						</view>
 						
 					</view>
 				</view>
@@ -515,6 +521,12 @@ export default{
 						}
 					})
 				}
+			})
+		},
+		toDraw(){
+			console.log(this.uerInfo)
+			uni.navigateTo({
+				url:'/pages/lottery/lottery?token=' + this.uerInfo.token
 			})
 		},
 		toMyStore(){

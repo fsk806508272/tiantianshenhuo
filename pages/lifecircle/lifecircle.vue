@@ -117,6 +117,9 @@
 			}
 		},
 		onLoad(options){
+			if (window.android) {
+				window.android.setBarColor('#ff6600')
+			}
 			this.token = options.token
 			
 		},

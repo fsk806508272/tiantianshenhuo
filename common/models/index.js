@@ -153,6 +153,15 @@ class IndexModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	getDrawRules(){
+		let params = {
+			method:"GET",
+			url:'/app/tbDrawActivityRule/getList',
+			success:success
+		}
+		this.request(params)
+	}
 
 }
 

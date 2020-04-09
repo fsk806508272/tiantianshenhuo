@@ -72,8 +72,8 @@
 						<text>{{item.title}}</text>
 					</view>
 				</view>
-				
 			</scroll-view>
+			
 			
 			<view class="move">
 				<image :src="showMove==0?showSrc[0]:showSrc[1]"></image>
@@ -370,6 +370,7 @@
 						this.loadingType = 'nomore'
 						return
 					}else if(this.pagelfunm==1){
+						this.loadingType = 'loading'
 						this.listlf = data
 					}else{
 						this.listlf = this.listlf.concat(data)
