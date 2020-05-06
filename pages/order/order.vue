@@ -109,7 +109,7 @@
 			<block class="list" v-for="(item,index) in list" :key="index">
 				
 				<view v-if="item.firsttypeId == 8||item.firsttypeId==9||item.firsttypeId==10||item.firsttypeId==3" class="type" @tap="toDetail(item)">
-					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
+					<store-title  @tapToStore="clickToStore(item)" :title="item.sellerNickName" :status="item.type"></store-title>
 					<block v-for="(row,number) in item.goodsOrderItemList" :key="number">
 						<store-main :pic="row.picPath" :title="row.title" :price="'￥'+row.price"
 						:specsize="row.spec" :spec="'×' + row.num"></store-main>
@@ -131,7 +131,7 @@
 				</view>
 				
 				<view v-if="item.firsttypeId==1" class="type" @tap="toDetail(item)">
-					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
+					<store-title @tapToStore="clickToStore(item)" :title="item.sellerNickName" :status="item.type"></store-title>
 					<store-main :pic="item|picOne" :title="item.title" :specsize="item.paymentMethod">
 						<view class="fee">
 							<view class="feename">押金</view>
@@ -152,7 +152,7 @@
 				</view>
 				
 				<view v-if="item.firsttypeId==5&&item.secondTypeId=='6364df4f0ede49da9063b6cc5d4dfc72'" class="type" @tap="toDetail(item)">
-					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
+					<store-title  @tapToStore="clickToStore(item)" :title="item.sellerNickName" :status="item.type"></store-title>
 					<store-main :pic="item|picOne" :title="item.title" :specsize="item.specsName"
 					:price="'￥'+item.specsPrice"></store-main>
 					<view class="sum">合计:￥{{item.sum}}</view>
@@ -161,7 +161,7 @@
 				</view>
 				
 				<view v-if="item.firsttypeId==5&&item.secondTypeId!='6364df4f0ede49da9063b6cc5d4dfc72'" class="type" @tap="toDetail(item)">
-					<store-title :title="item.sellerNickName" :status="item.type"></store-title>
+					<store-title  @tapToStore="clickToStore(item)" :title="item.sellerNickName" :status="item.type"></store-title>
 					<store-main :pic="item|picOne" :title="item.title" :specsize="item.specsName"></store-main>
 					<store-time :time="item.createDate" :type="item.type" v-on:cancelOrder="cancelUnpaidOrder(item)"
 					v-on:toPay="toPayment(item)" @rating="goRating(item)"></store-time>
@@ -279,6 +279,9 @@
 					url:`/pages/provide/detail?sellerId=${good.sellerId}&id=${good.goodsId}&type=8`
 				})
 			},
+			clickToStore(item){
+				console.log(item)
+			},
 			navToLogin(){
 				uni.navigateTo({
 					url:"../login/login"
@@ -322,6 +325,7 @@
 				})
 			},
 			shopChoose(row){
+				console.log(1)
 				!row.select ? this.shopTrue(row) : this.shopFalse(row)
 			},
 			allChoose(){

@@ -410,7 +410,7 @@
 					count:1,
 					success:(res)=>{
 						uni.uploadFile({
-							url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+							url: 'https://sgz.ttshzg.com/app/imgUpload/upload', 
 							filePath: res.tempFilePaths[0],
 							name: 'img',
 							success: (uploadFileRes) => {
@@ -428,7 +428,7 @@
 					count:1,
 					success:(res)=>{
 						uni.uploadFile({
-							url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+							url: 'https://sgz.ttshzg.com/app/imgUpload/upload', 
 							filePath: res.tempFilePaths[0],
 							name: 'img',
 							success: (uploadFileRes) => {

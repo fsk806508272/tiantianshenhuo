@@ -7,9 +7,9 @@
 				<image @tap="toPublish" class="camera" src="/static/cut/lifecircle/camera-white.png"></image>
 			</view>
 			
-			<view class="bottom" @tap="toMyPage">
-				<image :src="userIcon"></image>
-				<view>{{userName}}</view>
+			<view class="bottom">
+				<image @tap="toMyPage" :src="userIcon"></image>
+				<view @tap="toMyPage">{{userName}}</view>
 			</view>
 		</view>
 		
@@ -81,7 +81,6 @@
 		},
 		filters:{
 			timeDeal(value){
-				console.log(value)
 				let date = value.toString()
 				let year = value.substring(0,4)
 				let month = value.substring(5,7)
@@ -152,14 +151,14 @@
 					item.isGiveTheThumbsUp = 1
 					item.numberOfPoints += 1
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamicPraise/addUserDynamicPraise?token=' + that.token,
 						data:{
 							userDynamicId:item.id
 						},
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded', 
-							'token':that.token
+							// 'token':that.token
 						},
 						success(res){
 						}
@@ -168,14 +167,14 @@
 					item.isGiveTheThumbsUp = 0
 					item.numberOfPoints -= 1
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamicPraise/cancelUserDynamicPraise?token=' + that.token,
 						data:{
 							userDynamicId:item.id
 						},
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded',
-							'token':that.token
+							// 'token':that.token
 						},
 						success(res){
 						}
@@ -188,8 +187,8 @@
 			toPublish(){
 				if(this.token==''){
 					const android = window.android
-					if (window.android) {
-						window.android.toLogin();
+					if (window.android){
+						window.android.toLogin()
 					}else{
 						uni.showToast({
 							duration:1500,
@@ -203,6 +202,29 @@
 					})
 				}
 				
+			},
+			toMyPage(){
+				if(this.token!=''){
+					let data = {}
+					data.logoImg = this.userIcon
+					data.nickname=this.userName
+					uni.navigateTo({
+						url:'personalIndex?type=0&token=' + this.token + '&item=' + JSON.stringify(data)
+					})
+				}else{
+					const android = window.android
+					if (window.android){
+						window.android.toLogin()
+					}else{
+						uni.showToast({
+							duration:1500,
+							title:'请先登录',
+							icon:'none'
+						})
+					}
+					
+				
+				}
 			},
 			clickTab(index){
 				this.tabIndex = index
@@ -238,11 +260,11 @@
 				let that = this
 				if(this.token!=''){
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/appuser/getAppUser',
+						url:'https://sgz.ttshzg.com/app/appuser/getAppUser?token=' + that.token,
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded', 
-							'token':that.token||''
+							// 'token':that.token||''
 						},
 						success(res){
 							that.userId = res.data.data.appuserId
@@ -265,12 +287,12 @@
 				req.isMeOrAll = 2
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+					url:'https://sgz.ttshzg.com/app/tbUserDynamic/findUserDynamicList?token=' + that.token||'' ,
 					data:req,
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded', 
-						token:that.token||''
+						// token:that.token||''
 					},
 					success(res){
 						if(res.data.data.userDynamicList.length>0){
@@ -285,23 +307,7 @@
 					}
 				})
 			},
-			toMyPage(){
-				if(this.token!=''){
-					let data = {}
-					data.logoImg = this.userIcon
-					data.nickname=this.userName
-					console.log(JSON.stringify(data))
-					uni.navigateTo({
-						url:'personalIndex?type=0&token=' + this.token + '&item=' + JSON.stringify(data)
-					})
-				}else{
-					uni.showToast({
-						title:'请先登录',
-						icon:'none',
-						duration:1500
-					})
-				}
-			},
+			
 			toOtherPage(item){
 				if(item.userId==this.userId){
 					let data = {}
@@ -480,50 +486,50 @@
 	}
 	
 	
-	@media (prefers-color-scheme: dark) { 
-		page{
-			background-color: #141414;
-		}
-		
-		.navbar{
-			background:linear-gradient(0deg,rgba(50,50,50,1),rgba(20,20,20,1));
-		}
-		
-		.tabbar{
-			background-color: #313131;
-			.tab{
-				color:#fff;
-			}
-		}
-		
-		.list{
-			background-color: #2D2D2D;
-			.user{
-				.info{
-					.nickName{
-						color:#FFF;
-					}
-					.gray{
-						color:#A0A0A0;
-					}
-				}
-			}
-			.content{
-				color:#FFFFFF;
-			}
-			.bottom{
-				.lf{
-					color:#A0A0A0;
-				}
-				.rt{
-					view{
-						color:#fff;
-						&.on{
-							color:#FF6600;
-						}
-					}
-				}
-			}
-		}
-	}
+	// @media (prefers-color-scheme: dark) { 
+	// 	page{
+	// 		background-color: #141414;
+	// 	}
+	// 	
+	// 	.navbar{
+	// 		background:linear-gradient(0deg,rgba(50,50,50,1),rgba(20,20,20,1));
+	// 	}
+	// 	
+	// 	.tabbar{
+	// 		background-color: #313131;
+	// 		.tab{
+	// 			color:#fff;
+	// 		}
+	// 	}
+	// 	
+	// 	.list{
+	// 		background-color: #2D2D2D;
+	// 		.user{
+	// 			.info{
+	// 				.nickName{
+	// 					color:#FFF;
+	// 				}
+	// 				.gray{
+	// 					color:#A0A0A0;
+	// 				}
+	// 			}
+	// 		}
+	// 		.content{
+	// 			color:#FFFFFF;
+	// 		}
+	// 		.bottom{
+	// 			.lf{
+	// 				color:#A0A0A0;
+	// 			}
+	// 			.rt{
+	// 				view{
+	// 					color:#fff;
+	// 					&.on{
+	// 						color:#FF6600;
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 </style>

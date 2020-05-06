@@ -73,7 +73,7 @@ export default{
 				success:(res)=>{
 					let req = {img:res.tempFilePaths}
 					uni.uploadFile({
-						url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+						url: 'https://sgz.ttshzg.com/app/imgUpload/upload', 
 						filePath: res.tempFilePaths[0],
 						name: 'img',
 						success: (uploadFileRes) => {
@@ -91,7 +91,7 @@ export default{
 				success:(res)=>{
 					let req = {img:res.tempFilePaths}
 					uni.uploadFile({
-						url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+						url: 'https://sgz.ttshzg.com/app/imgUpload/upload', 
 						filePath: res.tempFilePaths[0],
 						name: 'img',
 						success: (uploadFileRes) => {

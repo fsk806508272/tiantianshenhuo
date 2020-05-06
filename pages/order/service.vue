@@ -61,7 +61,7 @@
 				index2:0,
 				applyReason:'',
 				backType:'',
-				image:['https://sgz.wdttsh.com/mini_static/cut/upload_photo.png'],
+				image:['https://sgz.ttshzg.com/mini_static/cut/upload_photo.png'],
 				applyExplain:'',
 			}
 		},
@@ -83,7 +83,7 @@
 						success:(res)=>{
 							for(let item of res.tempFilePaths){
 								uni.uploadFile({
-									url: 'https://sgz.wdttsh.com/app/imgUpload/upload', 
+									url: 'https://sgz.ttshzg.com/app/imgUpload/upload', 
 									filePath: item,
 									name: 'img',
 									success: (uploadFileRes) => {

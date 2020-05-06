@@ -14,7 +14,7 @@
 		onLoad(){
 			let that = this
 			uni.request({
-				url:'https://sgz.wdttsh.com/app/help/getPrivacyPolicy',
+				url:'https://sgz.ttshzg.com/app/help/getPrivacyPolicy',
 				method:'POST',
 				success(res){
 					that.data = res.data.data.substring(res.data.data.indexOf('<div'),res.data.data.indexOf('</div>'))

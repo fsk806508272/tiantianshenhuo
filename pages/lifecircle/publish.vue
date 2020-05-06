@@ -7,7 +7,7 @@
 		</view>
 		<textarea placeholder="快快分享你的心情吧~" v-model="content" placeholder-style="color:#A0A0A0"></textarea>
 		<publish-image :photos="goods_photos" @changes="goodsPhoto"></publish-image>
-		<view class="submit-button" @tap="submit">确认发布</view>
+		<view :class="isIphoneX?'bottom-x':''" class="submit-button" @tap="submit">确认发布</view>
 	</view>
 </template>
 
@@ -18,13 +18,23 @@
 			return{
 				content:'',
 				goods_photos: [],
-				token:''
+				token:'',
+				isIphoneX:false
 			}
 		},
 		components: {
 			publishImage
 		},
 		onLoad(options){
+			var u = navigator.userAgent;
+			var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+			if (isIOS) {    	
+				if (screen.height >= 812){
+					this.isIphoneX = true
+				}else{
+					this.isIphoneX = false
+				} 
+			}
 			this.token = options.token
 		},
 		methods: {
@@ -48,12 +58,12 @@
 				}
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbUserDynamic/addUserDynamic',
+					url:'https://sgz.ttshzg.com/app/tbUserDynamic/addUserDynamic?token=' + that.token ,
 					data:req,
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token	 
+						// 'token':that.token	 
 					},
 					success(res){
 						console.log(res)
@@ -92,6 +102,9 @@
 page{
 	background-color: #fff;
 	height:100vh;
+	padding-bottom: 0;  
+	padding-bottom: constant(safe-area-inset-bottom);  
+	padding-bottom: env(safe-area-inset-bottom);
 }
 
 .nav{
@@ -116,16 +129,21 @@ textarea{
 	}
 
 
-@media (prefers-color-scheme: dark) {
-	page{
-		background-color: #2d2d2d;
-	}
-	.nav{
-		.title{
-			color:#fff;
-		}
-	}
+.bottom-x{
+	bottom:100rpx;
 }
+// 
+// @media (prefers-color-scheme: dark) {
+// 	page{
+// 		background-color: #2d2d2d;
+// 	}
+// 	.nav{
+// 		.title{
+// 			color:#fff;
+// 		}
+// 	}
+// }
+
 
 
 

@@ -8,7 +8,7 @@
 				<view class="title-content">金融服务</view>
 			</view>
 			<view class="icon" @tap="pop()">
-				筛选<image src="https://sgz.wdttsh.com/mini_static/cut/triangle-down.png"></image>
+				筛选<image src="https://sgz.ttshzg.com/mini_static/cut/triangle-down.png"></image>
 			</view>
 		</view>
 		

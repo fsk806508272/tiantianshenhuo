@@ -8,7 +8,7 @@
 				<view class="title-content">{{position}}服务</view>
 			</view>
 			<view class="icon" @tap="pop()">
-				筛选<image src="https://sgz.wdttsh.com/mini_static/cut/triangle-down.png"></image>
+				筛选<image src="https://sgz.ttshzg.com/mini_static/cut/triangle-down.png"></image>
 			</view>
 		</view>
 		<block v-if="type==8||type==10">
@@ -73,7 +73,7 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(['lat','lon']),
+		...mapState(['lat','lon','city','province','area']),
 	},
 	components: {
 		bavigationbar,
@@ -119,6 +119,9 @@ export default {
 		this.dataReq.goodsFirsttype = this.type
 		this.dataReq.latitude = this.lat
 		this.dataReq.longitude = this.lon
+		this.dataReq.city = this.city
+		this.dataReq.area = this.area
+		this.dataReq.province = this.province
 		providemodel.getItemList(this.dataReq,(data)=>{
 			this.data = data
 		})

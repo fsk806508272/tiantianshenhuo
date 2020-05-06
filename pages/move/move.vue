@@ -128,7 +128,7 @@
 			toBack(){
 				if(this.type!=1&&this.type!=5){
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/receipt/lifeReceipt',
+						url:'https://sgz.ttshzg.com/app/receipt/lifeReceipt',
 						method:'POST',
 						data:this.queryInfo,
 						header: {
@@ -149,7 +149,7 @@
 					delete this.queryInfo.price
 					delete this.queryInfo.amount
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/receipt/houseReceipt',
+						url:'https://sgz.ttshzg.com/app/receipt/houseReceipt',
 						method:'POST',
 						data:this.queryInfo,
 						header: {
@@ -173,7 +173,7 @@
 					this.queryInfo.contractTime = this.contractTime
 					this.queryInfo.financeName = this.financeName
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/receipt/financeReceipt',
+						url:'https://sgz.ttshzg.com/app/receipt/financeReceipt',
 						method:'POST',
 						data:this.queryInfo,
 						header: {

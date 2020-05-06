@@ -124,22 +124,21 @@
 						delta:1
 					})
 				}
-				uni.navigateBack({
-					delta:1
-				})
+				// uni.navigateBack({
+				// 	delta:1
+				// })
 			},
 			queryDetail() {
 				
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicDetails',
+					url:'https://sgz.ttshzg.com/app/tbUserDynamic/findUserDynamicDetails?token=' + that.token,
 					data:{
 						id:that.id
 					},
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',	
-						 'token':that.token||''
 					},
 					success(res){
 						that.item = res.data.data
@@ -190,12 +189,11 @@
 					req.passiveUserId = this.replyItemData.replyUserId
 				}
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbUserDynamicReply/addCommentDynamic',
+					url:'https://sgz.ttshzg.com/app/tbUserDynamicReply/addCommentDynamic?token=' + that.token,
 					data:req,
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						token:that.token
 					},
 					success(res){
 						that.queryDetail()
@@ -267,14 +265,14 @@
 					item.isGiveTheThumbsUp = 1
 					item.numberOfPoints += 1
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamicPraise/addUserDynamicPraise?token=' + that.token,
 						data:{
 							userDynamicId:item.id
 						},
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded', 
-							'token':that.token
+							// 'token':that.token
 						},
 						success(res){
 						}
@@ -283,14 +281,14 @@
 					item.isGiveTheThumbsUp = 0
 					item.numberOfPoints -= 1
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamicPraise/cancelUserDynamicPraise?token=' + that.token,
 						data:{
 							userDynamicId:item.id
 						},
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded',
-							'token':that.token
+							// 'token':that.token
 						},
 						success(res){
 						}
@@ -522,51 +520,51 @@
 			margin-left: 299rpx;
 		}
 	}
-	
-	@media (prefers-color-scheme: dark) { 
-		page{
-			background-color: #141414;
-		}
-		
-		.back{
-			background-color: #141414;
-		}
-		
-		.box{
-			background-color: #2D2D2D;
-			.user{
-				.info{
-					.nickName{
-						color: #fff;
-					}
-				}
-			}
-			.content{
-				color: #fff;
-			}
-		}
-		
-		.commentList{
-			background-color: #2d2d2d;
-			.top{
-				.lf{
-					.info{
-						.name{
-							color: #fff;
-						}
-					}
-				}
-			}
-			.middle{
-				color:#fff;
-			}
-			.bottom{
-				background-color: #3C3C3C;
-			}
-		}
-		
-	}
-	
+	// 
+	// @media (prefers-color-scheme: dark) { 
+	// 	page{
+	// 		background-color: #141414;
+	// 	}
+	// 	
+	// 	.back{
+	// 		background-color: #141414;
+	// 	}
+	// 	
+	// 	.box{
+	// 		background-color: #2D2D2D;
+	// 		.user{
+	// 			.info{
+	// 				.nickName{
+	// 					color: #fff;
+	// 				}
+	// 			}
+	// 		}
+	// 		.content{
+	// 			color: #fff;
+	// 		}
+	// 	}
+	// 	
+	// 	.commentList{
+	// 		background-color: #2d2d2d;
+	// 		.top{
+	// 			.lf{
+	// 				.info{
+	// 					.name{
+	// 						color: #fff;
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 		.middle{
+	// 			color:#fff;
+	// 		}
+	// 		.bottom{
+	// 			background-color: #3C3C3C;
+	// 		}
+	// 	}
+	// 	
+	// }
+	// 
 	
 	
 </style>

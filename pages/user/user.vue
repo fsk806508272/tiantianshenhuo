@@ -323,7 +323,7 @@ export default{
 		toChat(){
 			let that = this
 			uni.request({
-				url:'https://sgz.wdttsh.com/app/systemparam/getServiceInfo',
+				url:'https://sgz.ttshzg.com/app/systemparam/getServiceInfo',
 				method:'POST',
 				success(res){
 					that.$store.commit('resetCurrentConversation')
@@ -707,7 +707,7 @@ export default{
 			height:140rpx;
 			margin:20rpx 0;
 			border-radius:20rpx;
-			background-image:url('https://sgz.wdttsh.com/mini_static/cut/date.png');
+			background-image:url('https://sgz.ttshzg.com/mini_static/cut/date.png');
 			background-size:cover;
 		}
 		.wallet-box{

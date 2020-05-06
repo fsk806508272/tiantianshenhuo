@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<block v-if="list.length===0">
-			<image class="noImg" src="https://sgz.wdttsh.com/mini_static/cut/mess_bg.png"></image>
+			<image class="noImg" src="https://sgz.ttshzg.com/mini_static/cut/mess_bg.png"></image>
 			<view class="noText">暂无系统消息</view>
 		</block>
 		<block v-else>
@@ -13,7 +13,7 @@
 				
 				<view @tap="toDetail(item)" class="box" :class="[theIndex==index?'open':oldIndex==index?'close':'']" @touchstart="touchStart(index,$event)" @touchmove="touchMove(index,$event)" @touchend="touchEnd(index,$event)">
 					<view class="title">{{item.title}}</view>
-					<image src="https://sgz.wdttsh.com/mini_static/cut/black-arrow.png"></image>
+					<image src="https://sgz.ttshzg.com/mini_static/cut/black-arrow.png"></image>
 				</view>
 			</view>
 			

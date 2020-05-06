@@ -14,7 +14,7 @@
 		onLoad(){
 			let that = this
 			uni.request({
-				url:'https://sgz.wdttsh.com/app/help/getAgreement',
+				url:'https://sgz.ttshzg.com/app/help/getAgreement',
 				method:'POST',
 				success(res){
 					that.data = res.data.data.substring(res.data.data.indexOf('<div'),res.data.data.indexOf('</div>'))

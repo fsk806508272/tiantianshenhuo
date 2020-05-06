@@ -19,7 +19,7 @@
 			<image class="upload_icon" v-if="hasUpload==0" :src="pictureSrc" @tap="selectPhoto"></image>
 			<view v-if="hasUpload==1" class="image_item">
 				<image class="img" :src="uploadSrc" ></image>
-				<view class="del_icon" @tap.stop="deletePhoto"><image src="https://sgz.wdttsh.com/mini_static/cut/delete-icon.png" mode="widthFix"></image></view>
+				<view class="del_icon" @tap.stop="deletePhoto"><image src="https://sgz.ttshzg.com/mini_static/cut/delete-icon.png" mode="widthFix"></image></view>
 			</view>
 		</view>
 		
@@ -36,7 +36,7 @@
 		data(){
 			return{
 				data:'',
-				pictureSrc:'https://sgz.wdttsh.com/mini_static/cut/upload_photo.png',
+				pictureSrc:'https://sgz.ttshzg.com/mini_static/cut/upload_photo.png',
 				hasUpload:false,
 				uploadSrc:''
 			}
@@ -52,7 +52,7 @@
 						console.log(res.tempFilePaths);
 						// console.log(res.tempFilePaths[i]);
 						uni.uploadFile({
-							url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
+							url: 'https://sgz.ttshzg.com/app/imgUpload/upload', //图片接口
 							filePath: res.tempFilePaths[0],
 							name: 'img',
 							success: (uploadFileRes) => {

@@ -25,7 +25,7 @@
 				req.contractCode = this.data.contractCode
 				req.type = 1
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/signing/queryContract',
+					url:'https://sgz.ttshzg.com/app/signing/queryContract',
 					data:req,
 					method:'POST',
 					header: {
@@ -43,7 +43,7 @@
 				req.type = 1
 				req.orderCode = this.data.orderCode
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/financialContracts/queryFinancialContract',
+					url:'https://sgz.ttshzg.com/app/financialContracts/queryFinancialContract',
 					data:req,
 					method:'POST',
 					header: {

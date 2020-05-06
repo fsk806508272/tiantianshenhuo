@@ -28,10 +28,11 @@ class IndexModel extends HTTP{
     })
   }
   getSwiper(success){
-	  
+	  let data={position:'index'}
   	  let params = {
   		method:"POST",
-  		url:"/app/banner/getList?position=index", 
+		data:data,
+  		url:"/app/banner/getList", 
   		success:success
   	  }
     this.request(params)

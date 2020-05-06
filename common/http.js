@@ -15,13 +15,14 @@ class HTTP {
     if (!params.method) {
       params.method = 'GET';
     }
+	console.log(store.state.uerInfo.token)
     uni.request({
-      url: url,
+      url: url + '?token=' + store.state.uerInfo.token||'',
       data: params.data,
       method: params.method,
       header: {
         'content-type':'application/x-www-form-urlencoded',
-	    'token':store.state.uerInfo.token||''
+	    // 'token':store.state.uerInfo.token||''
 		// #ifdef MP
 		// 'appkey':config.appkey
 		// #endif

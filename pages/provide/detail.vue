@@ -364,10 +364,10 @@ page{
 .carousel-section{
 	swiper{
 		width:750rpx;
-		height:500rpx;
+		height:750rpx;
 		image{
 			width:750rpx;
-			height:500rpx;
+			height:750rpx;
 		}
 	}
 }

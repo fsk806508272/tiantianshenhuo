@@ -2,7 +2,7 @@
 	<view class="storeInfo">
 		<view class="store">
 			<image class="storeIcon" src="/static/cut/dpicon.png"></image>
-			<view class="storetitle">{{title}}</view>
+			<view @tap.stop="toStore" class="storetitle">{{title}}</view>
 			<image class="arrow" src="/static/cut/black-arrow.png"></image>
 		</view>
 		<view class="status">{{typeText[status]}}</view>
@@ -53,7 +53,12 @@ export default {
 				housefinished:'交易完成',
 				houseback:'退租中'
 			},
-		};
+		}
+	},
+	methods:{
+		toStore(){
+			this.$emit('tapToStore')
+		}
 	}
 }
 </script>

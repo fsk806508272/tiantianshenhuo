@@ -13,7 +13,7 @@
 					<view class='status'>待支付</view>
 				</view>
 				<view class="billdetail">
-					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<image class="icon_img" src="https://sgz.ttshzg.com/mini_static/cut/bill-none.png"></image>
 					<view class="price_container">
 						<block v-for="(row,number) in item.costList" :key="number">
 							<view class="price_box" v-if="row.costPrice!=0">
@@ -37,7 +37,7 @@
 					<view class='paidstatus'>已支付</view>
 				</view>
 				<view class="billdetail">
-					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<image class="icon_img" src="https://sgz.ttshzg.com/mini_static/cut/bill-none.png"></image>
 					<view class="price_container">
 						<block v-for="(row,number) in item.costList" :key="number">
 							<view class="price_box" v-if="row.costPrice!=0">
@@ -61,7 +61,7 @@
 					<view class='status'>代收款</view>
 				</view>
 				<view class="billdetail">
-					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<image class="icon_img" src="https://sgz.ttshzg.com/mini_static/cut/bill-none.png"></image>
 					<view class="price_container">
 						<block v-for="(row,number) in item.costList" :key="number">
 							<view class="price_box" v-if="row.costPrice!=0">
@@ -85,7 +85,7 @@
 					<view class='paidstatus'>已支付</view>
 				</view>
 				<view class="billdetail">
-					<image class="icon_img" src="https://sgz.wdttsh.com/mini_static/cut/bill-none.png"></image>
+					<image class="icon_img" src="https://sgz.ttshzg.com/mini_static/cut/bill-none.png"></image>
 					<view class="price_container">
 						<block v-for="(row,number) in item.costList" :key="number">
 							<view class="price_box" v-if="row.costPrice!=0">

@@ -22,7 +22,7 @@
 					<view class="item" v-for="(item,index) in dateArr" :key="index">
 						<!-- status显示状态： 0：默认  1：已签到  2：未签到 -->
 						<block v-if="item.sign == 0">
-							<view class="ball" @tap="clickCheck(index)">签</view>
+							<view class="ball" @tap="clickCheck(index)">+{{item.count}}</view>
 						</block>
 						<block v-if="item.sign == 1">
 							<view class="ball finish" @tap="clickCheck(index)">+{{item.count}}</view>
@@ -54,7 +54,7 @@
 			<view class="addPoints">+{{todayStore}}积分</view>
 			<view class="success">恭喜签到成功</view>
 			<view class="days">本月累计签到{{checkArr.totalSignCount}}天</view>
-			<image @tap="closeShow" src="https://sgz.wdttsh.com/mini_static/cut/iknow.png"></image>
+			<image @tap="closeShow" src="https://sgz.ttshzg.com/mini_static/cut/iknow.png"></image>
 		</view>
 		
 		<view v-if="isAttendance==1" class="bottomButton">今日已签到，明日再来</view>
@@ -195,7 +195,6 @@
 				let integrals = [];
 					
 				checkModel.getSignSelect({year:cYear,month:cMonth},(data)=>{
-					console.log(data);
 					this.checkArr = data;
 					
 					for(var c=0;c<len;c++){
@@ -211,7 +210,8 @@
 							integrals.push(0)
 						}
 					}
-					// console.log(years,months,days);
+					let n = data.signstoreruleList.length
+					let maxCount = data.signstoreruleList[n-1].getStore
 					
 					for(let i = 1;i<=len;i++){
 						// console.log(data.signList[i-1]);
@@ -220,7 +220,7 @@
 						arr.push({
 							num: i,
 							sign: 0,
-							count: 5
+							count: maxCount
 						})
 						
 						if(this.year <= this.today.getFullYear() && this.month <= this.today.getMonth()+1 && arr[i-1].num < this.day){
@@ -230,23 +230,79 @@
 						}else{
 							arr[i-1].sign = 0
 						}
-						// console.log(years[i-1],parseInt(months[i-1]),parseInt(days[i-1]));
 						
 						for(var j=0;j<data.signList.length;j++){
 							if(years[j] == this.year && parseInt(months[j]) == this.month && parseInt(days[j]) == arr[i-1].num){
-								arr[i-1].sign = 1;
+								arr[i-1].sign = 1
 								arr[i-1].count = integrals[j]
-								// console.log(this.year,this.month,arr[i-1].num);
-								// arr.push({
-								// 	num: i,
-								// 	sign: 1
-								// })
 							}
 						}
-						
 					}
-					this.dateArr = arr;
-					console.log(this.dateArr)
+					console.log(arr)
+					if(data.isTodaySign == 0){
+						if(data.continuityDays == 0) {
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x)].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}else if(data.continuityDays == 1){
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x) - 1].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}else if(data.continuityDays == 2){
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x) - 2].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}else if(data.continuityDays == 3){
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x) - 3].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}
+					}else if(data.isTodaySign == 1){
+						if(data.continuityDays == 1){
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x)].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}else if(data.continuityDays == 2){
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x) - 1].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}else if(data.continuityDays == 3){
+							for(let i in arr){
+								if(this.year == this.today.getFullYear()&& this.month == this.today.getMonth()+1 && this.today.getDate() == arr[i].num ){
+									for(let x in data.signstoreruleList){
+										arr[parseInt(i) + parseInt(x) - 2].count = data.signstoreruleList[x].getStore
+									}
+								}
+							}
+						}
+					}
+					
+					this.dateArr = arr
+					
 				})
 			},
 			preMonth(){
@@ -271,9 +327,6 @@
 				this.getCalendar(this.year,this.month)
 			},
 			toUser(){
-				// uni.switchTab({
-				// 	url:'../user'
-				// })
 				uni.navigateBack({
 					delta: 1
 				})
@@ -313,7 +366,6 @@
 							// this.myScore = this.myScore + (10+this.signCount*10);
 							this.signCountAdd();
 						}
-						console.log(this.signCount,this.myScore);
 						this.getCalendar(this.year,this.month);
 					})
 				}

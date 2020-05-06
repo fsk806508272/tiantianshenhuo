@@ -45,7 +45,7 @@
 				</view>
 				<view class="award">您获得了"{{award.detail}}"</view>
 				<view class="attention">注意：实物奖品的发放地址为APP内的"默认地址"</view>
-				<image v-if="draw.needExchange==true&&exchanged==false" @tap="toExchange" class="exchange" src="/static/cut/exchange.png"></image>
+				<image v-if="draw.needExchange==true&&exchanged==false" @tap="toExchange(award)" class="exchange" src="/static/cut/exchange.png"></image>
 				<image v-if="draw.needExchange==true&&exchanged==true" class="exchange" src="/static/cut/exchanged.png"></image>
 				<image v-if="draw.needExchange==true" @tap="closeWindow" class="back" src="/static/cut/draw-back.png"></image>
 				<image v-if="draw.needExchange==false" @tap="closeWindow" class="ikonw" src="/static/cut/iknow-icon.png"></image>
@@ -137,11 +137,11 @@
 			getTimes(){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbDrawUserChance/getList',
+					url:'https://sgz.ttshzg.com/app/tbDrawUserChance/getList?token=' + that.token,
 					method:'GET',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.times = res.data.data
@@ -151,11 +151,11 @@
 			getList(){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/drawrule/getList',
+					url:'https://sgz.ttshzg.com/app/drawrule/getList?token=' + that.token,
 					method:'GET',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.awards = res.data.data
@@ -165,11 +165,11 @@
 			getRules(){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbDrawActivityRule/getList',
+					url:'https://sgz.ttshzg.com/app/tbDrawActivityRule/getList?token=' + that.token,
 					method:'GET',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.rules = res.data.data.ruleList
@@ -180,11 +180,14 @@
 			getMyAward(){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/hitdraw/selectListByUser',
+					url:'https://sgz.ttshzg.com/app/hitdraw/selectListByUser?token=' + that.token,
 					method:'GET',
+					data:{
+						pageSize:100
+					},
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.myList = res.data.data
@@ -194,11 +197,11 @@
 			getAllRecords(){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/hitdraw/selectList',
+					url:'https://sgz.ttshzg.com/app/hitdraw/selectList?token=' + that.token,
 					method:'GET',
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.list = res.data.data
@@ -231,20 +234,19 @@
                 // 请求接口, 这里我就模拟请求后的数据(请求时间为2s)
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/hitdraw/excuteLuckDraw',
+					url:'https://sgz.ttshzg.com/app/hitdraw/excuteLuckDraw?token=' + that.token,
 					method:'POST',
 					data:{
 						userChanceId:'1235'
 					},
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.draw = res.data.data
-						// that.draw.win = true
-						// that.draw.hitdrawId = 2
-						// that.draw.exchange = true
+						that.draw.win = true
+						that.draw.exchange = true
 						for(let i of that.awards){
 							if(i.drawruleId==that.draw.hitdrawId){
 								that.award = i
@@ -280,17 +282,17 @@
 
                 }, this.speed )
             },
-			toExchange(){
+			toExchange(item){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/hitdraw/updateExchange',
+					url:'https://sgz.ttshzg.com/app/hitdraw/updateExchange?token=' + that.token,
 					method:'POST',
 					data:{
-						hitdrawId :2
+						drawUserChanceId : this.draw.drawUserChanceId
 					},
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						that.exchanged = true
@@ -312,14 +314,14 @@
 			exchangeItem(item){
 				let that = this
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/hitdraw/updateExchange',
+					url:'https://sgz.ttshzg.com/app/hitdraw/updateExchange?token=' + that.token,
 					method:'POST',
 					data:{
-						hitdrawId :item.hitdrawId
+						drawUserChanceId :item.drawUserChanceId
 					},
 					header: {
 						'content-type':'application/x-www-form-urlencoded',
-						'token':that.token
+						// 'token':that.token
 					},
 					success(res){
 						item.status = 3
@@ -710,6 +712,7 @@
 		top:200rpx;
 		left:58rpx;
 		overflow:scroll ;
+		// -webkit-overflow-scrolling: touch;
 		font-size:28rpx;
 		color:rgba(30,30,30,1);
 		.item{

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view v-if="list.length==0">
-			<image src="https://sgz.wdttsh.com/mini_static/cut/no_user_comment.png"></image>
+			<image src="https://sgz.ttshzg.com/mini_static/cut/no_user_comment.png"></image>
 			<view class="noRecord">暂无积分记录</view>
 		</view>
 		

@@ -39,7 +39,7 @@ import NativeShare from '../../../common/SDK/NativeShare.js'
 export default{
 	data(){
 		return{
-			src:'https://sgz.wdttsh.com/mini_static/minicode.png',
+			src:'https://sgz.ttshzg.com/mini_static/minicode.png',
 			displayLink:true,
 			shareList:[{
 				title:'微信好友',

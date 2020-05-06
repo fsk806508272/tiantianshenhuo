@@ -152,7 +152,7 @@
 				</view>
 				<view @tap="showDistance=!showDistance" class="hit-right">
 					<view class="distance-title">距离筛选</view>
-					<image src="https://sgz.wdttsh.com/mini_static/cut/triangle-down.png"></image>
+					<image src="https://sgz.ttshzg.com/mini_static/cut/triangle-down.png"></image>
 				</view>
 			</view>
 			<view class="list">
@@ -240,7 +240,7 @@
 				Otherlistthree:[],
 				DynamicData:'',
 				showMove:false,
-				showSrc:['https://sgz.wdttsh.com/mini_static/cut/show-on.png','https://sgz.wdttsh.com/mini_static/cut/show-off.png'],
+				showSrc:['https://sgz.ttshzg.com/mini_static/cut/show-on.png','https://sgz.ttshzg.com/mini_static/cut/show-off.png'],
 				adShow:false,
 				adUrl:'',
 				adImg:'',
@@ -282,7 +282,7 @@
 					type:1,
 					isMeOrAll:2
 				},
-				url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+				url:'https://sgz.ttshzg.com/app/tbUserDynamic/findUserDynamicList',
 				method:'POST',
 				header: {
 					'content-type':'application/x-www-form-urlencoded', 

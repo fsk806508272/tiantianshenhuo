@@ -10,7 +10,7 @@
 			</view>
 		</view>
 		<view v-if="data.length==0" class="noGoods">
-			<image src="https://sgz.wdttsh.com/mini_static/cut/noSearchRecord.png"></image>
+			<image src="https://sgz.ttshzg.com/mini_static/cut/noSearchRecord.png"></image>
 			<view>无相关搜索商品，换个词试试吧</view>
 		</view>
 		

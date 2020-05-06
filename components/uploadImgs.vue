@@ -34,7 +34,7 @@
 						for(let i in res.tempFilePaths){
 							// console.log(res.tempFilePaths[i]);
 							uni.uploadFile({
-								url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
+								url: 'https://sgz.ttshzg.com/app/imgUpload/upload', //图片接口
 								filePath: res.tempFilePaths[i],
 								name: 'img',
 								success: (uploadFileRes) => {

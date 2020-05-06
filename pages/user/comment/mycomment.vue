@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<block v-if="commentList.length==0">
-			<image class="image" src="https://sgz.wdttsh.com/mini_static/cut/no_user_comment.png"></image>
+			<image class="image" src="https://sgz.ttshzg.com/mini_static/cut/no_user_comment.png"></image>
 			<view class="text">暂无评价</view>
 		</block>
 		<block v-else>

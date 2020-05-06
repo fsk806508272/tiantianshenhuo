@@ -78,12 +78,17 @@
 					</view>
 				</view>
 			</view>
-		</block>		
+		</block>
+		<uni-load-more :status="status"></uni-load-more>
 	</view>
 </template>
 
 <script>
+	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	export default{
+		components:{
+			uniLoadMore
+		},
 		data(){
 			return{
 				data:'',
@@ -92,10 +97,15 @@
 				item:'',
 				token:'',
 				sellerId:'',
-				status:''
+				status:'',
+				pagelfunm:1,
+				status:'loading',
 			}
 		},
 		onLoad(options){
+			if (window.android) {
+				window.android.setBarColor('#ff6600')
+			}
 			this.status = options.status
 			this.type = options.type
 			this.token = options.token
@@ -107,74 +117,115 @@
 				if(this.type==0){
 					let req = {}
 					req.isMeOrAll = 1
+					req.pageSize = 10
+					req.pageNo = this.pagelfunm
 					let that = this
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamic/findUserDynamicList?token=' + that.token,
 						data:req,
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded', 
-							token:that.token
+							// token:that.token
 						},
 						success(res){
-							that.data = res.data.data.userDynamicList
-							that.sellerId = that.data[0].sellerId
-							console.log(that.sellerId)
-							let sellerId = that.data[0].sellerId
-							uni.request({
-								url:'https://sgz.wdttsh.com/app/seller/findOne',
-								data:{
-									sellerId
-								},
-								method:'POST',
-								header: {
-									'content-type':'application/x-www-form-urlencoded', 
-									token:that.token
-								},
-								success(res){
-									that.storeInfo = res.data.data
+							if(res.data.data.userDynamicList.length>0){
+								if(req.pageNo == 1){
+									that.data = res.data.data.userDynamicList
+									that.sellerId = that.data[0].sellerId
+									let sellerId = that.data[0].sellerId
+									uni.request({
+										url:'https://sgz.ttshzg.com/app/seller/findOne?token=' + that.token,
+										data:{
+											sellerId
+										},
+										method:'POST',
+										header: {
+											'content-type':'application/x-www-form-urlencoded', 
+										},
+										success(res){
+											that.storeInfo = res.data.data
+										}
+									})
+								}else{
+									that.data = that.data.concat(res.data.data.userDynamicList)
+									that.sellerId = that.data[0].sellerId
+									let sellerId = that.data[0].sellerId
+									uni.request({
+										url:'https://sgz.ttshzg.com/app/seller/findOne?token=' + that.token,
+										data:{
+											sellerId
+										},
+										method:'POST',
+										header: {
+											'content-type':'application/x-www-form-urlencoded', 
+										},
+										success(res){
+											that.storeInfo = res.data.data
+										}
+									})
 								}
-							})
-							// if(res.data.data.userDynamicList.length>0){
-							// 	that.data = that.data.concat(res.data.data.userDynamicList)
-							// }else{
-							// 	that.status = "nomore"
-							// }
+							}else{
+								that.status = "nomore"
+							}
 						}
 					})
 				}else{
 					let req = {}
 					req.isMeOrAll = 3
+					req.pageSize = 10
+					req.pageNo = this.pagelfunm
 					req.userId = this.item.userId
 					let that = this
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamic/findUserDynamicList',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamic/findUserDynamicList?token=' + that.token,
 						data:req,
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded',
-							'token':that.token
 						},
 						success(res){
-							console.log(res)
-							that.data = res.data.data.userDynamicList
-							that.sellerId = that.data[0].sellerId
-							console.log(that.sellerId)
-							let sellerId = that.data[0].sellerId
-							uni.request({
-								url:'https://sgz.wdttsh.com/app/seller/findSellerOneDetailed',
-								data:{
-									sellerId
-								},
-								method:'POST',
-								header: {
-									'content-type':'application/x-www-form-urlencoded', 
-								},
-								success(res){
-									console.log(res)
-									that.storeInfo = res.data.data
+							if(res.data.data.userDynamicList.length>0){
+								if(req.pageNo == 1){
+									that.data = res.data.data.userDynamicList
+									that.sellerId = that.data[0].sellerId
+									let sellerId = that.data[0].sellerId
+									uni.request({
+										url:'https://sgz.ttshzg.com/app/seller/findSellerOneDetailed',
+										data:{
+											sellerId
+										},
+										method:'POST',
+										header: {
+											'content-type':'application/x-www-form-urlencoded', 
+										},
+										success(res){
+											console.log(res)
+											that.storeInfo = res.data.data
+										}
+									})
+								}else{
+									that.data = that.data.concat(res.data.data.userDynamicList)
+									that.sellerId = that.data[0].sellerId
+									let sellerId = that.data[0].sellerId
+									uni.request({
+										url:'https://sgz.ttshzg.com/app/seller/findSellerOneDetailed',
+										data:{
+											sellerId
+										},
+										method:'POST',
+										header: {
+											'content-type':'application/x-www-form-urlencoded', 
+										},
+										success(res){
+											console.log(res)
+											that.storeInfo = res.data.data
+										}
+									})
 								}
-							})
+							}else{
+								that.status = "nomore"
+							}
 						}
 					})
 				}
@@ -214,14 +265,14 @@
 					item.isGiveTheThumbsUp = 1
 					item.numberOfPoints += 1
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/addUserDynamicPraise',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamicPraise/addUserDynamicPraise?token=' + that.token,
 						data:{
 							userDynamicId:item.id
 						},
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded', 
-							'token':that.token
+							// 'token':that.token
 						},
 						success(res){
 						}
@@ -230,14 +281,14 @@
 					item.isGiveTheThumbsUp = 0
 					item.numberOfPoints -= 1
 					uni.request({
-						url:'https://sgz.wdttsh.com/app/tbUserDynamicPraise/cancelUserDynamicPraise',
+						url:'https://sgz.ttshzg.com/app/tbUserDynamicPraise/cancelUserDynamicPraise?token=' + that.token,
 						data:{
 							userDynamicId:item.id
 						},
 						method:'POST',
 						header: {
 							'content-type':'application/x-www-form-urlencoded',
-							'token':that.token
+							// 'token':that.token
 						},
 						success(res){
 						}
@@ -247,14 +298,14 @@
 			deleteDynamic(item){
 				let that = this 
 				uni.request({
-					url:'https://sgz.wdttsh.com/app/tbUserDynamicReply/deleteUserDynamic',
+					url:'https://sgz.ttshzg.com/app/tbUserDynamicReply/deleteUserDynamic?token=' + that.token,
 					data:{
 						id:item.id
 					},
 					method:'POST',
 					header: {
 						'content-type':'application/x-www-form-urlencoded', 
-						token:that.token
+						// token:that.token
 					},
 					success(res){
 						uni.showToast({
@@ -311,7 +362,12 @@
 				}
 				
 			}
-		}
+		},
+		//上拉加载，需要自己在page.json文件中配置"onReachBottomDistance"
+		onReachBottom(){
+			this.pagelfunm++
+			this.getList()
+		},
 	}
 </script>
 
@@ -491,40 +547,40 @@
 		}
 	}
 	
-	@media (prefers-color-scheme: dark){
-		page{
-			background-color: #141414;
-		}
-		.navbar{
-			background:linear-gradient(0deg,rgba(50,50,50,1),rgba(20,20,20,1));
-		}
-		
-		.myStore{
-			background-color: #2D2D2D;
-			.storeInfo{
-				.title{
-					color:#FFFFFF;
-				}
-				.score{
-					color:#FF6600;
-				}
-			}
-		}
-		.list{
-			background-color: #2d2d2d;
-			.user{
-				.info{
-					.nickName{
-						color: #fff;
-					}
-				}
-			}
-			.content{
-				color:#fff;
-			}
-		}
-		
-	}
+	// @media (prefers-color-scheme: dark){
+	// 	page{
+	// 		background-color: #141414;
+	// 	}
+	// 	.navbar{
+	// 		background:linear-gradient(0deg,rgba(50,50,50,1),rgba(20,20,20,1));
+	// 	}
+	// 	
+	// 	.myStore{
+	// 		background-color: #2D2D2D;
+	// 		.storeInfo{
+	// 			.title{
+	// 				color:#FFFFFF;
+	// 			}
+	// 			.score{
+	// 				color:#FF6600;
+	// 			}
+	// 		}
+	// 	}
+	// 	.list{
+	// 		background-color: #2d2d2d;
+	// 		.user{
+	// 			.info{
+	// 				.nickName{
+	// 					color: #fff;
+	// 				}
+	// 			}
+	// 		}
+	// 		.content{
+	// 			color:#fff;
+	// 		}
+	// 	}
+	// 	
+	// }
 	
 	
 	

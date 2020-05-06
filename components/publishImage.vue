@@ -69,7 +69,7 @@
 										let imgSrc = window.URL.createObjectURL(fileSrc)
 										console.log('压缩后', imgSrc)
 										uni.uploadFile({
-											url: 'https://sgz.wdttsh.com/app/imgUpload/upload', //图片接口
+											url: 'https://sgz.ttshzg.com/app/imgUpload/upload', //图片接口
 											filePath: imgSrc,
 											name: 'img',
 											success: (uploadFileRes) => {

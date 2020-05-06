@@ -82,7 +82,7 @@ export default{
 			req.type = 2
 			let that = this
 			uni.request({
-				url:'https://sgz.wdttsh.com/app/signing/queryContract',
+				url:'https://sgz.ttshzg.com/app/signing/queryContract',
 				data:req,
 				method:'POST',
 				header: {
@@ -101,7 +101,7 @@ export default{
 			req.orderCode = this.data.orderCode
 			let that = this
 			uni.request({
-				url:'https://sgz.wdttsh.com/app/financialContracts/queryFinancialContract',
+				url:'https://sgz.ttshzg.com/app/financialContracts/queryFinancialContract',
 				data:req,
 				method:'POST',
 				header: {

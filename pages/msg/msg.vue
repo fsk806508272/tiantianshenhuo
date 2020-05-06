@@ -51,7 +51,7 @@
 			
 			<block v-else>
 				<view class="no_content">
-					<image src="https://sgz.wdttsh.com/mini_static/cut/mess_bg.png" mode="widthFix"></image>
+					<image src="https://sgz.ttshzg.com/mini_static/cut/mess_bg.png" mode="widthFix"></image>
 					<text>暂无消息内容</text>
 				</view>
 			</block>
