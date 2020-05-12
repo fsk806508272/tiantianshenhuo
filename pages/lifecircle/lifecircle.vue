@@ -138,11 +138,22 @@
 			like(index,item){
 				
 				if(this.token == ''){
-					uni.showToast({
-						title:'请先登录',
-						duration:1500,
-						icon:'none'
-					})
+					if (window.android){
+						window.android.toLogin()
+					}else if(window.webkit){
+						window.webkit.messageHandlers.getLogin.postMessage(0)
+					}else{
+						uni.showToast({
+							duration:1500,
+							title:'请先登录',
+							icon:'none'
+						})
+						setTimeout(function() {
+							uni.navigateTo({
+								url:'../login/login'
+							})
+						}, 1500);
+					}
 					return
 				}
 			
@@ -189,12 +200,19 @@
 					const android = window.android
 					if (window.android){
 						window.android.toLogin()
+					}else if(window.webkit){
+						window.webkit.messageHandlers.getLogin.postMessage(0)
 					}else{
 						uni.showToast({
 							duration:1500,
 							title:'请先登录',
 							icon:'none'
 						})
+						setTimeout(function() {
+							uni.navigateTo({
+								url:'../login/login'
+							})
+						}, 1500);
 					}
 				}else{
 					uni.navigateTo({
@@ -215,12 +233,19 @@
 					const android = window.android
 					if (window.android){
 						window.android.toLogin()
+					}else if(window.webkit){
+						window.webkit.messageHandlers.getLogin.postMessage(0)
 					}else{
 						uni.showToast({
 							duration:1500,
 							title:'请先登录',
 							icon:'none'
 						})
+						setTimeout(function() {
+							uni.navigateTo({
+								url:'../login/login'
+							})
+						}, 1500);
 					}
 					
 				
