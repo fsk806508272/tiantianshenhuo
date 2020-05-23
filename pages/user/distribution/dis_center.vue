@@ -1,48 +1,60 @@
 <template>
 	<view class="distribution">
+		<view class="header">
+			<image class="left" src="../../../static/cut/back_white.png" mode="" @tap="toUser()"></image>
+			<view class="title">分销中心</view>
+			<view class="right" @tap="toRules()">规则</view>
+		</view>
 		<view class="page_bg"></view>
 		<view class="discenter_top_box">
 			<view class="discenter_info">
 				<image :src="avatar" class="avatar_img" mode="widthFix"></image>
 				<view class="info_right">
-					<view class="info_title">{{name}}<image src="/static/cut/level_png.png" mode="widthFix"></image></view>
-					<view class="info_txt">{{time}}加入代理</view>
+					<view class="info_title">
+						<text>{{name}}</text>
+						<image style="width: 90rpx;" v-if="list.userType==1" src="/static/cut/level1.png" mode="widthFix"></image>
+						<image style="width: 90rpx;" v-if="list.userType==2" src="/static/cut/level2.png" mode="widthFix"></image>
+						<image style="width: 108rpx;" v-if="list.userType==3" src="/static/cut/level3.png" mode="widthFix"></image>
+						<image style="width: 144rpx;" v-if="list.userType==4" src="/static/cut/level4.png" mode="widthFix"></image>
+						<image style="width: 144rpx;" v-if="list.userType==5" src="/static/cut/level5.png" mode="widthFix"></image>
+					</view>
+					<view class="info_txt">{{list.addtime}}加入代理</view>
 				</view>
 			</view>
 			<view class="dis_money_box">
 				<text>当前累计获取佣金(元)</text>
-				<view class="dis_money_txt">{{total_money}}</view>
+				<view class="dis_money_txt">{{list.totalCommission || 0}}</view>
 			</view>
 		</view>
 		<view class="discenter_bottom_box">
 			<view class="disbottom_list">
 				<view class="dl_box">
 					<text>今日获取佣金</text>
-					<view class="dl_money">{{today_money}}</view>
+					<view class="dl_money">{{list.todayTotalCommission || 0}}</view>
 				</view>
 				<view class="dl_box">
 					<text>待收益佣金</text>
-					<view class="dl_money">{{wait_money}}</view>
+					<view class="dl_money">{{wait_money || 0}}</view>
 				</view>
 			</view>
 			<view class="disbottom_with">
-				<text>可提现佣金：{{withdraw_money}}元</text>
+				<text>可提现佣金：{{list.canWithdrawCommission || 0}}元</text>
 				<view>立即提现<image src="/static/cut/right_orange.png" mode="widthFix"></image></view>
 			</view>
 			<view class="my_invite_code">
-				<view>我的邀请码：<text>{{invite_code}}</text></view>
+				<view>我的邀请码：<text>{{list.bindedInvitationCode}}</text></view>
 				<text @tap="copy()">复制</text>
 			</view>
 			<view class="invite_nav_box">
 				<view class="invite_item" @tap="toInvitePage()">
 					<image src="/static/cut/discenter_icon1.png" mode="widthFix"></image>
 					<view>已邀请用户</view>
-					<text>{{person_num}}人</text>
+					<text>{{list.totalPersonCount || 0}}人</text>
 				</view>
 				<view class="invite_item" @tap="toCommissionPage()">
 					<image src="/static/cut/discenter_icon2.png" mode="widthFix"></image>
 					<view>佣金明细</view>
-					<text>{{money_num}}笔</text>
+					<text>{{list.commissionCount || 0}}笔</text>
 				</view>
 				<view class="invite_item" @tap="toShare">
 					<image src="/static/cut/discenter_icon3.png" mode="widthFix"></image>
@@ -56,25 +68,35 @@
 
 <script>
 	import h5Copy from '@/common/junyi-h5-copy.js'
+	import {UserModel} from "@/common/models/user.js"
+	let userModel=new UserModel()
 	export default{
 		data(){
 			return{
+				list:'',
 				avatar: '/static/cut/logo.png',
 				name: '汤圆圆',
-				time: '2019-09-01',
-				total_money: '568.88',
-				today_money: '568.88',
-				wait_money: '12.82',
-				withdraw_money: '99.86',
-				invite_code: 'ABC456',
-				person_num: 100,
-				money_num: 180
+				wait_money:''
 			}
 		},
-		components: {
-			
+		onLoad(res) {
+			this.avatar = res.logo
+			this.name = res.name
+			userModel.getSelectStatistics(data =>{
+				this.list = data
+			})
 		},
 		methods:{
+			toRules(){
+				uni.navigateTo({
+					url:'distributionRules'
+				})
+			},
+			toUser(){
+				uni.switchTab({
+					url:'../user'
+				})
+			},
 			toInvitePage(){
 				uni.navigateTo({
 					url: '/pages/user/distribution/invite'
@@ -86,7 +108,7 @@
 				})
 			},
 			copy(){
-				let content = this.invite_code
+				let content = this.list.bindedInvitationCode
 				const result = h5Copy(content)
 				if(result===true){
 					uni.showToast({
@@ -106,6 +128,33 @@
 </script>
 
 <style scoped lang="scss">
+	.header{
+		width: 100%;
+		height: 88rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		top: 0;
+		left: 0;
+		.left{
+			position: absolute;
+			left:20rpx;
+			width:20rpx;
+			height:34rpx;
+		}
+		.title{
+			color: #FFFFFF;
+			font-size: 36rpx;
+			font-weight: 400;
+		}
+		.right{
+			position: absolute;
+			right:20rpx;
+			color: #FFFFFF;
+			font-size: 28rpx
+		}
+	}
 	.discenter_top_box{
 		background:linear-gradient(90deg,rgba(255,105,75,1),rgba(247,63,67,1));
 		border-radius:0px 0px 50rpx 50rpx;
@@ -117,6 +166,7 @@
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
+			margin-top: 88rpx;
 			.avatar_img{
 				display: block;
 				width:100rpx;
@@ -130,17 +180,17 @@
 				align-items: center;
 				flex-wrap: wrap;
 				.info_title{
-					font-size:34rpx;
-					font-family:Source Han Sans CN;
-					font-weight:500;
-					color:rgba(30,30,30,1);
 					display: flex;
 					justify-content: flex-start;
 					align-items: center;
 					margin-bottom: 10rpx;
+					text{
+						font-size:34rpx;
+						font-weight:500;
+						color:rgba(30,30,30,1);
+					}
 					image{
-						display: block;
-						width: 104rpx;
+						margin-left: 15rpx;
 						height: 42rpx;
 					}
 				}

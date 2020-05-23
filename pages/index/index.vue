@@ -28,7 +28,7 @@
 		<view class="carousel-section">
 			  <swiper class="swiper" circular="true" autoplay="true" @change="changeSwiper">
 				<swiper-item v-for="(item,index) in Swiperlist" :key="index">
-					<image class="swiper-img" :src="item.coverImg" mode=""></image>
+					<image class="swiper-img" :src="item.coverImg" mode="" @tap="toLife(item,1)"></image>
 				</swiper-item>
 				
 			</swiper>
@@ -105,9 +105,7 @@
 					{{DynamicData.dynamicContent}}
 				</view>
 				<view @tap="toDynamicDetail" class="imageGroup">
-					<image :src="DynamicData.pictureList[0]"></image>
-					<image :src="DynamicData.pictureList[1]"></image>
-					<image :src="DynamicData.pictureList[2]"></image>
+					<image v-for="(item,index) in DynamicData.pictureList" :key="index" v-if="DynamicData.pictureList.length<4" :src="item" mode=""></image>
 				</view>
 			</view>
 		</view>
@@ -120,16 +118,16 @@
 			</view>
 			<view class="life-cen">
 				<view class="lf">
-					<image @tap="toLife(Otherlisttwo[0])" :src="Otherlisttwo[0].coverImg" mode=""></image>
+					<image @tap="toLife(Otherlisttwo[0],2)" :src="Otherlisttwo[0].coverImg" mode=""></image>
 				</view>
 				<view class="rt">
-					<image :src="Otherlisttwo[1].coverImg" @tap="toLife(Otherlisttwo[1])" mode=""></image>
-					<image :src="Otherlisttwo[2].coverImg" @tap="toLife(Otherlisttwo[2])" mode=""></image>
+					<image :src="Otherlisttwo[1].coverImg" @tap="toLife(Otherlisttwo[1],2)" mode=""></image>
+					<image :src="Otherlisttwo[2].coverImg" @tap="toLife(Otherlisttwo[2],2)" mode=""></image>
 				</view>
 			</view>
 			<view class="life-bottom">
 				<view class="item" v-for="(item,index) in Otherlistone" :key="index">
-					<image :src="item.coverImg" mode="widthFix" @tap="toLife(item)"></image>
+					<image :src="item.coverImg" mode="widthFix" @tap="toLife(item,2)"></image>
 				</view>
 				
 			</view>
@@ -140,7 +138,7 @@
 				<view class="mark"></view><text>其他服务</text>
 			</view>
 			<view class="item-img">
-				<image v-for="(item,index) in Otherlistthree" :key="index" :src="item.coverImg" @tap="toLife(item)" mode=""></image>				
+				<image v-for="(item,index) in Otherlistthree" :key="index" :src="item.coverImg" @tap="toLife(item,2)" mode=""></image>				
 			</view>	
 		</view>
 
@@ -290,7 +288,6 @@
 				success: (res) => {
 					console.log(res)
 					this.DynamicData = res.data.data.userDynamicList[0]
-					console.log(this.DynamicData)
 				}
 			})
 			
@@ -591,7 +588,12 @@
 					url: '/pages/provide/detail?id=' + item.id + '&type=' + 8 + '&sellerId=' + item.sellerId
 				});
 			},
-			toLife(item){
+			toLife(item,num){
+				if(num==1){
+					providemodel.getBannerHits({bannerId:item.bannerId},data =>{})
+				}else if(num==2){
+					providemodel.getOtherAdvertHits({stripadvertId:item.stripadvertId},data =>{})
+				}
 				if(this.showDistance == true){
 					return this.showDistance = false
 				}
@@ -624,7 +626,8 @@
 							url:'/pages/house/housedetail?data=' + item.shipId
 						})
 					}
-					
+				}else{
+					window.location.href = item.skipUrl
 				}
 			},
 			onCancel(e) {

@@ -509,6 +509,26 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	//查询分销中心规则
+	getRewardRules(success){
+		let params = {
+			method:'POST',
+			url:'/app/help/getRewardRules',
+			success:success
+		}
+		this.request(params)
+	}
+	
+	//获取分销中心信息
+	getSelectStatistics(success){
+		let params = {
+			method:'GET',
+			url:'/app/tbInviterebate/selectStatistics',
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

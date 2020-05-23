@@ -35,17 +35,17 @@ export default new Vuex.Store({
 		},
 		//改变登录状态  
 		login(state, provider) {
-			console.log(provider)
+			// console.log(provider)
 			state.hasLogin = true  
 			state.uerInfo=provider	
 			uni.setStorage({//将用户信息保存在本地  
 				key: 'uerInfo',  
 				data: provider,
 				success: function (res) {
-				console.log(res);
+				// console.log(res);
 				}
 			})  
-			console.log(state.uerInfo.token);
+			// console.log(state.uerInfo.token);
 		},  
 		setTest(state,t){
 			console.log(t)

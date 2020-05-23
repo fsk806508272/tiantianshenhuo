@@ -15,7 +15,7 @@ class HTTP {
     if (!params.method) {
       params.method = 'GET';
     }
-	console.log(store.state.uerInfo.token)
+	// console.log(store.state.uerInfo.token)
     uni.request({
       url: url + '?token=' + store.state.uerInfo.token||'',
       data: params.data,

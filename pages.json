@@ -742,7 +742,13 @@
 		{
 			"path": "pages/user/distribution/dis_center",
 			"style": {
-				"navigationBarTitleText": "分销中心",
+				"navigationStyle":"custom"
+			}
+		},
+		{
+			"path":"pages/user/distribution/distributionRules",
+			"style": {
+				"navigationBarTitleText":"分销规则",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}
 		},

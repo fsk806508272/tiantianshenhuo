@@ -158,6 +158,26 @@ class ProvideModel extends HTTP{
 		}
 		this.request(params)
 	}
+	
+	getBannerHits(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/banner/add-hits',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
+	
+	getOtherAdvertHits(data,success){
+		let params = {
+			method:'POST',
+			url:'/app/otheradvert/add-hits',
+			data:data,
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {ProvideModel}

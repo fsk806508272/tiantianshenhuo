@@ -423,7 +423,7 @@ export default{
 		},
 		toRetailCenter(){
 			uni.navigateTo({
-				url:'/pages/user/distribution/dis_center'
+				url:`/pages/user/distribution/dis_center?logo=${this.uerInfo.logoImg}&name=${this.uerInfo.nickname}`
 			})
 		},
 		toMyCollection(){
