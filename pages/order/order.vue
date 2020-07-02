@@ -65,7 +65,7 @@
 											<image v-else src="/static/cut/minus-able.png"></image>
 										</view>
 										<view @tap.stop="doNothing" class="input">
-											<input type="number" v-model="good.num"/>
+											<input type="number" v-model="good.num" @blur="editNum($event,good)"/>
 										</view>
 										<view class="add" @tap.stop="add(good)">
 											<image src="/static/cut/plus-able.png" ></image>
@@ -270,9 +270,20 @@
 		},
 
 		computed:{
-			...mapState(['hasLogin'])
+			...mapState(['hasLogin','uerInfo'])
 		},
 		methods:{
+			getList(){
+				if(this.hasLogin){
+					ordermodel.getCartList((data)=>{
+						this.allSelected = false
+						this.sumPrice = 0
+						this.shopSelected = 0
+						this.shopingCarlist = data
+					})
+					this.showType(this.tabbarIndex)
+				}
+			},
 			toGoodsDetail(row,good){
 				console.log(row,good)
 				uni.navigateTo({
@@ -336,21 +347,130 @@
 				if(good.num == 1){
 					good.num 
 				}else{
-					good.num--
+					uni.showLoading({
+						title: '正在加载',
+						mask: true
+					});
+					let that = this
 					good.selected?this.sumPrice -= good.price : ''
-					let req = {goodsItemId:good.itemId,num:good.num}
+					let req = {goodsItemId:good.itemId,num:good.num-1}
 					ordermodel.changeNum(req,(data)=>{
-						
+						if(data.resultCode==2){
+							good.num = uni.getStorageSync('cartNum01')
+							that.getList()
+							setTimeout(()=>{
+								uni.hideLoading()
+								uni.showToast({
+									title:data.message,
+									icon:'none'
+								})
+							},400)
+						}else{
+							good.selected ? that.sumPrice += good.price : ''
+							that.getList()
+							setTimeout(()=>{
+								uni.hideLoading()
+							},400)
+						}
 					})
 				}
 			},
 			add(good){
-				good.num++
+				uni.showLoading({
+					title: '正在加载',
+					mask: true
+				});
+				uni.setStorageSync('cartNum01',good.num)
+				let that = this
 				good.selected ? this.sumPrice += good.price : ''
-				let req = {goodsItemId:good.itemId,num:good.num}
+				let req = {goodsItemId:good.itemId,num:good.num+1}
 				ordermodel.changeNum(req,(data)=>{
-					
+					console.log(33,data)
+					if(data.resultCode==2){
+						good.num = uni.getStorageSync('cartNum01')
+						that.getList()
+						setTimeout(()=>{
+							uni.hideLoading()
+							uni.showToast({
+								title:data.message,
+								icon:'none'
+							})
+						},400)
+					}else{
+						good.selected ? that.sumPrice += good.price : ''
+						that.getList()
+						setTimeout(()=>{
+							uni.hideLoading()
+						},400)
+					}
 				})
+			},
+			// 输入框修改数量
+			editNum(e, good) {
+				uni.showLoading({
+					title: '正在加载',
+					mask: true
+				});
+				let that = this
+				if (good.num <= 1 || '') {
+					good.num = 1
+					uni.showToast({
+						title:'受不了了，数量不能再减少了哦',
+						icon:'none'
+					})
+					let req = {
+						goodsItemId: good.itemId,
+						num: good.num
+					}
+					ordermodel.changeNum(req, (data) => {
+						good.selected ? that.sumPrice = good.price * good.num : ''
+						that.getList()
+						setTimeout(()=>{
+							uni.hideLoading()
+						},400)
+					})
+				} else {
+					console.log(111,good)
+					uni.setStorageSync('cartNum02',good.num)
+					let req = {
+						goodsItemId: good.itemId,
+						num: e.detail.value
+					}
+					uni.request({
+						url:'https://sgz.wdttsh.com/app/shCarts/alterGoodsNumToCartList',
+						data:req,
+						method:'POST',
+						header: {
+							'content-type':'application/x-www-form-urlencoded',
+							'token':that.uerInfo.token
+						},
+						success(res){
+							if(res.data.resultCode==2){
+								good.num = uni.getStorageSync('cartNum02')
+								that.getList()
+								setTimeout(()=>{
+									uni.hideLoading()
+									uni.showToast({
+										title:res.data.message,
+										icon:'none'
+									})
+								},400)
+							}else{
+								good.selected ? that.sumPrice = good.price * e.detail.value : ''
+								that.getList()
+								setTimeout(()=>{
+									uni.hideLoading()
+								},400)
+							}
+						},fail(err) {
+							uni.hideLoading()
+							uni.showToast({
+								title:res.data.message,
+								icon:'none'
+							})
+						}
+					})
+				}
 			},
 			tab(){
 				this.isAccounted = this.isAccounted ? 0 : 1
