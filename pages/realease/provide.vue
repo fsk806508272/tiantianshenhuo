@@ -8,7 +8,7 @@
 				<view class="pro_item" @tap="selectDemandParent(index)" :class="[demand_parent_idx == index?'active':'']" v-for="(item,index) in provideItem" :key="index">{{item}}</view>
 			</view>
 		</view>
-		
+
 		<!-- 基本信息 -->
 		<view class="graytitle">基本信息</view>
 		

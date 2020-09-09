@@ -42,7 +42,7 @@
 				<view>立即提现<image src="/static/cut/right_orange.png" mode="widthFix"></image></view>
 			</view>
 			<view class="my_invite_code">
-				<view>我的邀请码：<text>{{list.bindedInvitationCode}}</text></view>
+				<view>我的邀请码：<text>{{bindedInvitationCode}}</text></view>
 				<text @tap="copy()">复制</text>
 			</view>
 			<view class="invite_nav_box">
@@ -76,15 +76,20 @@
 				list:'',
 				avatar: '/static/cut/logo.png',
 				name: '汤圆圆',
-				wait_money:''
+				wait_money:'',
+				bindedInvitationCode:''
 			}
 		},
 		onLoad(res) {
 			this.avatar = res.logo
 			this.name = res.name
+			this.bindedInvitationCode = res.bindedInvitationCode
+			console.log(res)
 			userModel.getSelectStatistics(data =>{
 				this.list = data
+				console.log(this.list)
 			})
+			
 		},
 		methods:{
 			toRules(){
@@ -97,9 +102,9 @@
 					url:'../user'
 				})
 			},
-			toInvitePage(){
+			toInvitePage(){//userType
 				uni.navigateTo({
-					url: '/pages/user/distribution/invite'
+					url: `/pages/user/distribution/invite?userType=${this.list.userType}`
 				})
 			},
 			toCommissionPage(){
@@ -108,7 +113,7 @@
 				})
 			},
 			copy(){
-				let content = this.list.bindedInvitationCode
+				let content = this.bindedInvitationCode
 				const result = h5Copy(content)
 				if(result===true){
 					uni.showToast({

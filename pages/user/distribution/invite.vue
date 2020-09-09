@@ -2,7 +2,7 @@
 	<view>
 		<view class="invite_top">
 			<text>邀请用户总人数</text>
-			<view class="invite_num">{{total}}</view>
+			<view class="invite_num">{{this.level.totalPersonCount}}</view>
 		</view>
 		<view class="list_nav">
 			<view v-for="(item,index) in navbar" :key="index" :class="[currentTab==index ? 'active' : '']" @tap="navbarTap(index)">{{item.name}}({{item.num}})</view>
@@ -23,46 +23,62 @@
 </template>
 
 <script>
+	import {UserModel} from "@/common/models/user.js"
+	let userModel=new UserModel()
 	export default{
 		data(){
 			return{
 				total: 101,
 				navbar:[{name:"一级用户",num:0},{name:"二级用户",num:0}],
 				currentTab:0,
+				userType:'',
+				level:[],
 				level_list: [
-					{
-						id: 1,
-						avatar: "/static/cut/logo.png",
-						title: "刘方方",
-						info: "已使用软件120天，为您带来收益10元"
-					},{
-						id: 2,
-						avatar: "/static/cut/logo.png",
-						title: "刘方方",
-						info: "已使用软件120天，为您带来收益10元"
-					},{
-						id: 3,
-						avatar: "/static/cut/logo.png",
-						title: "刘方方",
-						info: "已使用软件120天，为您带来收益10元"
-					},{
-						id: 4,
-						avatar: "/static/cut/logo.png",
-						title: "刘方方",
-						info: "已使用软件120天，为您带来收益10元"
-					},{
-						id: 5,
-						avatar: "/static/cut/logo.png",
-						title: "刘方方",
-						info: "已使用软件120天，为您带来收益10元"
-					},{
-						id: 6,
-						avatar: "/static/cut/logo.png",
-						title: "刘方方",
-						info: "已使用软件120天，为您带来收益10元"
-					}
+					// {
+					// 	id: 1,
+					// 	avatar: "/static/cut/logo.png",
+					// 	title: "刘方方",
+					// 	info: "已使用软件120天，为您带来收益10元"
+					// },{
+					// 	id: 2,
+					// 	avatar: "/static/cut/logo.png",
+					// 	title: "刘方方",
+					// 	info: "已使用软件120天，为您带来收益10元"
+					// },{
+					// 	id: 3,
+					// 	avatar: "/static/cut/logo.png",
+					// 	title: "刘方方",
+					// 	info: "已使用软件120天，为您带来收益10元"
+					// },{
+					// 	id: 4,
+					// 	avatar: "/static/cut/logo.png",
+					// 	title: "刘方方",
+					// 	info: "已使用软件120天，为您带来收益10元"
+					// },{
+					// 	id: 5,
+					// 	avatar: "/static/cut/logo.png",
+					// 	title: "刘方方",
+					// 	info: "已使用软件120天，为您带来收益10元"
+					// },{
+					// 	id: 6,
+					// 	avatar: "/static/cut/logo.png",
+					// 	title: "刘方方",
+					// 	info: "已使用软件120天，为您带来收益10元"
+					// }
 				]
 			}
+		},
+		onLoad(res) {
+			// this.userType = res.userType
+			let req = {}
+			req.type = res.userType
+			console.log(req)
+			userModel.getSelectInvitedUserList(req,data =>{
+				this.level = data
+				this.level_list = data.list
+				console.log(this.level_list,this.level)
+			})
+			
 		},
 		methods:{
 			// 切换导航

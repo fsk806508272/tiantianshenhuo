@@ -91,7 +91,7 @@
 				let m = today.getMonth() + 1
 				let d = today.getDate()
 				let time2 = new Date(y + '/' + m + '/' + d)
-				console.log(time2,time)
+				// console.log(time2,time)
 				let days = parseInt(time2-time)/1000/3600/24
 				if(days==0){
 					return '今天 ' +  value.substring(11,16)
@@ -116,6 +116,7 @@
 			}
 		},
 		onLoad(options){
+			console.log(window.android)
 			if (window.android) {
 				window.android.setBarColor('#ff6600')
 			}
@@ -131,7 +132,7 @@
 			this.requestData()
 		},
 		onPageScroll(event){
-			console.log(event)
+			// console.log(event)
 			this.scrollTop = event.scrollTop
 		},
 		methods: {
@@ -258,7 +259,8 @@
 				this.requestData()
 			},
 			toIndex(){
-				
+				console.log(window.android)
+				console.log(window.webkit)
 				if (window.android) {
 					window.android.finish()
 				}else if(window.webkit){

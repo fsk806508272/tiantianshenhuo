@@ -268,11 +268,20 @@
 				this.showType(this.tabbarIndex)
 			}
 		},
-
+		onPullDownRefresh() {
+			let that = this
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+				that._getListFactory()
+			}, 1000);
+		},
 		computed:{
 			...mapState(['hasLogin','uerInfo'])
 		},
 		methods:{
+			_getListFactory() {
+				this.getList()
+			},
 			getList(){
 				if(this.hasLogin){
 					ordermodel.getCartList((data)=>{
@@ -322,8 +331,29 @@
 			doNothing(){
 				
 			},
-			goodChoose(row,good){
-				!good.selected?this.chooseTrue(row,good):this.chooseFalse(row,good)
+			// goodChoose(row,good){
+			// 	!good.selected?this.chooseTrue(row,good):this.chooseFalse(row,good)
+			// },
+			goodChoose(row, good) {
+				for (let i of this.shopingCarlist) {
+					console.log(i.select)
+					for (let k of i.orderItemList) {
+						if (k.selected == 1) {
+							if (i.sellerName == row.sellerName) {
+								break
+							} else {
+								uni.showToast({
+									title: '只能选择一个店铺结算哦',
+									icon: 'none',
+									duration: 2000
+								})
+								return
+							}
+			
+						}
+					}
+			
+				}!good.selected ? this.chooseTrue(row, good) : this.chooseFalse(row, good)
 			},
 			shopTrue(row){
 				row.orderItemList.forEach((good)=>{
@@ -335,9 +365,47 @@
 					good.selected === true ? this.chooseFalse(row,good):''
 				})
 			},
-			shopChoose(row){
-				console.log(1)
-				!row.select ? this.shopTrue(row) : this.shopFalse(row)
+			// shopChoose(row){
+			// 	console.log(1)
+			// 	!row.select ? this.shopTrue(row) : this.shopFalse(row)
+			// },
+			shopChoose(row) {
+				for (let i of this.shopingCarlist) {
+					if (i.select == 1) {
+						if (i.sellerName == row.sellerName) {
+							break
+						} else {
+							uni.showToast({
+								title: '只能选择一个店铺结算哦',
+								icon: 'none',
+								duration: 2000
+							})
+							return
+						}
+			
+					} else {
+						for (let k of i.orderItemList) {
+							if (k.selected == 1) {
+			
+								console.log(row.sellerName, i, 111111)
+								if (i.sellerName == row.sellerName) {
+									break
+								} else {
+			
+									uni.showToast({
+										title: '只能选择一个店铺结算哦',
+										icon: 'none',
+										duration: 2000
+									})
+									return
+								}
+			
+							}
+						}
+					}
+				}!row.select ? this.shopTrue(row) : this.shopFalse(row)
+			
+			
 			},
 			allChoose(){
 				this.allSelected = !this.allSelected;

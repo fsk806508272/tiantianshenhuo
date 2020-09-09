@@ -103,6 +103,7 @@
 			}
 		},
 		onLoad(options){
+			console.log(options)
 			if (window.android) {
 				window.android.setBarColor('#ff6600')
 			}

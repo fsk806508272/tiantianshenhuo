@@ -13,7 +13,7 @@
 					</view>	
 					<view class="item">
 						<image class="icon2" src="../../static/cut/lock.png"></image>
-						<input placeholder="设置密码" v-model="loginPassword"/>				
+						<input class="uni-input" password type="text" placeholder="设置密码" v-model="loginPassword"/>				
 					</view>			
 					<view class="theme-button" @tap="doLogin">确定</view>
 					<view>手机号无法接收短信</view>

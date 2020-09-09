@@ -6,8 +6,10 @@ import COS from 'cos-js-sdk-v5'
 import TYPES from '@/common/types.js'
 import BaiduMap from 'vue-baidu-map'
 import VueJsonp from 'vue-jsonp'
+import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue"
 Vue.config.productionTip = false
 
+Vue.component('mescroll-body', MescrollBody)
 App.mpType = 'app'
 
 let options = {

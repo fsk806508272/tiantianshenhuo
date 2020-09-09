@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, user-scalable=no, viewport-fit=cover,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<title>
+			授权
+		</title>
+		<!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey"></script> -->
+		<script>
+			(function(win, designW) {
+			            var doc = win.document;
+			            var docEle = doc.documentElement;
+			            designW = designW || 640; //设计稿宽度px,默认640px设计稿
+			            var ratio = designW / 100;//640px=> 1rem = 100px, 超出640px font-size：100px;
+			            var or = "orientationchange" in win ? "orientationchange" : "resize";
+			            //创建viewport
+			            _createViewport();
+			            if(doc.addEventListener){
+			                win.addEventListener(or, _refreshRem, false);
+			                doc.addEventListener("DOMContentLoaded", _refreshRem, false);
+			            }
+			            /**
+			             * 创建viewport
+			             */
+			            function _createViewport(){
+			                var metaEl = doc.createElement('meta');
+			                metaEl.setAttribute('name', 'viewport');
+			                metaEl.setAttribute('content', 'initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no');
+			                if (docEle.firstElementChild) {
+			                    docEle.firstElementChild.appendChild(metaEl);
+			                }
+			
+			            }
+			            /**
+			             * 动态更新rem
+			             */
+			            function _refreshRem() {
+			                var clientW = docEle.clientWidth || 300;
+							var clientH = docEle.clientHeight;
+							console.log(clientW,clientH)
+			                //设置最大和最小宽度取值
+			                if(clientW > designW){
+			                    clientW = designW
+			                } else if(clientW<300){
+			                    clientW=300;
+			                }
+							console.log(clientW,ratio)
+			                docEle.style.fontSize = clientW / ratio + "px";
+							console.log(docEle.style.fontSize)
+			            };
+			        })(window, 3000);//750为设计稿宽度px值,根据实际设计稿大小对应设置
+        
+        </script>
+	</head>
+	<body>
+		<div class="box">
+			<div class="content">
+				<image src="../../static/authority.png" >
+				<div class="input1 box-txt">
+					<div class="txt">
+						<strong>深圳市时光轴科技有限公司授予<p class='txet' style="max-width:6.94rem;">某公司某公司某</p><p class='txet'>某公司</p>为“天天生活APP”
+						<p class='txet'>某地区</p><p class='txet'>某地区</p><p class='txet'>某地区</p>
+							区域的代理商。<br />
+							<p style="line-height: 2.1rem;">特此授权！</p></strong>
+					</div>
+				</div>
+				<div class="input3 box-input">
+					3年
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+
+		.txet {
+			display: inline-block;
+			min-width: 2rem;
+			width: auto;
+			max-width: 4.7rem;
+			font-weight: 500;
+			line-height: 1.8rem;
+			text-align: center;
+			border-bottom: #1E1E1E solid 2px;
+		}
+
+		p {
+			width: 100%;
+			margin: 0;
+			display: inline-block;
+			min-width: 2rem;
+			height: auto;
+		}
+
+		strong {
+			width: 100%;
+			display: inline-block;
+		}
+
+		.box {
+			display: flex;
+			width: 100%;
+			height: 21.1rem;
+		}
+
+		.content {
+			margin: 100rpx auto;
+			width: 100%;
+			/* background: url(../../static/authority.png)0 0 no-repeat; */
+			/* background-image: url(../../static/authority.png)0 0 no-repeat; */
+			background-size: 100%;
+			display: inline-block;
+
+		}
+		img{
+			max-width:100%;
+		}
+		.box-txt {
+			height: 7rem;
+			width: 24rem;
+			display: inline-block;
+			font-size: 0.5rem;
+			font-family:"宋体";
+		}
+
+		.txt {
+			width: 100%;
+			height: auto;
+		}
+
+		.box-input {
+			height: 2.4rem;
+			width: 3.6rem;
+			/* background-color: #007AFF; */
+			text-align: center;
+			font-size: 0.5rem;
+			line-height: 3.4rem;
+		}
+
+		.input1 {
+			position: absolute;
+			left: 3rem;
+			top: 8rem;
+		}
+
+		.input3 {
+			position: absolute;
+			left: 6.9rem;
+			top: 15.7rem;
+			font-size: 0.9rem;
+		}
+	</style>
+</html>

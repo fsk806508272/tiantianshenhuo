@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, user-scalable=no, viewport-fit=cover,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<title>
+			天天生活平台代理协议
+		</title>
+		<!-- <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=q2nw1v8HmXL5FS3V8LvedWjrPtEhzUey"></script> -->
+		<script>
+			(function(win, designW) {
+			            var doc = win.document;
+			            var docEle = doc.documentElement;
+			            designW = designW || 640; //设计稿宽度px,默认640px设计稿
+			            var ratio = designW / 100;//640px=> 1rem = 100px, 超出640px font-size：100px;
+			            var or = "orientationchange" in win ? "orientationchange" : "resize";
+			            //创建viewport
+			            _createViewport();
+			            if(doc.addEventListener){
+			                win.addEventListener(or, _refreshRem, false);
+			                doc.addEventListener("DOMContentLoaded", _refreshRem, false);
+			            }
+			            /**
+			             * 创建viewport
+			             */
+			            function _createViewport(){
+			                var metaEl = doc.createElement('meta');
+			                metaEl.setAttribute('name', 'viewport');
+			                metaEl.setAttribute('content', 'initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no');
+			                if (docEle.firstElementChild) {
+			                    docEle.firstElementChild.appendChild(metaEl);
+			                }
+			
+			            }
+			            /**
+			             * 动态更新rem
+			             */
+			            function _refreshRem() {
+			                var clientW = docEle.clientWidth || 320;
+							var clientH = docEle.clientHeight;
+							console.log(clientW,clientH)
+			                //设置最大和最小宽度取值
+			                if(clientW > designW){
+			                    clientW = designW
+			                } else if(clientW<320){
+			                    clientW=320;
+			                }
+							console.log(clientW,ratio)
+			                docEle.style.fontSize = clientW / ratio + "px";
+							console.log(docEle.style.fontSize)
+			            };
+			        })(window, 1024);//750为设计稿宽度px值,根据实际设计稿大小对应设置
+        
+        </script>
+	</head>
+	<body>
+		<div class="box">
+			<div class="top-box">
+				<div class="top-box-title">
+					<p class='txets'>编号：</p>
+					<p class='txet'>1</p>
+				</div>
+				<div class="top-box-tit">
+					<h1>天天生活平台代理协议</h1>
+				</div>
+				<div class="top-box-conten">
+					<div class="top-box-conten1 flex">
+						<div class="flex-box">
+							授权方 ：
+						</div>
+						<div class="flex-box1" txet='121212'>
+							
+						</div>
+
+					</div>
+					<div class="top-box-conten2 flex">
+						<div class="flex-box">
+							被授权方 ：
+						</div>
+						<div class="flex-box1">
+							
+						</div>
+
+					</div>
+					<div class="top-box-conten3 flex">
+						<div class="flex-box">
+							签订日期：
+						</div>
+						<div class="flex-box2">
+							<div class="flex-box3">
+								1
+							</div>
+							年
+							<div class="flex-box3">
+								1
+							</div>
+							月
+							<div class="flex-box3">
+								1
+							</div>
+							日
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="conent-box">
+				<div class="conent-text">
+					第一条&nbsp;&nbsp;合同双方
+				</div>
+				<div class="conent-text">
+					授权方：深圳市时光轴科技有限公司（以下简称“甲方”）
+				</div>
+				<div class="conent-text">
+					统一社会信用代码：9144030039840977XQ
+				</div>
+				<div class="conent-text">
+					地址：深圳市龙岗区龙翔大道9002号志联佳大厦5楼8508
+				</div>
+				<div class="conent-text ">
+					<span>
+						被授权方：
+					</span>
+					<span class='txet2' lang="12312312">
+						
+					</span>
+					<span>
+						（以下简称“乙方”）
+					</span>
+				</div>
+				<div class="conent-text">
+					身份证或统一社会信用代码：
+					<p class='txet2' >
+						1
+					</p>
+				</div>
+				<div class="conent-text">
+					法定代表人：
+					<p class='txet2'>
+						1
+					</p>
+				</div>
+				<div class="conent-text">
+					电话：
+					<p class='txet2'>
+						1
+					</p>
+				</div>
+				<div class="conent-text">
+					地址：
+					<p class='txet2'>
+						1
+					</p>
+				</div>
+				<div class="conent-text">
+					<span>&nbsp;&nbsp;甲乙双方本着平等互利的原则，经过友好协商，就乙方通过自有运营团队，商家，买家等资源与甲方的天天生活平台嫁接合作，实现乙方提供数据给天天生活平台，天天生活平台反哺变现、变社会价值事宜达成以下条款，以兹信守。</span>
+				</div>
+				<div class="conent-text">
+					<strong>一、代理经营</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">1、甲方特此授权乙方为天天生活平台
+						<span class='txet2' style="min-width: 1.5rem;">
+							1
+						</span>
+						（区域名称）的区域代理商。</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						2、在代理区域内乙方运用能力和人脉关系在甲方的监管指导下发展商铺与会员。
+					</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						3、甲乙双方相互利用各自资源为对方进行合法合作。乙方无需支付甲方平台使用费，同时享受甲方平台提供的技术功能和团队服务。甲方使用乙方的所有资源（运营团队，商家，买家，其它），同样享受免费方式。
+					</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						4、甲方平台收取商家部分交易额作为佣金，乙方邀请商家的佣金，甲方按特定比例返还给乙方，具体如下：自合同签订第一年，返70%；第二年，返65%，第三年，返60%，甲方平台在此基础上再返10%做为奖励。
+					</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						5、若乙方所邀请商家在甲方平台上进行付费推广，甲方按本协议1.4所约定的比例返还给乙方。
+					</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						6、乙方可发展下一级代理，赚取下一级代理返利的5%作为服务费。假如代理所邀请的会员又成为代理，会自动成为本代理商的二级代理商，一级代理商可以赚取本二级代理商返利的5%作为服务费，但二级代理商后续发展的代理商不再予以提留。本平台代理，全部核算层级为两级。
+					</span>
+				</div>
+				<div class="conent-text">
+					<strong>二、关系确立和退出机制</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						1、甲乙双方签订协议后（包括书面或电子签约），乙方在天天生活平台注册成代理商，甲方给予专用邀请码（邀请码终身有效，不可变更），就标志着乙方的代理关系确立，正式获得了天天生活平台的代理权。乙方通过各种合法的运营方案进行天天生活平台运营活动，包括线上或线下推广。乙方也可以发展二级代理组建团队运营。
+					</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						2、乙方退出机制<br />
+						（1）双方协商退出，在乙方（包括所管辖的二级代理商）存在违法违规经营，或未经甲方书面同意擅自改变经营范围等违规行为，甲方有权解散，转让，接管，重组并购，冻结后台交易等措施，或针对乙方部分区域进行冻结。造成甲方公司损失的，将依法追究一切法律责任。<br />
+						（2）甲方因重大重组、融资、运营模式重大调整导致此协议无法匹配执行时，乙方享有优先参与权和利益分配机会，或者协议退出。当此情况发生，乙方必须无条件配合甲方进行清算交接、更改协议转型，或办理变更、退出手续。<br />
+						（3）甲方对乙方每月进行一次运营绩效评估，评估项目包括销售产值、销售方法渠道、注册用户量等。按签订协议当年计，乙方正式运营3个月，第4个月起开始考评。乙方若运营邀请注册会员低于300会员/月，交易额低于3000元/月（这两项指标同步考评），判定为不达标，甲方对乙方进行发出警示，连续3次警示仍然不达标的，甲方有权取消乙方运营资格，本协议自动失效。甲方要求乙方自协议次年起，必须连续三年递增10%数据量（年会员和交易额），第四年起确保不减少会员，不减少交易额。否则，甲方判定乙方不达标，甲方对乙方发出警示，连续3次警示仍然不达标的，甲方有权取消运营资格，本协议自动失效。
+					</span>
+				</div>
+				<div class="conent-text">
+					<strong>三、财务结算</strong>
+				</div>
+				<div class="conent-text">
+					<span>1、结算对象<br />
+						&nbsp;&nbsp;甲方结算对象为协议签约（网络签约）的乙方，以及乙方发展的二级代理商，系统会自动按时段同步结算（系统升级或网络影响可改为系统外结算）。<br />
+						2、乙方需指定一个私人结算账号<br />
+						&nbsp;&nbsp;协议签约（网络签约）的乙方在天天生活平台需关联微信支付或支付宝支付个人账号，实现与平台联通结算，协议签订人必须关联属于自己的结算手机号码（误填或错填将无法结算，平台概不负责）：
+						本单位（本人）授权委托（姓名）：
+						<span class='txet2' style="min-width: 1.5rem;">
+							1
+						</span>
+						，手机号：
+						<span class='txet2' style="min-width: 1.5rem;">
+							1
+						</span>
+						，代表本单位（本人）平台运营并绑定微信支付或支付宝支付提现结算账号。在整个过程中，该绑定的微信支付或支付宝支付账号在提现结算时代表本单位（本人），与本单位（本人）的提现结算账号具有同等法律效力。本单位（本人）将承担该提现结算账号的全部法律后果和法律责任。<br />
+						3、结算时间及额度<br />
+						&nbsp;&nbsp;代理奖励和服务费结款在平台的“分销中心”里的“可提现奖励”提现，同时该页面也会显示奖金订单明细、拉新明细、二级代理商明细。每一笔交易明细非常清晰，代理商还可以与拉新的会员和二级代理进行互动。</span>
+				</div>
+				<div class="conent-text">
+					<strong>四、权利义务</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">1、甲方的权利义务<br />
+						（1）甲方或甲方直属分公司承诺并保证，乙方销售甲方天天生活平台商品符合国家相关法律法规，不侵犯第三方知识产权和财产权利。如乙方推广甲方天天生活平台商品导致知识产权纠纷或侵犯第三方财产权利，甲方平台店铺自行承担法律责任，与乙方无关（乙方所建店铺及商品或战略合作店铺商品，则责任倒置）。<br />
+						（2）甲方或甲方直属分公司承诺并保证，乙方销售甲方天天生活平台商品符合国家产品质量方面法律法规。如乙方推广甲方天天生活平台的商品导致产品质量纠纷，甲方平台店铺自行承担法律责任，与乙方无关（乙方所建店铺及商品或战略合作店铺商品，则责任倒置）。<br />
+						（3）甲方或甲方直属分公司支持乙方在推广天天生活平台时，给予乙方的一切便利，包括但不限于天天生活平台相关资料介绍，技术支持、方案及样品、产品详情图、推广文案、推广图文音视频等相关信息。<br />
+						（4）甲方或甲方直属分公司积极配合乙方的销售和工作人员，并提供相关的业务及操作流程培训，帮助乙方提高销售技能，拓展业务范围。<br />
+						（5）甲方或甲方直属分公司负责天天生活平台的技术维护和商品售后服务。<br />
+						（6）为规范市场，甲方有权对乙方是否正确推广销售商品进行监督，乙方要把运营方式报备给甲方或甲方直属分公司，甲方或甲方直属分公司指定人员可随时监管，预防破坏整体市场和天天生活平台名誉。</span>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">
+						2、乙方的权利义务<br />
+						（1）乙方以天天生活平台运营授权名义使用各种合法的推广方案来运营天天生活平台，负责整个天天生活平台市场的策划、引流、销售。<br />
+						（2）乙方在本协议约定的范围内自行开拓与发展买家，建立线上线下营销圈子或其他渠道进行销售，积极推广天天生活平台，维护甲方的企业形象和服务品质，开展业务应如实介绍甲方天天生活平台和商品，并确保为买家提供良好的服务，不得以欺诈胁迫等不正当手段损害客户及甲方声誉。<br />
+						（3）乙方有义务维护天天生活平台的知识产权和商品质量。如：随时向甲方反馈在运营过程中所遇到的平台技术问题、用户体验情况和商品质量情况。以帮助甲方不断完善平台技术和商品服务等。<br />
+						（4）乙方不得在运营过程中诋毁天天生活平台或其售卖的商品的商誉。<br />
+						（5）乙方应本着诚实、勤勉的原则竭力推广天天生活平台产品，创造经济效益。<br />
+						（6）未经甲方正式书面授权，乙方不得以各种名义垄断性、排斥性推广宣传，恶意竞争商业活动及其他非法手段运营活动，更不能做超出协议内容及经营范围之外的相关业务，否则，乙方承担全部责任。<br />
+						（7）因业务需要，乙方需要借甲方总部头衔的需提前征得甲方书面同意。私自野蛮使用，如“天天生活平台创始人”“天天生活平台总部”“自主研发”等头衔，造成甲方损失的，甲方有权追究法律责任和经济赔偿。<br />
+						（8）乙方有优先权向甲方推荐优质商品上架，并成为卖家（担当卖家责任），同时可以赚取商品买卖差价。<br />
+						（9）乙方有义务做好自己买家的客户服务，甲方予以积极配合。<br />
+						（10）乙方不得利用甲方资源进行私下交易或己用他用，徇私舞弊，一经发现，取消其资格。
+					</span>
+				</div>
+				<div class="conent-text">
+					<strong>五、平台禁止条例（含乙方市级分公司及代理商）</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">1、禁止自立门户并利用天天生活平台搞拉人头，非法集资；变相卖空账号，层层叠加搞传销；线上线下加盟返利资金盘等国家严禁禁止的非法网络盘（含乙方市级分公司和代理商）和违反国家相关法律法规的行为，一经发现，甲方立即取消经营平台资格，没收一切所得，并报警起诉。<br />
+						2、禁止为达成个人宣传推广目的，编造天天生活的负面标题及内容进行推广或宣传，抹黑公司形象的举措和信息。违反者，发现一次，处罚4000元，2次8000元，拒不交罚款者取消运营资格。<br />
+						3、禁止为了自身利益，窜拉别人已经建立好关系的运营。违反者，第一次处罚4000元，第二次处罚8000元（处罚金额用于损失方赔偿和举报奖励等），第三次取消资格。</span>
+				</div>
+				<div class="conent-text">
+					<strong>六、保密条款</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">&nbsp;&nbsp;任何一方在合作期间知晓的另一方的商业秘密，于合作期间内及合作终止后，只要该信息未成为公众信息，双方均有保密义务，未经对方书面授权或许可，任何一方不能将该商业机密和活动策划，产品价格等告知第三方或者用作其他商业用途，否则，造成的损失依据现行法律，依法追究责任。</span>
+				</div>
+				<div class="conent-text">
+					<strong>七、违约责任</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">1、如因甲方商品质量或物流纠纷造成买家损失的，甲乙双方出面协调商家或物流来进行赔偿。<br />
+						2、如因乙方违规运营销售天天生活平台商品，怠慢买家客户服务（如买家咨询产品信息，乙方故意不予回应）等，造成平台损失的由乙方承担全部责任。<br />
+						3、甲方未按本协议约定支付乙方运营所得的（按最长支付期限顺延10天计），甲方赔付乙方违约金1‰/天。</span>
+				</div>
+				<div class="conent-text">
+					<strong>八、协议期限</strong>
+				</div>
+				<div class="conent-text">
+					<span style="width: 100%;display: inline-block;">本协议有效期为三年，按本协议相关内容条款。乙方被取消或封号的违规运营，本协议自动失效，同时甲方有权没收未结算的运营所有款项。</span>
+				</div>
+				<div class="conent-text" style="margin-top: 1.5rem;">
+					甲方：深圳市时光轴科技有限公司
+				</div>
+				<div class="conent-text" style="margin-top: 1.5rem;">
+					盖章：
+				</div>
+				<div class="conent-text" style="width: 80%; margin-top: 1.5rem;margin-bottom: 3rem;">
+					<div class="top-box-conten3 flex">
+						<div class="flex-box">
+							签订日期：
+						</div>
+						<div class="flex-box2">
+							<div class="flex-box3">
+								1
+							</div>
+							年
+							<div class="flex-box3">
+								1
+							</div>
+							月
+							<div class="flex-box3">
+								1
+							</div>
+							日
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<style type="text/css">
+		body {
+			margin: 0;
+			font-size: .24rem;
+			font-family: 宋体;
+		}
+
+		p {
+			width: 100%;
+			margin: 0;
+			display: inline-block;
+			min-width: 2rem;
+		}
+
+		.box {
+			margin-left: 5%;
+			/* margin-right: 0.2rem; */
+			width: 90%;
+			height: auto;
+		}
+
+		.top-box {
+			width: 100%;
+			height: 18rem;
+		}
+
+		.top-box-title {
+			margin-top: .5rem;
+			width: 9rem;
+			line-height: .6rem;
+			margin-left: 5rem;
+		}
+
+		.txet {
+			display: inline-block;
+			min-width: 2rem;
+			width: auto;
+			height: .6rem;
+			max-width: 4.7rem;
+			font-weight: 500;
+			margin-bottom: 0.2rem;
+			text-align: center;
+			border-bottom: #1E1E1E solid 2px;
+		}
+
+		.txet2 {
+			display: inline-block;
+			min-width: 2.5rem;
+			width: auto;
+			height: .6rem;
+			max-width: 6.7rem;
+			font-weight: 500;
+			text-align: center;
+			border-bottom: #1E1E1E solid 2px;
+		}
+
+		.txets {
+			display: inline-block;
+			width: auto;
+			height: .6rem;
+			float: left;
+		}
+
+		.top-box-tit {
+			text-align: center;
+			width: 100%;
+			font-size: .4rem;
+			margin-top: 4rem;
+		}
+
+		.top-box-conten {
+			width: 85%;
+			margin: 0 7.5%;
+			height: 4rem;
+			font-size: .4rem;
+			margin-top: 4rem;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.flex {
+			flex-grow: 1;
+			display: flex;
+			justify-content: space-between;
+
+		}
+
+		.flex-box1 {
+			width: 68%;
+			height: .58rem;
+			text-align: center;
+			border-bottom: #1E1E1E solid 2px;
+		}
+
+		.flex-box2 {
+			width: 68%;
+			height: .58rem;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.flex-box3 {
+			width: 20%;
+			height: .58rem;
+			text-align: center;
+			border-bottom: #1E1E1E solid 2px;
+		}
+
+		.conent-text {
+			font-size: .4rem;
+			margin-top: .4rem;
+	</style>
+</html>

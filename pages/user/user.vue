@@ -422,8 +422,9 @@ export default{
 			})
 		},
 		toRetailCenter(){
+			console.log(this.uerInfo)
 			uni.navigateTo({
-				url:`/pages/user/distribution/dis_center?logo=${this.uerInfo.logoImg}&name=${this.uerInfo.nickname}`
+				url:`/pages/user/distribution/dis_center?logo=${this.uerInfo.logoImg}&name=${this.uerInfo.nickname}&bindedInvitationCode=${this.uerInfo.refereeCode}`
 			})
 		},
 		toMyCollection(){

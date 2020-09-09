@@ -84,7 +84,7 @@
 			<view class="title">
 				<view class="lf">
 					<view class="block"></view>
-					<view class="word">生活圈</view>
+					<view class="word" >生活圈</view><!-- @tap="toLifecircles" -->
 				</view>
 				<image v-if="adShow==1" class="epid" :src="adImg" @tap.stop="toAdver()"></image>
 				<view class="rt" @tap="toLifecircle">
@@ -517,6 +517,15 @@
 					url: '/pages/lifecircle/lifecircle?token=' + token
 				})
 			},
+			// toLifecircles() {
+			// 	let token = ''
+			// 	if (this.hasLogin) {
+			// 		token = this.uerInfo.token
+			// 	}
+			// 	uni.navigateTo({
+			// 		url: '/pages/information/information?token=' + token +'&pushContentId='+'1'
+			// 	})
+			// },
 			Jump(item) {
 
 				if (item.firsttypeinfoId == 8) {

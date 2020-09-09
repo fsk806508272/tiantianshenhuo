@@ -529,6 +529,16 @@ class UserModel extends HTTP{
 		}
 		this.request(params)
 	}
+	//已邀请用户
+	getSelectInvitedUserList(data,success){
+		let params = {
+			method:'GET',
+			data: data,
+			url:'/app/tbInviterebate/selectInvitedUserList',
+			success:success
+		}
+		this.request(params)
+	}
 }
 
 export {UserModel}

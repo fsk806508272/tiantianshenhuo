@@ -49,8 +49,31 @@
 			}
 		},
 		{
+			"path": "pages/information/information",
+			"style": {
+				"navigationBarTitleText":"推送信息",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
+			}
+		},
+		{
+			"path": "pages/authorization/authorization",
+			"style": {
+				"navigationBarTitleText":"授权证明",
+				"navigationBarBackgroundColor":"#FFFFFF",
+				"app-plus": {
+					"titleNView": false ,//禁用原生导航栏
+					"bounce":"none"
+				}
+			}
+		},
+		{
 			"path": "pages/order/order",
 			"style": {
+				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "订单",
 				"navigationBarBackgroundColor":"#FFFFFF"
 			}

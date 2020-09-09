@@ -16,7 +16,7 @@
 			</view>	
 			<view class="item" v-if="!switchShow">
 				<image src="/static/cut/lock.png" class="lockImage"></image>
-				<input placeholder="请输入密码" v-model="password"/>				
+				<input  class="uni-input" password type="text" placeholder="请输入密码" v-model="password"/>				
 			</view>
 			<!-- <view class="agreement"> 新用户登录即注册，并代表已阅读并同意<text @click="screen('center')">《天天生活用户协议》</text></view> -->
 			<view class="theme-button" @tap="doLogin">登录</view>
