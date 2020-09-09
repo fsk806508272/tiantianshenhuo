@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<k-scroll-view>
 		<view class="top-header">
 			<image @tap="toSearch" class="searchImg" src="/static/cut/ss.png"></image>
 			<view>附近</view>
@@ -63,11 +63,12 @@
 		</uni-popup>
 		<uni-load-more :status="loadingType">
 		</uni-load-more>
-	</view>
+	</k-scroll-view>
 </template>
 
 
 <script>
+	import kScrollView from '@/components/k-scroll-view/k-scroll-view.vue';
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	import {IndexModel} from '@/common/models/index.js'

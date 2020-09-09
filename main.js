@@ -15,7 +15,9 @@ App.mpType = 'app'
 let options = {
 	SDKAppID:1400292904
 }
-
+// 下拉刷新
+import hrPullLoad from '@/components/hr-pull-load/hr-pull-load.vue';
+Vue.component('hrPullLoad',hrPullLoad)
 const tim = TIM.create(options)
 tim.setLogLevel(1)
 tim.registerPlugin({'cos-wx-sdk': COS})
