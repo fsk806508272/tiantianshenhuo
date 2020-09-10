@@ -18,7 +18,16 @@
 				<image src="/static/cut/filter_icon.png"></image>
 			</view>
 		</view>
-		
+		<hrPullLoad
+		@refresh='refresh'
+		:height='-1'
+		:pullHeight='50'
+		:maxHeight='150'
+		:lowerThreshold='20'
+		:isAllowPull="true"
+		ref='hrPullLoad'
+		:flag=flag
+		>
 		<view v-for="(item,index) in list" :key="index" class="item" @tap="toStore(item)">
 			<image class="storeImg" :src="item.logoPic"></image>
 			<view class="content">
@@ -63,12 +72,16 @@
 		</uni-popup>
 		<uni-load-more :status="loadingType">
 		</uni-load-more>
+		</hrPullLoad>
 	</k-scroll-view>
 </template>
 
 
 <script>
 	import kScrollView from '@/components/k-scroll-view/k-scroll-view.vue';
+	//下拉
+	import hrPullLoad from '@/components/hr-pull-load/hr-pull-load.vue';
+	//点击弹出遮罩
 	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	import uniLoadMore from "@/components/uni-load-more/uni-load-more.vue"
 	import {IndexModel} from '@/common/models/index.js'
@@ -81,10 +94,12 @@
 		},
 		components: {
 			uniPopup,
-			uniLoadMore
+			uniLoadMore,
+			hrPullLoad //fsk
 		},
 		data(){
 			return{
+				flag:true,//fsk
 				loadingType:"loading",
 				iconList:[
 					{url:'/static/tab/icosh.png',name:'生活',id:8},
@@ -118,16 +133,68 @@
 			}
 		},
 		onLoad(){
-			
+			 this.getExampleData(1);//fsk
 		},
 		onShow(){
 			this.getList()
+			
 		},
 		onReachBottom(){
 			this.queryInfo.pageNo += 1
 			this.getList()
 		},
 		methods:{
+			/*******fsk***/
+			getExampleData(type){
+				 this.flag = true
+			/* type 1代表下拉刷新 2代表加载更多 */
+			    setTimeout(()=>{
+			        /* 接口获取到的数据 */
+			        let data = [1,2,3,4];
+			        /* 拿到数据后的处理 */
+			        if(data.length>0){
+			            if(type==1){
+			                this.exampleInfo = data;
+			            }
+			            else if(type==2){
+			                this.exampleInfo = this.exampleInfo.concat(data);
+			            }
+			            /* 这里的20是每次调用后台接口返回的最大数据条数，可以自定义 */
+			            if(this.exampleInfo.length<20){
+			                this.bottomTips = "nomore";
+			            }
+			            else{
+			                this.bottomTips = "more";
+			            }
+			        }
+			        else{
+			            if(type==1){
+			                this.exampleInfo = [];
+			            }
+			            else if(type==2){
+			                this.currentPage--;
+			            }
+			            this.bottomTips = "nomore";
+			        }
+					this.getList().then(setTimeout(()=>{
+			            this.$refs.hrPullLoad.reSet();
+						this.flag = false
+			        },1000))
+			       
+			       
+			    },500);
+			},
+			//自定义上拉加载更多
+			loadMore(){
+			    this.currentPage++;
+			    this.bottomTips = "loading";
+			    this.getExampleData(2);
+			},
+			//自定义下拉刷新
+			refresh(){
+			    this.currentPage = 1;
+			    this.getExampleData(1);
+			},
 			async getList(){
 				await indexmodel.findAllSeller(this.queryInfo,data=>{
 					if(data.length<=5){
@@ -152,6 +219,7 @@
 			},
 			filter(){
 				this.$refs.poptop.open()
+				
 			},
 			chooseProveide(item,index){
 				if(this.provideIndex === index){

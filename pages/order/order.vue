@@ -1,15 +1,12 @@
 <template>
 	<view v-if="!hasLogin" class="hasLogin">
-		
 			<view>
-				<image src="../../static/notlogged.png" mode=""></image>
+				<image src="../../static/bigShopCar.png" mode=""></image>
 			</view>
 			<view class="title">
 				<text>登录后可查看“订单”页面</text>
 			</view>
 			<view class="theme-button" @tap="navToLogin"><text>立即登录</text></view>
-		
-		
 	</view>
 	<view v-else>
 		<!-- 顶部导航 -->

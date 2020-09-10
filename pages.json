@@ -1103,15 +1103,11 @@
 			"selectedIconPath": "static/tab/tab_near_selected.png",
 			"text": "附近"
 		},  
-		 {
-			"pagePath": "pages/realease/provideIndex",
-			"iconPath": "static/tab/tab_add_onselected.png",
-			"selectedIconPath": "static/tab/tab_add_onselected.png"
-		},{
+		{
 			"pagePath": "pages/order/order",
-			"iconPath": "static/tab/tab_order_unselected.png",
-			"selectedIconPath": "static/tab/tab_order_onselected.png",
-			"text": "订单"
+			"iconPath": "static/tab/shop-cart.png",
+			"selectedIconPath": "static/tab/shop-cart-select.png",
+			"text": "购物车"
 		},
 		{
 			"pagePath": "pages/user/user",

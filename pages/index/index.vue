@@ -12,6 +12,7 @@
 						<text>搜索标题</text>
 					</view>
 					<image class="rt" src="../../static/cut/yy.png" mode=""></image>
+			
 				</view>
 			</view>
 			<image src="/static/home/home-msg.png" @tap="toMessage()" mode=""></image>
@@ -25,22 +26,18 @@
 						<text>搜索标题</text>
 					</view>
 					<image class="rt" src="../../static/cut/yy.png" mode=""></image>
+					<view @click="clicksearch('')" class="searchBtn">搜索</view>
 				</view>
 			</view>
 		</view>
 		<hrPullLoad
 		  @refresh='refresh'
-		  @loadMore='loadMore'
 		  :height='-1'
 		  :pullHeight='50'
 		  :maxHeight='150'
 		  :lowerThreshold='20'
-		  :bottomTips='bottomTips'
 		  :isAllowPull="true"
-		  :isTab='false'
 		  ref='hrPullLoad'
-		 
-		 
 		>
 		<!-- 轮播图 -->
 		<view class="carousel-section">
@@ -182,14 +179,23 @@
 							</view>
 
 							<view class="main-parameter">
-								<view>
-									<text class="price">￥{{item.price}}</text>
+								<view class="Rp">
+									<text class="RenMinBi">￥</text>
+									<text class="price">{{item.price}}</text>
 								</view>
 								<!-- <text class="volume">月销{{item.monthSale}}</text> -->
 								<!-- <text class="volume">免费配送</text> -->
-								<view>距离{{item.distance|formatDistance}}</view>
-								<image @tap.stop="addToCart(item)" src="/static/cut/car.png" mode=""></image>
+								<view class="distance">距离{{item.distance|formatDistance}}</view>
+								<image class="smallCar-img" @tap.stop="addToCart(item)" src="/static/cut/car.png" mode=""></image>
 							</view>
+							<view class="shopSec">
+								 <view class="shopName">{{item.sellerNickName}}</view>
+								 <view class="goToShop">
+									 <text class="text-shop">进店</text>
+									 <image class="right-img" src="../../static/rightArrow.png" mode=""></image>
+								 </view>
+							</view>
+							
 						</view>
 					</view>
 				</view>
@@ -336,7 +342,7 @@
 			 this.getExampleData(1);
 		},
 		onShow() {
-			this.pagelfunm = 1
+			this.hrPullLoad = 1
 			this.getprovide(this.pagelfunm)
 		},
 		onReady() {
@@ -727,8 +733,30 @@
 			getExampleData(type){
 			/* type 1代表下拉刷新 2代表加载更多 */
 			    setTimeout(()=>{
-			        /* 接口获取到的数据 */
-			        let data = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+			     /* 接口获取到的数据 */
+			    //  let res = this.getprovide(this.pagelfunm)
+				// console.log(this.pagelfunm)
+				uni.request({
+					data: {
+						type: 1,
+						isMeOrAll: 2
+					},
+					url: 'https://sgz.ttshzg.com/app/tbUserDynamic/findUserDynamicList',
+					method: 'POST',
+					header: {
+						'content-type': 'application/x-www-form-urlencoded',
+					},
+					success: (res) => {
+						this.DynamicData = res.data.data.userDynamicList[0]
+						this.contentList = this.DynamicData.dynamicContent.replace(/[\r\n\↵]/g,"<br/>")
+						if(this.DynamicData.pictureList.length > 3){
+							this.pictureList = this.DynamicData.pictureList.slice(0,3)
+						}else{
+							this.pictureList = this.DynamicData.pictureList
+						}
+					}
+				})
+			        let data = [1,2,3];
 			        /* 拿到数据后的处理 */
 			        if(data.length>0){
 			            if(type==1){
@@ -805,21 +833,26 @@
 
 	.content {
 		.hits {
-			margin: 30rpx 0;
+			margin: 10rpx 0;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
 			padding: 0 20rpx;
+			width: 100%;
+			height: 100rpx;
+			background-color: #fff;
+			border-radius: 30rpx;
 
 			.hit-left {
 				display: flex;
 				align-items: center;
-
+              
 				.hit-border {
-					margin-right: 13rpx;
-					width: 8rpx;
+					margin-right: 12rpx;
+					width: 12rpx;
 					height: 30rpx;
-					background: rgba(255, 102, 0, 1);
+					background: #FF6600;
+					border-radius: 6rpx 7rpx 6rpx 6rpx;
 				}
 
 				.hit-title {
@@ -995,6 +1028,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	
 
 		image {
 			width: 30rpx;
@@ -1056,7 +1090,7 @@
 			}
 		}
 	}
-
+//这里
 	.top {
 		width: 100%;
 		height: 86rpx;
@@ -1074,13 +1108,13 @@
 			
 			.top-search {
 				border-radius: 33rpx;
-				width: 100%;
+				width: 710rpx;
 				height: 66rpx;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				background-color: #F0F0F0;
-				padding: 0 20rpx;
+				padding-left: 20rpx;
 			
 				.lf {
 					width: 27rpx;
@@ -1090,12 +1124,23 @@
 				.rt {
 					width: 27rpx;
 					height: 36rpx;
+					margin-left: 350rpx;
 				}
 			
 				text {
 					font-size: 28rpx;
 					color: #787878;
 					padding-left: 17rpx;
+				}
+				.searchBtn{
+					width: 120rpx;
+					height: 60rpx;
+					background: linear-gradient(90deg, #FF9230, #FF6600);
+					border-radius: 30px;
+					text-align: center;
+					line-height: 60rpx;
+					color: #fff;
+					font-size: 28rpx;
 				}
 			}
 		}
@@ -1354,18 +1399,19 @@
 
 			.item {
 				border-radius: 30rpx;
-				height: 190rpx;
+				height: 250rpx;
 				padding: 20rpx 20rpx;
 				display: flex;
 				margin: 10rpx 0;
 				background: #FFFFFF;
 
 				.item-img {
-					width: 150rpx;
-					height: 150rpx;
-					background: rgba(250, 250, 250, 1);
+					width: 228rpx;
+					height: 210rpx;
 					border-radius: 10rpx;
 					margin-right: 20rpx;
+					background: #FAFAFA;
+					border-radius: 14rpx;
 				}
 
 				.main-left {
@@ -1377,19 +1423,21 @@
 					.main-title {
 						display: flex;
 						justify-content: space-between;
-
+                     
 						.tit {
 							font-size: 30rpx;
 							max-height: 80rpx;
 							overflow: hidden;
 							font-weight: 400;
 							line-height: 40rpx;
+							max-width: 478rpx;
 							flex: 1;
 						}
 
 						.distance {
-							font-size: 24rpx;
+							font-size: 22rpx;
 							color: rgba(120, 120, 120, 1);
+                            line-height: 36rpx;
 						}
 					}
 
@@ -1412,11 +1460,15 @@
 
 						.normal-tag {
 							padding: 0rpx 5rpx;
-							font-size: 22rpx;
+							font-size: 21rpx;
 							color: #8C8C8C;
-							background: rgba(255, 255, 255, 1);
-							border: 1px solid rgba(160, 160, 160, 1);
+							height: 30rpx;
+							background: #FFFFFF;
+							border: 1px solid #A0A0A0;
 							border-radius: 6rpx;
+							font-family: Source Han Sans CN;
+							font-weight: 400;
+							line-height: 30rpx;
 						}
 					}
 
@@ -1424,17 +1476,40 @@
 						display: flex;
 						justify-content: space-between;
 						align-items: flex-end;
-
+                        height:62rpx;
+						line-height: 62rpx;
 						.fh {
 							color: #FF6600;
 							font-size: 34rpx;
 							color: rgba(160, 160, 160, 1);
 						}
-
-						.price {
-							font-size: 34rpx;
-							color: #FF6600;
+							
+						.Rp{
+							.RenMinBi{
+								font-size: 26rpx;
+								font-family: Source Han Sans CN;
+								font-weight: 400;
+								color: #FF4E00;
+								line-height: 36rpx;
+							}
+							.price {
+								font-size: 36rpx;
+								color: #FF6600;
+							}
 						}
+						.distance{
+							
+							font-size: 26rpx;
+							font-family: Source Han Sans CN;
+							font-weight: 400;
+							color: #8C8C8C;
+							
+						}
+						.smallCar-img{
+							width: 62rpx;
+							height: 62rpx;
+						}
+                       
 
 						.volume {
 							font-size: 24rpx;
@@ -1444,6 +1519,31 @@
 						image {
 							width: 56rpx;
 							height: 56rpx;
+						}
+					}
+					.shopSec{
+						display: flex;
+						.shopName{
+							font-size: 28rpx;
+							font-family: Source Han Sans CN;
+							font-weight: 400;
+							color: #A0A0A0;
+							line-height: 40rpx;
+						}
+						.goToShop{
+							.text-shop{
+								font-size: 28rpx;
+								font-family: Source Han Sans CN;
+								font-weight: 400;
+								color: #FF6600;
+								line-height: 40rpx;
+								margin-left: 13rpx;
+							}
+							.right-img{
+								width: 10rpx;
+								height: 19rpx;
+								margin-left: 9rpx;
+							}
 						}
 					}
 				}

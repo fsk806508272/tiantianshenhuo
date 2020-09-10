@@ -27,12 +27,13 @@
 				<text class="list"></text>
 				<text class="list"></text>
 			</view>
-		    <view class="flex-wrap" v-if="flag">
-				 <view class="tips">{{upDownTips}}</view>
-				 <view class="refreshOver" style="margin-right: 30rpx;margin-left: 100rpx;" v-show="isHeightChange&&!isAllowLoading">刷新完成</view>
-				 <view class="time">上次更新{{time}}</view>
-			</view>
+		
+			<view class="tips">{{upDownTips}}</view>
+			<view class="refreshOver" style="margin-right: 30rpx;margin-left: 100rpx;" v-show="isHeightChange&&!isAllowLoading">刷新完成</view>
+			<view class="time">上次更新{{time}}</view>
 		</view>
+
+		
 		<!-- 内容 -->
 		<slot></slot>
 	</scroll-view>
@@ -56,12 +57,7 @@
 				time:''//时间
 			}
 		},
-	
 		props: {
-			flag:{
-				type:Boolean,
-				default:true
-			},
 			height:{
 				type:Number,
 				default :1200
@@ -104,7 +100,7 @@
 			},
 			//鼠标移动
 			doTouchMove(e){
-				 
+				 console.log('鼠标移动'+e)
 				if(!this.isAllowPull){
 					return;
 				}
@@ -171,8 +167,10 @@
 				this.distanceY = 0;
 				this.isInterval = true;
 				this.isAllowPullDown = false;
+			},
+			loadMore(){
+				this.$emit('loadMore');
 			}
-		
 		}
 	}
 </script>
@@ -184,14 +182,15 @@
 		transition: all .2s linear;
 	}
 	.upDown{
+		width: 300rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		flex-wrap: wrap;
 		margin: 0 auto;
-		text-align: center;
-	
+		
 		.loading{
+		
 			width: 110rpx;
 			height: 110rpx;
 			position: relative;
@@ -266,20 +265,13 @@
 			transition: all .3s linear;
 			transform: rotate(180deg);
 		}
-		
-		.flex-wrap{
-			display: flex;
-			flex-direction: column;
-			.tips{
-				font-size: 30rpx;
-			}		
-			.refreshOver{
-				font-size: 30rpx;
-			}
-			.time{
-				font-size: 30rpx;
-			}	
-		}	
+		.tips{
+			font-size: 30rpx;
+		}		
+		.refreshOver{
+			font-size: 30rpx;
+		}
+			
 		
 	}
 	.bottomTips{
